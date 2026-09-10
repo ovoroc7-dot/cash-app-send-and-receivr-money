@@ -1,14 +1,6 @@
-import { Clock, CreditCard, DollarSign, Landmark, LineChart } from "lucide-react";
+import { Clock, Landmark, DollarSign } from "lucide-react";
 
-export type Tab = "money" | "card" | "pay" | "invest" | "activity";
-
-const TABS: { id: Tab; label: string; Icon: typeof Clock }[] = [
-  { id: "money", label: "Money", Icon: Landmark },
-  { id: "card", label: "Cash Card", Icon: CreditCard },
-  { id: "pay", label: "Pay", Icon: DollarSign },
-  { id: "invest", label: "Investing", Icon: LineChart },
-  { id: "activity", label: "Activity", Icon: Clock },
-];
+export type Tab = "money" | "pay" | "activity";
 
 export function BottomNav({
   tab,
@@ -19,28 +11,48 @@ export function BottomNav({
   onChange: (t: Tab) => void;
   green: boolean;
 }) {
+  const items: { key: Tab; Icon: typeof Clock; label: string }[] = [
+    { key: "money", Icon: Landmark, label: "Money" },
+    { key: "pay", Icon: DollarSign, label: "Pay" },
+    { key: "activity", Icon: Clock, label: "Activity" },
+  ];
+
   return (
     <nav
-      className={`absolute inset-x-4 bottom-4 z-40 flex items-center justify-between rounded-full px-2 py-2 shadow-lg backdrop-blur ${
-        green ? "bg-cash-ink/10" : "bg-surface-raised/90"
+      className={`absolute inset-x-0 bottom-0 z-20 flex justify-center pb-6 ${
+        green ? "" : "px-4"
       }`}
     >
-      {TABS.map(({ id, label, Icon }) => {
-        const active = tab === id;
-        return (
-          <button
-            key={id}
-            onClick={() => onChange(id)}
-            aria-label={label}
-            aria-current={active ? "page" : undefined}
-            className={`grid size-12 place-items-center rounded-full transition-colors ${
-              active ? (green ? "bg-cash-ink/15" : "bg-surface") : "opacity-60"
-            }`}
-          >
-            <Icon className="size-5" strokeWidth={2.2} />
-          </button>
-        );
-      })}
+      <div
+        className={`flex w-full max-w-[320px] items-center justify-between rounded-full p-1.5 ${
+          green ? "" : "bg-surface-raised shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+        }`}
+      >
+        {items.map(({ key, Icon, label }) => {
+          const active = tab === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              aria-label={label}
+              aria-current={active ? "page" : undefined}
+              onClick={() => onChange(key)}
+              className={`flex h-12 flex-1 items-center justify-center rounded-full transition-colors ${
+                active
+                  ? green
+                    ? "bg-cash-deep"
+                    : "bg-black/[0.06]"
+                  : "bg-transparent"
+              }`}
+            >
+              <Icon
+                className={`${key === "pay" ? "size-7" : "size-6"} text-cash-ink`}
+                strokeWidth={key === "pay" ? 3 : 2.2}
+              />
+            </button>
+          );
+        })}
+      </div>
     </nav>
   );
 }
