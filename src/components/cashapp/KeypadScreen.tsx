@@ -22,7 +22,7 @@ export function KeypadScreen() {
       if (k === "back") return cur.length <= 1 ? "0" : cur.slice(0, -1);
       if (k === ".") return cur.includes(".") ? cur : cur + ".";
       if (cur === "0") return k;
-      if (cur.includes(".") && cur.split(".")[1].length >= 2) return cur;
+      if ((cur.split(".")[1]?.length ?? 0) >= 2) return cur;
       return cur.length >= 7 ? cur : cur + k;
     });
   };
