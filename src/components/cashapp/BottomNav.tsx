@@ -31,7 +31,7 @@ export function BottomNav({
           className={`absolute left-1.5 top-1.5 size-[60px] rounded-full transition-transform duration-300 ease-out ${
             green ? "bg-cash-lite" : "bg-black/[0.06]"
           }`}
-          style={{ transform: `translateX(${index * 68}px)` }}
+          style={{ transform: `translateX(${index * 60}px)` }}
         />
         {tabs.map(({ id, label, Icon }) => (
           <button
