@@ -135,11 +135,16 @@ export function MoneyScreen() {
           </article>
 
           <div className="mt-8 space-y-7">
-            {offers.map(({ label, sub, Icon }) => (
+            {offers.map(({ label, sub, img }) => (
               <div key={label} className="flex items-center gap-4">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-surface-raised">
-                  <Icon className="size-5 text-cash-ink" strokeWidth={2.2} />
-                </span>
+                <img
+                  src={img}
+                  alt={label}
+                  loading="lazy"
+                  width={816}
+                  height={816}
+                  className="size-12 shrink-0 object-contain"
+                />
                 <div className="flex-1">
                   <p className="font-display text-[19px] font-semibold tracking-[-0.01em] text-cash-ink">
                     {label}
