@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { ChevronLeft, Search, Briefcase, ScanLine } from "lucide-react";
+import { PayFlow } from "./PayFlow";
 
 export function KeypadScreen() {
   const [amount, setAmount] = useState("0");
+  const [flow, setFlow] = useState<"Pay" | "Request" | null>(null);
 
   const press = (k: string) => {
     setAmount((a) => {
@@ -67,12 +69,14 @@ export function KeypadScreen() {
       <div className="mt-6 grid grid-cols-2 gap-4">
         <button
           type="button"
+          onClick={() => amount !== "0" && setFlow("Request")}
           className="h-14 rounded-full bg-cash-deep font-display text-[17px] font-semibold text-cash-ink active:opacity-80"
         >
           Request
         </button>
         <button
           type="button"
+          onClick={() => amount !== "0" && setFlow("Pay")}
           className="h-14 rounded-full bg-cash-deep font-display text-[17px] font-semibold text-cash-ink active:opacity-80"
         >
           Pay
@@ -80,6 +84,17 @@ export function KeypadScreen() {
       </div>
 
       <div className="h-24" />
+
+      {flow && (
+        <PayFlow
+          amount={amount}
+          mode={flow}
+          onClose={() => {
+            setFlow(null);
+            setAmount("0");
+          }}
+        />
+      )}
     </div>
   );
 }
