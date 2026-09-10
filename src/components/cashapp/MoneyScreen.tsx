@@ -5,17 +5,15 @@ import {
   Search,
   Briefcase,
   Landmark,
-  Heart,
-  Sparkles,
-  CreditCard,
-  TrendingUp,
-  Box,
-  Flower2,
-  Bitcoin,
   Banknote,
   ScanLine,
   Repeat,
 } from "lucide-react";
+import tagsArt from "@/assets/tags-art.png";
+import iconStocks from "@/assets/icon-stocks.png";
+import iconPools from "@/assets/icon-pools.png";
+import iconSavings from "@/assets/icon-savings.png";
+import iconBitcoin from "@/assets/icon-bitcoin.png";
 
 export function MoneyScreen() {
   const [loading, setLoading] = useState(true);
