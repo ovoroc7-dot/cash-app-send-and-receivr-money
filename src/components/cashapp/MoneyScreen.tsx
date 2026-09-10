@@ -1,5 +1,21 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, EyeOff, Search, Briefcase, Landmark } from "lucide-react";
+import {
+  ChevronRight,
+  EyeOff,
+  Search,
+  Briefcase,
+  Landmark,
+  Heart,
+  Sparkles,
+  CreditCard,
+  TrendingUp,
+  Box,
+  Flower2,
+  Bitcoin,
+  Banknote,
+  ScanLine,
+  Repeat,
+} from "lucide-react";
 
 export function MoneyScreen() {
   const [loading, setLoading] = useState(true);
@@ -110,10 +126,87 @@ export function MoneyScreen() {
               <br />
               way to pay
             </p>
-            <div className="mt-6 h-40" />
+            <div className="mt-6 flex h-40 items-end justify-between">
+              <Heart className="size-14 text-cash-ink" fill="currentColor" strokeWidth={0} />
+              <Sparkles className="size-20 text-black/15" strokeWidth={1.5} />
+              <CreditCard className="size-16 text-cash/70" strokeWidth={1.5} />
+            </div>
           </article>
+
+          <div className="mt-8 space-y-7">
+            {offers.map(({ label, sub, Icon }) => (
+              <div key={label} className="flex items-center gap-4">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-surface-raised">
+                  <Icon className="size-5 text-cash-ink" strokeWidth={2.2} />
+                </span>
+                <div className="flex-1">
+                  <p className="font-display text-[19px] font-semibold tracking-[-0.01em] text-cash-ink">
+                    {label}
+                  </p>
+                  <p className="font-display text-[17px] text-cash-ink/80">{sub}</p>
+                </div>
+                <button
+                  type="button"
+                  className="h-11 rounded-full bg-surface-raised px-6 font-display text-[17px] font-semibold text-cash-ink"
+                >
+                  Start
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <hr className="mt-8 border-black/10" />
+
+          <h2 className="mt-8 font-display text-[24px] font-semibold tracking-[-0.02em] text-cash-ink">
+            Add money
+          </h2>
+
+          <div className="mt-6 space-y-8">
+            {addMoney.map(({ label, Icon }) => (
+              <button
+                key={label}
+                type="button"
+                className="flex w-full items-center gap-6 text-left"
+              >
+                <Icon className="size-6 shrink-0 text-cash-ink" strokeWidth={2.2} />
+                <span className="flex-1 font-display text-[19px] font-semibold tracking-[-0.01em] text-cash-ink">
+                  {label}
+                </span>
+                <ChevronRight className="size-5 text-cash-ink" strokeWidth={2.5} />
+              </button>
+            ))}
+          </div>
+
+          <hr className="mt-8 border-black/10" />
+
+          <div className="mt-6 space-y-4 font-mono text-[12px] leading-relaxed text-cash-ink/45">
+            <p>
+              If you don't have a Cash App Card, a sponsored account, or sponsor an account, your
+              Cash App and savings balances are not deposit products and therefore are not
+              protected by FDIC pass-through insurance.
+            </p>
+            <p>
+              Banking services provided by Cash App's bank partner(s). Brokerage services by Cash
+              App Investing LLC. member FINRA, subsidiary of Block, Inc. Bitcoin services by Block,
+              Inc. Tax filing services by Cash App Taxes.
+            </p>
+            <p className="font-semibold text-cash-ink underline">Disclosures</p>
+          </div>
         </>
       )}
     </div>
   );
 }
+
+const offers = [
+  { label: "Stocks", sub: "Invest with $1", Icon: TrendingUp },
+  { label: "Pools", sub: "Collect money with anyone", Icon: Box },
+  { label: "Savings", sub: "Save for a goal", Icon: Flower2 },
+  { label: "Bitcoin", sub: "Buy, use, and earn", Icon: Bitcoin },
+];
+
+const addMoney = [
+  { label: "Deposit paper money", Icon: Banknote },
+  { label: "Deposit check", Icon: ScanLine },
+  { label: "Auto reload", Icon: Repeat },
+];
