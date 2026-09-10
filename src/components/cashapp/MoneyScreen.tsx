@@ -1,5 +1,21 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, EyeOff, Search, Briefcase, Landmark } from "lucide-react";
+import {
+  ChevronRight,
+  EyeOff,
+  Search,
+  Briefcase,
+  Landmark,
+  Heart,
+  Sparkles,
+  CreditCard,
+  TrendingUp,
+  Box,
+  Flower2,
+  Bitcoin,
+  Banknote,
+  ScanLine,
+  Repeat,
+} from "lucide-react";
 
 export function MoneyScreen() {
   const [loading, setLoading] = useState(true);
