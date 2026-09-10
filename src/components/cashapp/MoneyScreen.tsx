@@ -126,11 +126,14 @@ export function MoneyScreen() {
               <br />
               way to pay
             </p>
-            <div className="mt-6 flex h-40 items-end justify-between">
-              <Heart className="size-14 text-cash-ink" fill="currentColor" strokeWidth={0} />
-              <Sparkles className="size-20 text-black/15" strokeWidth={1.5} />
-              <CreditCard className="size-16 text-cash/70" strokeWidth={1.5} />
-            </div>
+            <img
+              src={tagsArt}
+              alt="Tags: a flaming heart lock, a star wand and a green Cash Card"
+              loading="lazy"
+              width={1024}
+              height={768}
+              className="mt-4 w-full"
+            />
           </article>
 
           <div className="mt-8 space-y-7">
