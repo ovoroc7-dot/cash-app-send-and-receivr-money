@@ -5,17 +5,15 @@ import {
   Search,
   Briefcase,
   Landmark,
-  Heart,
-  Sparkles,
-  CreditCard,
-  TrendingUp,
-  Box,
-  Flower2,
-  Bitcoin,
   Banknote,
   ScanLine,
   Repeat,
 } from "lucide-react";
+import tagsArt from "@/assets/tags-art.png";
+import iconStocks from "@/assets/icon-stocks.png";
+import iconPools from "@/assets/icon-pools.png";
+import iconSavings from "@/assets/icon-savings.png";
+import iconBitcoin from "@/assets/icon-bitcoin.png";
 
 export function MoneyScreen() {
   const [loading, setLoading] = useState(true);
@@ -126,19 +124,27 @@ export function MoneyScreen() {
               <br />
               way to pay
             </p>
-            <div className="mt-6 flex h-40 items-end justify-between">
-              <Heart className="size-14 text-cash-ink" fill="currentColor" strokeWidth={0} />
-              <Sparkles className="size-20 text-black/15" strokeWidth={1.5} />
-              <CreditCard className="size-16 text-cash/70" strokeWidth={1.5} />
-            </div>
+            <img
+              src={tagsArt}
+              alt="Tags: a flaming heart lock, a star wand and a green Cash Card"
+              loading="lazy"
+              width={1024}
+              height={768}
+              className="mt-4 w-full"
+            />
           </article>
 
           <div className="mt-8 space-y-7">
-            {offers.map(({ label, sub, Icon }) => (
+            {offers.map(({ label, sub, img }) => (
               <div key={label} className="flex items-center gap-4">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-surface-raised">
-                  <Icon className="size-5 text-cash-ink" strokeWidth={2.2} />
-                </span>
+                <img
+                  src={img}
+                  alt={label}
+                  loading="lazy"
+                  width={816}
+                  height={816}
+                  className="size-12 shrink-0 object-contain"
+                />
                 <div className="flex-1">
                   <p className="font-display text-[19px] font-semibold tracking-[-0.01em] text-cash-ink">
                     {label}
@@ -199,10 +205,10 @@ export function MoneyScreen() {
 }
 
 const offers = [
-  { label: "Stocks", sub: "Invest with $1", Icon: TrendingUp },
-  { label: "Pools", sub: "Collect money with anyone", Icon: Box },
-  { label: "Savings", sub: "Save for a goal", Icon: Flower2 },
-  { label: "Bitcoin", sub: "Buy, use, and earn", Icon: Bitcoin },
+  { label: "Stocks", sub: "Invest with $1", img: iconStocks },
+  { label: "Pools", sub: "Collect money with anyone", img: iconPools },
+  { label: "Savings", sub: "Save for a goal", img: iconSavings },
+  { label: "Bitcoin", sub: "Buy, use, and earn", img: iconBitcoin },
 ];
 
 const addMoney = [
