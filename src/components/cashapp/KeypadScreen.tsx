@@ -41,7 +41,7 @@ export function KeypadScreen() {
   };
 
   return (
-    <div className="flex h-full flex-col bg-cash px-6 pb-3 pt-4 text-cash-ink">
+    <div className="flex h-full flex-col bg-cash px-6 pb-24 pt-4 text-cash-ink">
       <header className="flex items-center justify-between">
         <button aria-label="Scan QR code" className="grid size-11 place-items-center rounded-full">
           <ScanLine className="size-6" strokeWidth={2.4} />
