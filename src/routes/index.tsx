@@ -39,21 +39,29 @@ function Index() {
   }, []);
 
   return (
-    <main className={green ? "min-h-screen bg-cash" : "min-h-screen bg-surface"}>
-      <div className="relative mx-auto h-screen max-w-md overflow-hidden">
-        {splash ? (
-          <div className="flex h-full items-center justify-center bg-cash">
-            <div className="flex size-[86px] items-center justify-center rounded-[24px] bg-[#0d4d10]">
-              <span className="font-display text-[52px] font-bold leading-none text-cash">$</span>
+    <CashProvider>
+      <main className={green ? "min-h-screen bg-cash" : "min-h-screen bg-surface"}>
+        <div className="relative mx-auto h-screen max-w-md overflow-hidden">
+          {splash ? (
+            <div className="flex h-full items-center justify-center bg-cash">
+              <div className="flex size-[86px] items-center justify-center rounded-[24px] bg-[#0d4d10]">
+                <span className="font-display text-[52px] font-bold leading-none text-cash">$</span>
+              </div>
             </div>
-          </div>
-        ) : (
-          <>
-            {green ? <KeypadScreen /> : <MoneyScreen />}
-            <BottomNav tab={tab} onChange={setTab} green={green} />
-          </>
-        )}
-      </div>
-    </main>
+          ) : (
+            <>
+              {green ? (
+                <KeypadScreen />
+              ) : tab === "activity" ? (
+                <ActivityScreen />
+              ) : (
+                <MoneyScreen />
+              )}
+              <BottomNav tab={tab} onChange={setTab} green={green} />
+            </>
+          )}
+        </div>
+      </main>
+    </CashProvider>
   );
 }
