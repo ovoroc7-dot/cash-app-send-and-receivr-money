@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { BottomNav, type Tab } from "@/components/cashapp/BottomNav";
 import { KeypadScreen } from "@/components/cashapp/KeypadScreen";
 import { MoneyScreen } from "@/components/cashapp/MoneyScreen";
+import { ActivityScreen } from "@/components/cashapp/ActivityScreen";
+import { CashProvider } from "@/components/cashapp/store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
