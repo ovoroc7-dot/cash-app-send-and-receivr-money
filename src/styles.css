@@ -59,6 +59,14 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-cash: var(--cash);
+  --color-cash-deep: var(--cash-deep);
+  --color-cash-ink: var(--cash-ink);
+  --color-cash-key: var(--cash-key);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-magenta: var(--magenta);
+  --font-display: "Cash Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
