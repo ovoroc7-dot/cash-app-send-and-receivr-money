@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { ChevronLeft, Search, Briefcase, ScanLine } from "lucide-react";
+import { PayFlow } from "./PayFlow";
 
 export function KeypadScreen() {
   const [amount, setAmount] = useState("0");
+  const [flow, setFlow] = useState<"Pay" | "Request" | null>(null);
 
   const press = (k: string) => {
     setAmount((a) => {
