@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ChevronRight,
   EyeOff,
   Search,
-  Briefcase,
-  Landmark,
+  CreditCard,
+  Smartphone,
   Banknote,
   ScanLine,
   Repeat,
@@ -14,112 +14,138 @@ import iconStocks from "@/assets/icon-stocks.png";
 import iconPools from "@/assets/icon-pools.png";
 import iconSavings from "@/assets/icon-savings.png";
 import iconBitcoin from "@/assets/icon-bitcoin.png";
+import avatar from "@/assets/avatar.jpg";
 
 export function MoneyScreen() {
-  const [loading, setLoading] = useState(true);
   const [hidden, setHidden] = useState(false);
 
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 700);
-    return () => clearTimeout(t);
-  }, []);
-
   return (
-    <div className="h-full overflow-y-auto bg-surface px-6 pt-4 pb-32">
-      <header className="flex items-center justify-between">
-        <h1 className="font-display text-[26px] font-semibold tracking-[-0.02em] text-cash-ink">
+    <div className="h-full overflow-y-auto bg-surface pb-28">
+      <header className="flex items-center justify-between px-6 pt-4">
+        <h1 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
           Money
         </h1>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            aria-label="Search"
-            className="flex size-11 items-center justify-center rounded-full bg-surface-raised"
-          >
-            <Search className="size-5 text-cash-ink" strokeWidth={2.8} />
+        <div className="flex items-center gap-4">
+          <button type="button" aria-label="Search">
+            <Search className="size-7 text-cash-ink" strokeWidth={2.8} />
           </button>
-          <button
-            type="button"
-            aria-label="Profile"
-            className="flex size-11 items-center justify-center rounded-full bg-magenta"
-          >
-            <Briefcase className="size-5 text-cash-ink" strokeWidth={2.5} />
+          <button type="button" aria-label="Profile" className="relative">
+            <img
+              src={avatar}
+              alt="Your profile"
+              loading="lazy"
+              width={512}
+              height={512}
+              className="size-11 rounded-full object-cover"
+            />
+            <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-alert font-display text-[11px] font-bold text-white">
+              1
+            </span>
           </button>
         </div>
       </header>
 
-      {loading ? (
-        <div className="mt-10 animate-pulse space-y-4">
-          <div className="h-4 w-32 rounded-full bg-black/[0.06]" />
-          <div className="h-10 w-48 rounded-2xl bg-black/[0.06]" />
-          <div className="grid grid-cols-2 gap-4 pt-8">
-            <div className="h-14 rounded-full bg-black/[0.06]" />
-            <div className="h-14 rounded-full bg-black/[0.06]" />
-          </div>
-          <div className="h-28 rounded-3xl bg-black/[0.06]" />
-          <div className="h-56 rounded-3xl bg-black/[0.06]" />
+      <section className="mt-5">
+        <div className="rounded-t-[28px] bg-gradient-to-b from-cash-light to-[#b9f24a] px-5 pb-8 pt-4">
+          <span className="inline-flex items-center gap-2 rounded-full bg-black/10 px-4 py-2">
+            <CreditCard className="size-4 text-cash-ink" strokeWidth={2.5} />
+            <span className="font-display text-[17px] font-semibold text-cash-ink">•• 6969</span>
+          </span>
         </div>
-      ) : (
-        <>
-          <div className="mt-12 flex items-start justify-between">
-            <div>
-              <button
-                type="button"
-                className="flex items-center gap-1 font-display text-[15px] font-semibold text-cash-ink"
-              >
-                Cash balance
-                <ChevronRight className="size-4" strokeWidth={2.5} />
-              </button>
-              <p className="mt-1 font-display text-[56px] font-semibold leading-none tracking-[-0.04em] text-cash-ink">
-                {hidden ? "••••" : "$0.00"}
-              </p>
-            </div>
+
+        <div className="-mt-5 rounded-t-[28px] bg-surface px-6 pt-6">
+          <div className="flex items-start justify-between">
+            <button
+              type="button"
+              className="flex items-center gap-1 font-display text-[19px] font-bold tracking-[-0.01em] text-cash-ink"
+            >
+              Cash balance •• 9206
+              <ChevronRight className="size-5" strokeWidth={2.8} />
+            </button>
             <button
               type="button"
               aria-label={hidden ? "Show balance" : "Hide balance"}
               onClick={() => setHidden((h) => !h)}
-              className="pt-1"
             >
               <EyeOff className="size-6 text-cash-ink" strokeWidth={2.2} />
             </button>
           </div>
+          <p className="mt-1 font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink">
+            {hidden ? "••••" : "$100.00"}
+          </p>
 
-          <div className="mt-12 grid grid-cols-2">
+          <div className="mt-12 grid grid-cols-2 gap-3">
             <button
               type="button"
-              className="h-14 rounded-full bg-surface-raised font-display text-[17px] font-semibold text-cash-ink shadow-[0_2px_10px_rgba(0,0,0,0.04)]"
+              className="h-16 rounded-full bg-surface-raised font-display text-[19px] font-bold text-cash-ink"
             >
               Add money
             </button>
             <button
               type="button"
-              className="h-14 rounded-full font-display text-[17px] font-semibold text-black/35"
+              className="h-16 rounded-full bg-surface-raised font-display text-[19px] font-bold text-cash-ink"
             >
               Withdraw
             </button>
           </div>
 
           <article className="mt-4 rounded-3xl bg-surface-raised p-5">
-            <p className="font-display text-[15px] font-semibold text-cash-ink">Taxes</p>
-            <div className="mt-3 flex items-center gap-3">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#5a15d0]">
-                <Landmark className="size-4 text-white" strokeWidth={2.5} />
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Smartphone className="size-5 text-cash" strokeWidth={2.4} />
+                <span className="font-display text-[19px] font-semibold text-cash-ink">
+                  Green status
+                </span>
               </span>
-              <p className="font-display text-[22px] font-semibold leading-tight tracking-[-0.02em] text-cash-ink">
-                Estimate your
-                <br />
-                tax refund
-              </p>
+              <span className="font-display text-[19px] font-semibold text-cash-ink">
+                $467.52 away
+              </span>
+            </div>
+            <div className="mt-4 h-1.5 w-full rounded-full bg-black/[0.07]">
+              <div className="h-full w-[9%] rounded-full bg-cash" />
             </div>
           </article>
 
-          <h2 className="mt-8 font-display text-[24px] font-semibold tracking-[-0.02em] text-cash-ink">
+          <article className="mt-4 flex items-center justify-between rounded-3xl bg-surface-raised p-5">
+            <div>
+              <p className="font-display text-[17px] text-cash-ink">Bitcoin</p>
+              <p className="font-display text-[34px] font-bold leading-tight tracking-[-0.03em] text-cash-ink">
+                $0.00
+              </p>
+              <p className="font-display text-[17px] text-cash-ink/40">0% today</p>
+            </div>
+            <span className="flex size-[72px] items-center justify-center rounded-full bg-cash/10 font-display text-[34px] font-bold text-cash">
+              ₿
+            </span>
+          </article>
+
+          <article className="mt-4 flex items-center justify-between rounded-3xl bg-surface-raised p-5">
+            <div>
+              <p className="font-display text-[17px] text-cash-ink">Stocks</p>
+              <p className="font-display text-[34px] font-bold leading-tight tracking-[-0.03em] text-cash-ink">
+                $0.00
+              </p>
+              <p className="font-display text-[17px] text-cash-ink/40">0% today</p>
+            </div>
+            <span className="flex size-[72px] items-center justify-center rounded-full bg-black/[0.05]">
+              <img
+                src={iconStocks}
+                alt=""
+                loading="lazy"
+                width={816}
+                height={816}
+                className="size-10 object-contain"
+              />
+            </span>
+          </article>
+
+          <h2 className="mt-10 font-display text-[24px] font-bold tracking-[-0.02em] text-cash-ink">
             More for you
           </h2>
 
           <article className="mt-4 rounded-3xl bg-surface-raised p-5">
             <p className="font-display text-[15px] font-semibold text-cash-ink">Tags</p>
-            <p className="mt-2 font-display text-[26px] font-semibold leading-tight tracking-[-0.02em] text-cash-ink">
+            <p className="mt-2 font-display text-[26px] font-bold leading-tight tracking-[-0.02em] text-cash-ink">
               A magical new
               <br />
               way to pay
@@ -163,17 +189,13 @@ export function MoneyScreen() {
 
           <hr className="mt-8 border-black/10" />
 
-          <h2 className="mt-8 font-display text-[24px] font-semibold tracking-[-0.02em] text-cash-ink">
+          <h2 className="mt-8 font-display text-[24px] font-bold tracking-[-0.02em] text-cash-ink">
             Add money
           </h2>
 
           <div className="mt-6 space-y-8">
             {addMoney.map(({ label, Icon }) => (
-              <button
-                key={label}
-                type="button"
-                className="flex w-full items-center gap-6 text-left"
-              >
+              <button key={label} type="button" className="flex w-full items-center gap-6 text-left">
                 <Icon className="size-6 shrink-0 text-cash-ink" strokeWidth={2.2} />
                 <span className="flex-1 font-display text-[19px] font-semibold tracking-[-0.01em] text-cash-ink">
                   {label}
@@ -188,8 +210,8 @@ export function MoneyScreen() {
           <div className="mt-6 space-y-4 font-mono text-[12px] leading-relaxed text-cash-ink/45">
             <p>
               If you don't have a Cash App Card, a sponsored account, or sponsor an account, your
-              Cash App and savings balances are not deposit products and therefore are not
-              protected by FDIC pass-through insurance.
+              Cash App and savings balances are not deposit products and therefore are not protected
+              by FDIC pass-through insurance.
             </p>
             <p>
               Banking services provided by Cash App's bank partner(s). Brokerage services by Cash
@@ -198,8 +220,8 @@ export function MoneyScreen() {
             </p>
             <p className="font-semibold text-cash-ink underline">Disclosures</p>
           </div>
-        </>
-      )}
+        </div>
+      </section>
     </div>
   );
 }
