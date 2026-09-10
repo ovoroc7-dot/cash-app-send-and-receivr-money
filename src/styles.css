@@ -59,10 +59,25 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-cash: var(--cash);
+  --color-cash-deep: var(--cash-deep);
+  --color-cash-ink: var(--cash-ink);
+  --color-cash-key: var(--cash-key);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-magenta: var(--magenta);
+  --font-display: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
   --radius: 0.625rem;
+  --cash: oklch(0.85 0.29 143);
+  --cash-deep: oklch(0.78 0.27 143);
+  --cash-ink: oklch(0.15 0.05 150);
+  --cash-key: oklch(0.2 0.02 150);
+  --surface: oklch(0.96 0 0);
+  --surface-raised: oklch(1 0 0);
+  --magenta: oklch(0.68 0.29 340);
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
