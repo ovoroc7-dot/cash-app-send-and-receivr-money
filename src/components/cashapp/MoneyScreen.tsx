@@ -205,10 +205,10 @@ export function MoneyScreen() {
 }
 
 const offers = [
-  { label: "Stocks", sub: "Invest with $1", Icon: TrendingUp },
-  { label: "Pools", sub: "Collect money with anyone", Icon: Box },
-  { label: "Savings", sub: "Save for a goal", Icon: Flower2 },
-  { label: "Bitcoin", sub: "Buy, use, and earn", Icon: Bitcoin },
+  { label: "Stocks", sub: "Invest with $1", img: iconStocks },
+  { label: "Pools", sub: "Collect money with anyone", img: iconPools },
+  { label: "Savings", sub: "Save for a goal", img: iconSavings },
+  { label: "Bitcoin", sub: "Buy, use, and earn", img: iconBitcoin },
 ];
 
 const addMoney = [
