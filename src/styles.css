@@ -71,13 +71,14 @@
 
 :root {
   --radius: 0.625rem;
-  --cash: oklch(0.85 0.29 143);
-  --cash-deep: oklch(0.78 0.27 143);
-  --cash-ink: oklch(0.15 0.05 150);
-  --cash-key: oklch(0.2 0.02 150);
-  --surface: oklch(0.96 0 0);
-  --surface-raised: oklch(1 0 0);
-  --magenta: oklch(0.68 0.29 340);
+  --cash: #00dc13;
+  --cash-deep: #00c310;
+  --cash-lite: #14f925;
+  --cash-ink: #0a0a0a;
+  --cash-key: #0a0a0a;
+  --surface: #fafafa;
+  --surface-raised: #ffffff;
+  --magenta: #fa54bd;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
