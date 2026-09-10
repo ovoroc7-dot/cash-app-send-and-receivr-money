@@ -9,7 +9,7 @@ export function KeypadScreen() {
       if (k === "<") return a.length <= 1 ? "0" : a.slice(0, -1);
       if (k === ".") return a.includes(".") ? a : a + ".";
       if (a === "0") return k;
-      if (a.includes(".") && a.split(".")[1].length >= 2) return a;
+      if ((a.split(".")[1] ?? "").length >= 2) return a;
       return a + k;
     });
   };
