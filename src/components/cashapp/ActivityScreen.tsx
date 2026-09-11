@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Ban, Briefcase, Clock, MessageSquare, ChevronRight, Search, X } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Ban, Clock, MessageSquare, ChevronRight, Search, X, Plus } from "lucide-react";
+import avatar from "@/assets/avatar.jpg";
 import { fmtAmount, useCash, type Payment } from "./store";
 
 const history = [
@@ -19,6 +20,22 @@ const history = [
 export function ActivityScreen() {
   const { pending } = useCash();
   const [open, setOpen] = useState<Payment | null>(null);
+  const [query, setQuery] = useState("");
+
+  // Recent transaction profiles sit at the top, most recent first.
+  const people = useMemo(() => {
+    const seen = new Set<string>();
+    return pending
+      .filter((p) => (seen.has(p.name) ? false : (seen.add(p.name), true)))
+      .slice(0, 6);
+  }, [pending]);
+
+  const q = query.trim().toLowerCase();
+  const shown = q
+    ? pending.filter(
+        (p) => p.name.toLowerCase().includes(q) || p.note.toLowerCase().includes(q),
+      )
+    : pending;
 
   return (
     <div
@@ -29,26 +46,55 @@ export function ActivityScreen() {
         <h1 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
           Activity
         </h1>
-        <div className="flex items-center gap-4">
-          <button type="button" aria-label="Search">
-            <Search className="size-7 text-cash-ink" strokeWidth={2.8} />
-          </button>
-          <button
-            type="button"
-            aria-label="Profile"
-            className="flex size-11 items-center justify-center rounded-full bg-magenta"
-          >
-            <Briefcase className="size-5 text-cash-ink" strokeWidth={2.5} />
-          </button>
-        </div>
+        <button type="button" aria-label="Profile">
+          <img
+            src={avatar}
+            alt="Your profile"
+            loading="lazy"
+            width={512}
+            height={512}
+            className="size-11 rounded-full object-cover"
+          />
+        </button>
       </header>
 
-      {pending.length > 0 && (
+      <div className="mt-4 px-6">
+        <label className="flex h-12 items-center gap-3 rounded-full bg-cash-ink/[0.06] px-4">
+          <Search className="size-5 shrink-0 text-cash-ink/50" strokeWidth={2.6} />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            type="search"
+            inputMode="search"
+            placeholder="Search transactions"
+            aria-label="Search transactions"
+            className="w-full bg-transparent font-display text-[17px] text-cash-ink outline-none placeholder:text-cash-ink/45"
+          />
+        </label>
+      </div>
+
+      <div className="mt-6 flex gap-5 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <QuickTile label="Get $5">
+          <Plus className="size-8 text-white" strokeWidth={3} />
+        </QuickTile>
+        <QuickTile label="Cash">
+          <span className="font-display text-[34px] font-bold leading-none text-white">$</span>
+        </QuickTile>
+        {people.map((p) => (
+          <QuickTile key={p.id} label={p.name.split(" ")[0]}>
+            <span className="font-display text-[28px] font-bold leading-none text-white">
+              {p.name[0]}
+            </span>
+          </QuickTile>
+        ))}
+      </div>
+
+      {shown.length > 0 && (
         <section className="px-6">
-          <h2 className="mt-6 font-display text-[22px] font-bold tracking-[-0.02em] text-cash-ink">
-            Pending
+          <h2 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-cash-ink">
+            Today
           </h2>
-          {pending.map((p) => (
+          {shown.map((p) => (
             <button
               key={p.id}
               type="button"
@@ -67,44 +113,60 @@ export function ActivityScreen() {
                 </span>
                 <span className="block font-display text-[14px] text-cash-ink/50">{p.time}</span>
               </span>
-              <span className="font-display text-[15px] text-cash-ink/60">{fmtAmount(p.amount)}</span>
+              <span className="font-display text-[15px] text-cash-ink/60">
+                {fmtAmount(p.amount)}
+              </span>
             </button>
           ))}
         </section>
       )}
 
-      {history.map((group) => (
-        <section key={group.month} className="px-6">
-          <h2 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-cash-ink">
-            {group.month}
-          </h2>
-          {group.items.map((it) => (
-            <div key={it.sub} className="mt-4 flex items-center gap-4">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#f5303e] font-display text-[18px] font-bold text-white">
-                !
-              </span>
-              <span className="flex-1">
-                <span className="block font-display text-[16px] font-semibold text-cash-ink">
-                  {it.title}
+      {!q &&
+        history.map((group) => (
+          <section key={group.month} className="px-6">
+            <h2 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-cash-ink">
+              {group.month}
+            </h2>
+            {group.items.map((it) => (
+              <div key={it.sub} className="mt-4 flex items-center gap-4">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#f5303e] font-display text-[18px] font-bold text-white">
+                  !
                 </span>
-                <span className="block font-display text-[14px] text-cash-ink/50">
-                  Verification needed
+                <span className="flex-1">
+                  <span className="block font-display text-[16px] font-semibold text-cash-ink">
+                    {it.title}
+                  </span>
+                  <span className="block font-display text-[14px] text-cash-ink/50">
+                    Verification needed
+                  </span>
+                  <span className="block font-display text-[14px] text-cash-ink/50">{it.sub}</span>
                 </span>
-                <span className="block font-display text-[14px] text-cash-ink/50">{it.sub}</span>
-              </span>
-              <button
-                type="button"
-                className="h-9 rounded-full bg-cash-ink/[0.06] px-4 font-display text-[14px] font-semibold text-cash-ink"
-              >
-                Review
-              </button>
-            </div>
-          ))}
-        </section>
-      ))}
+                <button
+                  type="button"
+                  className="h-9 rounded-full bg-cash-ink/[0.06] px-4 font-display text-[14px] font-semibold text-cash-ink"
+                >
+                  Review
+                </button>
+              </div>
+            ))}
+          </section>
+        ))}
 
       {open && <PaymentDetail payment={open} onClose={() => setOpen(null)} />}
     </div>
+  );
+}
+
+function QuickTile({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <button type="button" className="flex w-[72px] shrink-0 flex-col items-center gap-2">
+      <span className="flex size-[68px] items-center justify-center rounded-full bg-cash">
+        {children}
+      </span>
+      <span className="w-full truncate text-center font-display text-[14px] font-semibold text-cash-ink">
+        {label}
+      </span>
+    </button>
   );
 }
 
