@@ -44,10 +44,10 @@ export function BottomNav({
         aria-label="Pay"
         aria-current={payActive ? "page" : undefined}
         onClick={() => onChange("pay")}
-        className="relative flex flex-1 items-center justify-center pb-1"
+        className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
         <span
-          className={`font-display text-[28px] font-bold leading-none ${
+          className={`font-display text-[28px] font-bold leading-none transition-colors duration-100 ease-out ${
             payActive ? "text-cash-ink" : "text-cash-ink/35"
           }`}
         >
