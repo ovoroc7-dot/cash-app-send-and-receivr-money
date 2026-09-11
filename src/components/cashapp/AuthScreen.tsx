@@ -23,7 +23,8 @@ type Mode = "phone" | "email";
 const CODE_PREFIX = "962-";
 
 export function AuthScreen() {
-  const [step, setStep] = useState<Step>("welcome");
+  const [step, setStep] = useState<Step>("chooser");
+  const [afterLoading, setAfterLoading] = useState<Step>("welcome");
   const [mode, setMode] = useState<Mode>("phone");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
