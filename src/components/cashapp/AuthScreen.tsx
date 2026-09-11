@@ -11,7 +11,11 @@ type Step =
   | "password"
   | "dob"
   | "card"
-  | "cashtag";
+  | "cashtag"
+  | "zipcode"
+  | "pin"
+  | "cashcard"
+  | "contacts";
 type Mode = "phone" | "email";
 
 const CODE_PREFIX = "962-";
