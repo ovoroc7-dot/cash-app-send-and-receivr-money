@@ -45,7 +45,7 @@ export function BottomNav({
             moneyActive ? inkOn : inkOff
           }`}
         >
-          $100
+          {balanceLabel}
         </span>
       </button>
 
