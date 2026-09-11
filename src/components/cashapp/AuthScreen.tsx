@@ -5,6 +5,8 @@ import dollarSign from "@/assets/dollar-sign.png";
 import { haptic } from "./store";
 
 type Step =
+  | "chooser"
+  | "loading"
   | "welcome"
   | "entry"
   | "code"
