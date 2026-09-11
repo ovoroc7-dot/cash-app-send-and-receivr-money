@@ -58,30 +58,15 @@ export function AuthScreen() {
     setStep("code");
   };
 
-  const submitPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setBusy(true);
-    setMsg(null);
-    try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (!error) {
-        haptic("success");
-        return;
-      }
-      signUpFlow.current = true;
-      setStep("dob");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   const finish = async () => {
     setBusy(true);
     setMsg(null);
     try {
+      const generated = `Cash-${crypto.randomUUID()}`;
+      setPassword(generated);
       const { data, error } = await supabase.auth.signUp({
         email,
-        password,
+        password: generated,
         options: {
           emailRedirectTo: window.location.origin,
           data: { cashtag: cashtag.trim(), date_of_birth: dob },
