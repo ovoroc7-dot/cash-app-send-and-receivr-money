@@ -1,4 +1,5 @@
 import { Clock } from "lucide-react";
+import dollarSign from "@/assets/dollar-sign.png";
 
 export type Tab = "money" | "pay" | "activity";
 
@@ -46,13 +47,14 @@ export function BottomNav({
         onClick={() => onChange("pay")}
         className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
-        <span
-          className={`font-display text-[28px] font-bold leading-none transition-colors duration-100 ease-out ${
-            payActive ? "text-cash-ink" : "text-cash-ink/35"
+        <img
+          src={dollarSign}
+          alt=""
+          aria-hidden="true"
+          className={`h-[28px] w-auto object-contain transition-opacity duration-100 ease-out ${
+            payActive ? "opacity-100" : "opacity-35"
           }`}
-        >
-          $
-        </span>
+        />
       </button>
 
       <button
