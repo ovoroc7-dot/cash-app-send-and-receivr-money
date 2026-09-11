@@ -85,10 +85,25 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   const [cvv, setCvv] = useState("");
   const [field, setField] = useState<"card" | "exp" | "cvv">("card");
 
+  const [loading, setLoading] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     const id = requestAnimationFrame(() => setUp(true));
-    return () => cancelAnimationFrame(id);
+    return () => {
+      cancelAnimationFrame(id);
+      if (timer.current) clearTimeout(timer.current);
+    };
   }, []);
+
+  const go = (next: typeof step) => {
+    setLoading(true);
+    timer.current = setTimeout(() => {
+      setStep(next);
+      setLoading(false);
+    }, 650);
+  };
+
 
   const typed = digits ? Number(digits) : 0;
   const sourceLabel = source === "discover" ? "Discover debit 9607" : "Apple Pay";
