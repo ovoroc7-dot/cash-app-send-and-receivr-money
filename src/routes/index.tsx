@@ -57,7 +57,7 @@ function Index() {
               ) : (
                 <MoneyScreen />
               )}
-              <BottomNav tab={tab} onChange={setTab} />
+              <BottomNav tab={tab} onChange={setTab} green={green} />
             </>
           )}
         </div>
