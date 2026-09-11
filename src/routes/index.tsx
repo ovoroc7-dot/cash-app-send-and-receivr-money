@@ -66,7 +66,7 @@ function Index() {
     <CashProvider>
       <main className={green ? "min-h-[100dvh] bg-cash" : "min-h-[100dvh] bg-surface"}>
         <div className="relative mx-auto h-[100dvh] w-full max-w-md overflow-x-hidden overflow-y-hidden">
-          {splash ? (
+          {splash || signedIn === null ? (
             <div className="flex h-full items-center justify-center bg-cash sysdark:bg-black">
               <img
                 src={cashAppLogo.url}
@@ -81,6 +81,8 @@ function Index() {
                 />
               </div>
             </div>
+          ) : !signedIn ? (
+            <AuthScreen />
           ) : (
             <>
               {green ? (
