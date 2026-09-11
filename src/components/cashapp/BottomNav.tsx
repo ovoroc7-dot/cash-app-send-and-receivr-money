@@ -60,11 +60,11 @@ export function BottomNav({
         aria-label="Activity"
         aria-current={activityActive ? "page" : undefined}
         onClick={() => onChange("activity")}
-        className="relative flex flex-1 items-center justify-center pb-1"
+        className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
         <div className="relative">
           <Clock
-            className={`size-[26px] ${
+            className={`size-[26px] transition-colors duration-100 ease-out ${
               activityActive ? "text-cash-ink" : "text-cash-ink/35"
             }`}
             strokeWidth={2.2}
