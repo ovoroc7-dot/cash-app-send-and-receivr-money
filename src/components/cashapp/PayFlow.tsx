@@ -66,6 +66,20 @@ export function PayFlow({
   const [showReceiptAction, setShowReceiptAction] = useState(true);
   const lastReceiptScrollTop = useRef(0);
 
+  useEffect(() => {
+    if (step !== "loading") return;
+    const t = setTimeout(() => setStep("sent"), 900);
+    return () => clearTimeout(t);
+  }, [step]);
+
+  if (step === "loading") {
+    return (
+      <div className="absolute inset-0 z-50 flex items-center justify-center bg-surface-raised">
+        <CashLoading />
+      </div>
+    );
+  }
+
   const title = (
     <h2 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
       {mode} ${amount}{" "}
@@ -411,7 +425,7 @@ export function PayFlow({
                     if (!person) return;
                     const id = addPayment({ name: person.name, amount, note });
                     setPaymentId(id);
-                    setStep("sent");
+                    setStep("loading");
                   }}
                   className="mt-3 h-14 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised"
                 >
