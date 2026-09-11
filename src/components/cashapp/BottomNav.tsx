@@ -28,10 +28,10 @@ export function BottomNav({
         aria-label="Money"
         aria-current={moneyActive ? "page" : undefined}
         onClick={() => onChange("money")}
-        className="relative flex flex-1 items-center justify-center pb-1"
+        className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
         <span
-          className={`font-display text-[22px] font-bold leading-none ${
+          className={`font-display text-[22px] font-bold leading-none transition-colors duration-100 ease-out ${
             moneyActive ? "text-cash-ink" : "text-cash-ink/35"
           }`}
         >
