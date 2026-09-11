@@ -34,24 +34,41 @@ export function PayFlow({
 
   if (step === "sent") {
     return (
-      <div className="absolute inset-0 z-40 flex flex-col bg-surface-raised px-6 pb-8 pt-16">
-        <span className="flex size-11 items-center justify-center rounded-full bg-cash">
-          <Check className="size-7 text-cash-ink" strokeWidth={3} />
-        </span>
-        <h2 className="mt-6 font-display text-[30px] font-bold leading-tight tracking-[-0.03em] text-cash-ink">
-          Your ${amount} payment is ready to send
-        </h2>
-        <div className="flex-1" />
-        <p className="mb-5 font-display text-[15px] text-cash-ink/60">
-          We'll send this payment when you are connected to the Internet.
-        </p>
+      <div className="absolute inset-0 z-40 flex flex-col bg-surface-raised px-4 pb-5 pt-4">
         <button
           type="button"
+          aria-label="Close receipt"
           onClick={onClose}
-          className="h-14 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
+          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-surface-raised shadow-[0_8px_24px_rgba(0,0,0,0.08)]"
         >
-          OK
+          <X className="size-7 text-cash-ink" strokeWidth={2.4} />
         </button>
+
+        <span className="mt-5 flex size-16 shrink-0 items-center justify-center rounded-full bg-cash">
+          <Check className="size-9 text-white" strokeWidth={2.8} />
+        </span>
+
+        <h2 className="mt-7 max-w-[360px] font-display text-[48px] font-semibold leading-[1.04] text-cash-ink">
+          You sent ${amount} to {person?.name}
+        </h2>
+
+        <div className="flex-1" />
+
+        <div className="space-y-2">
+          <button
+            type="button"
+            className="flex h-14 w-full items-center justify-center rounded-full bg-black/[0.08] font-display text-[20px] font-semibold text-cash-ink"
+          >
+            Receipt
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-14 w-full items-center justify-center rounded-full bg-cash-ink font-display text-[20px] font-semibold text-white"
+          >
+            Done
+          </button>
+        </div>
       </div>
     );
   }
