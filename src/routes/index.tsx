@@ -40,22 +40,6 @@ function Index() {
     return () => clearTimeout(t);
   }, []);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const color = splash
-      ? dark
-        ? "#000000"
-        : "var(--cash)"
-      : green
-        ? "var(--cash)"
-        : "var(--surface)";
-    root.style.backgroundColor = color;
-    document.body.style.backgroundColor = color;
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", green || splash ? "#00dc13" : dark ? "#000000" : "#fafafa");
-  }, [green, splash]);
-
   return (
     <CashProvider>
       <main className={green ? "min-h-[100dvh] bg-cash" : "min-h-[100dvh] bg-surface"}>

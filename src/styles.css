@@ -169,18 +169,6 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
-@utility pt-safe {
-  padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
-}
-
-@utility pb-safe-nav {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.75rem);
-}
-
-@utility h-safe-nav {
-  height: calc(env(safe-area-inset-bottom, 0px) + 84px);
-}
-
 @layer base {
   :root {
     color-scheme: light dark;
