@@ -48,9 +48,23 @@ export function AuthScreen() {
     return () => clearInterval(t);
   }, [step]);
 
+  // Loading spinner interlude, then continue to the queued step.
+  useEffect(() => {
+    if (step !== "loading") return;
+    const t = setTimeout(() => setStep(afterLoading), 1400);
+    return () => clearTimeout(t);
+  }, [step, afterLoading]);
+
+  const goWithSpinner = (next: Step) => {
+    haptic();
+    setMsg(null);
+    setAfterLoading(next);
+    setStep("loading");
+  };
+
   // Paint the status-bar area to match the welcome screen's black background.
   useEffect(() => {
-    if (step === "welcome") {
+    if (step === "welcome" || step === "loading") {
       document.body.style.backgroundColor = "#000000";
     } else {
       document.body.style.backgroundColor = "var(--surface)";
