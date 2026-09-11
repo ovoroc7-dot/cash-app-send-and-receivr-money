@@ -52,9 +52,9 @@ export function MoneyScreen() {
 
       <section className="mt-5">
         <div className="rounded-t-[28px] bg-gradient-to-b from-cash-light to-[#b9f24a] px-5 pb-8 pt-4">
-          <span className="inline-flex items-center gap-2 rounded-full bg-cash-ink/10 px-4 py-2">
-            <CreditCard className="size-4 text-cash-ink" strokeWidth={2.5} />
-            <span className="font-display text-[17px] font-semibold text-cash-ink">•• 6969</span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-cash-key/10 px-4 py-2">
+            <CreditCard className="size-4 text-cash-key" strokeWidth={2.5} />
+            <span className="font-display text-[17px] font-semibold text-cash-key">•• 6969</span>
           </span>
         </div>
 
