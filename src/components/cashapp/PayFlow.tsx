@@ -30,11 +30,12 @@ export function PayFlow({
   mode: "Pay" | "Request";
   onClose: () => void;
 }) {
-  const { addPayment } = useCash();
+  const { addPayment, cancelPayment } = useCash();
   const [step, setStep] = useState<Step>("contacts");
   const [person, setPerson] = useState<(typeof contacts)[number] | null>(null);
   const [note, setNote] = useState("");
   const [method, setMethod] = useState("discover");
+  const [paymentId, setPaymentId] = useState<string | null>(null);
 
   const title = (
     <h2 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
