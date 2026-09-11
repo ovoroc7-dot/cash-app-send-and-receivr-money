@@ -119,7 +119,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="mt-4 grid grid-cols-3 gap-x-2 gap-y-2 bg-[#d6dae1] px-1.5 pb-8 pt-2">
-          {keys.map(([key, letters]) => (
+          {keys.map(([key = "", letters = ""]) => (
             <button
               key={key}
               type="button"
