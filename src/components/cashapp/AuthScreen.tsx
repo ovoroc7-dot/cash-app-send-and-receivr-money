@@ -108,9 +108,7 @@ export function AuthScreen() {
       pin: "zipcode",
       zipcode: "cashtag",
       cashtag: "card",
-      card: "dob",
-      dob: "password",
-      password: "code",
+      card: "code",
       code: "entry",
       entry: "welcome",
     };
