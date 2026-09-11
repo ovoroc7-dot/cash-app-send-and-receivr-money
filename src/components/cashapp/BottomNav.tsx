@@ -1,76 +1,74 @@
-import { Clock, Landmark } from "lucide-react";
-import type { CSSProperties } from "react";
+import { Clock } from "lucide-react";
 
 export type Tab = "money" | "pay" | "activity";
-
-const TABS: Tab[] = ["money", "pay", "activity"];
 
 export function BottomNav({
   tab,
   onChange,
-  green = false,
 }: {
   tab: Tab;
   onChange: (t: Tab) => void;
-  green?: boolean;
 }) {
-  const index = TABS.indexOf(tab);
-
-  // Colors per the recording: on the green keypad the pill is deep translucent
-  // green with a slightly darker active highlight; on light screens it's white
-  // with a light gray active highlight.
-  const pillBg = green ? "bg-black/[0.12]" : "bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] ring-1 ring-black/[0.05]";
-  const hiBg = green ? "bg-black/[0.18]" : "bg-black/[0.08]";
-  const iconOn = "text-cash-ink";
-  const iconOff = green ? "text-cash-ink/45" : "text-cash-ink/60";
-
-  const item = "relative z-10 flex h-11 w-[72px] items-center justify-center";
+  const moneyActive = tab === "money";
+  const payActive = tab === "pay";
+  const activityActive = tab === "activity";
 
   return (
-    <nav className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center pb-6">
-      <div
-        className={`pointer-events-auto relative flex items-center rounded-full px-2 py-1.5 backdrop-blur ${pillBg}`}
+    <nav className="absolute inset-x-0 bottom-0 z-20 flex h-[84px] items-end bg-white pb-7 shadow-[0_-2px_12px_rgba(0,0,0,0.06)]">
+      <button
+        type="button"
+        aria-label="Money"
+        aria-current={moneyActive ? "page" : undefined}
+        onClick={() => onChange("money")}
+        className="relative flex flex-1 items-center justify-center pb-1"
       >
-        {/* sliding active highlight */}
         <span
-          aria-hidden
-          className={`absolute left-2 top-1.5 h-11 w-[72px] rounded-2xl transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${hiBg}`}
-          style={{ transform: `translateX(${index * 72}px)` } as CSSProperties}
-        />
-        <button
-          type="button"
-          aria-label="Money"
-          aria-current={tab === "money" ? "page" : undefined}
-          onClick={() => onChange("money")}
-          className={item}
+          className={`font-display text-[22px] font-bold leading-none ${
+            moneyActive ? "text-cash-ink" : "text-cash-ink/35"
+          }`}
         >
-          <Landmark className={`size-[26px] ${tab === "money" ? iconOn : iconOff}`} strokeWidth={2.2} />
-        </button>
-        <button
-          type="button"
-          aria-label="Pay"
-          aria-current={tab === "pay" ? "page" : undefined}
-          onClick={() => onChange("pay")}
-          className={item}
+          $100
+        </span>
+        {moneyActive && (
+          <span className="absolute bottom-0 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full bg-cash" />
+        )}
+      </button>
+
+      <button
+        type="button"
+        aria-label="Pay"
+        aria-current={payActive ? "page" : undefined}
+        onClick={() => onChange("pay")}
+        className="relative flex flex-1 items-center justify-center pb-1"
+      >
+        <span
+          className={`font-display text-[28px] font-bold leading-none ${
+            payActive ? "text-cash-ink" : "text-cash-ink/35"
+          }`}
         >
-          <span
-            className={`font-display text-[26px] font-bold leading-none ${
-              tab === "pay" ? iconOn : iconOff
+          $
+        </span>
+      </button>
+
+      <button
+        type="button"
+        aria-label="Activity"
+        aria-current={activityActive ? "page" : undefined}
+        onClick={() => onChange("activity")}
+        className="relative flex flex-1 items-center justify-center pb-1"
+      >
+        <div className="relative">
+          <Clock
+            className={`size-[26px] ${
+              activityActive ? "text-cash-ink" : "text-cash-ink/35"
             }`}
-          >
-            $
+            strokeWidth={2.2}
+          />
+          <span className="absolute -right-2.5 -top-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-alert px-1 text-[11px] font-bold text-white">
+            2
           </span>
-        </button>
-        <button
-          type="button"
-          aria-label="Activity"
-          aria-current={tab === "activity" ? "page" : undefined}
-          onClick={() => onChange("activity")}
-          className={item}
-        >
-          <Clock className={`size-[26px] ${tab === "activity" ? iconOn : iconOff}`} strokeWidth={2.2} />
-        </button>
-      </div>
+        </div>
+      </button>
     </nav>
   );
 }
