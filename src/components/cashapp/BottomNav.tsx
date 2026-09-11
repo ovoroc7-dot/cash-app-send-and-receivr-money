@@ -14,6 +14,7 @@ export function BottomNav({
   green?: boolean;
 }) {
   const { balance } = useCash();
+  const trim = (n: number) => String(Number(n.toFixed(2)));
   const compact = (n: number) => {
     const v = Math.round(n);
     if (v >= 1_000_000) return `${trim(v / 1_000_000)}M`;
