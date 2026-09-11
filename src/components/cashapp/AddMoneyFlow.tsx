@@ -422,6 +422,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             disabled={typed <= 0}
+            aria-label={typed > 0 ? `Add ${speakMoney(typed)} to Cash balance` : "Add"}
             onClick={() => {
               addFunds(typed);
               onClose();
