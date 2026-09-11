@@ -1,4 +1,5 @@
 import { Clock } from "lucide-react";
+import { haptic } from "./store";
 import dollarSign from "@/assets/dollar-sign.png";
 
 export type Tab = "money" | "pay" | "activity";
@@ -15,25 +16,31 @@ export function BottomNav({
   const moneyActive = tab === "money";
   const payActive = tab === "pay";
   const activityActive = tab === "activity";
+  const inkOn = green ? "text-cash-key" : "text-cash-ink";
+  const inkOff = green ? "text-cash-key/35" : "text-cash-ink/35";
+  const select = (t: Tab) => {
+    haptic("tap");
+    onChange(t);
+  };
 
   return (
     <nav
       className={`absolute inset-x-0 bottom-0 z-20 flex h-[84px] items-end pb-7 transition-colors duration-100 ease-out will-change-transform ${
         green
           ? "bg-cash shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
-          : "bg-white shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
+          : "bg-surface-raised shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
       }`}
     >
       <button
         type="button"
         aria-label="Money"
         aria-current={moneyActive ? "page" : undefined}
-        onClick={() => onChange("money")}
+        onClick={() => select("money")}
         className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
         <span
           className={`font-display text-[22px] font-bold leading-none transition-colors duration-100 ease-out ${
-            moneyActive ? "text-cash-ink" : "text-cash-ink/35"
+            moneyActive ? inkOn : inkOff
           }`}
         >
           $100
@@ -44,7 +51,7 @@ export function BottomNav({
         type="button"
         aria-label="Pay"
         aria-current={payActive ? "page" : undefined}
-        onClick={() => onChange("pay")}
+        onClick={() => select("pay")}
         className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
         <img
@@ -61,13 +68,13 @@ export function BottomNav({
         type="button"
         aria-label="Activity"
         aria-current={activityActive ? "page" : undefined}
-        onClick={() => onChange("activity")}
+        onClick={() => select("activity")}
         className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
         <div className="relative">
           <Clock
             className={`size-[26px] transition-colors duration-100 ease-out ${
-              activityActive ? "text-cash-ink" : "text-cash-ink/35"
+              activityActive ? inkOn : inkOff
             }`}
             strokeWidth={2.2}
           />

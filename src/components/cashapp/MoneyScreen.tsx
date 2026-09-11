@@ -52,9 +52,9 @@ export function MoneyScreen() {
 
       <section className="mt-5">
         <div className="rounded-t-[28px] bg-gradient-to-b from-cash-light to-[#b9f24a] px-5 pb-8 pt-4">
-          <span className="inline-flex items-center gap-2 rounded-full bg-black/10 px-4 py-2">
-            <CreditCard className="size-4 text-cash-ink" strokeWidth={2.5} />
-            <span className="font-display text-[17px] font-semibold text-cash-ink">•• 6969</span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-cash-key/10 px-4 py-2">
+            <CreditCard className="size-4 text-cash-key" strokeWidth={2.5} />
+            <span className="font-display text-[17px] font-semibold text-cash-key">•• 6969</span>
           </span>
         </div>
 
@@ -123,7 +123,7 @@ export function MoneyScreen() {
                 $467.52 away
               </span>
             </div>
-            <div className="mt-4 h-1.5 w-full rounded-full bg-black/[0.07]">
+            <div className="mt-4 h-1.5 w-full rounded-full bg-cash-ink/[0.07]">
               <div className="h-full w-[9%] rounded-full bg-cash" />
             </div>
           </article>
@@ -149,7 +149,7 @@ export function MoneyScreen() {
               </p>
               <p className="font-display text-[17px] text-cash-ink/40">0% today</p>
             </div>
-            <span className="flex size-[72px] items-center justify-center rounded-full bg-black/[0.05]">
+            <span className="flex size-[72px] items-center justify-center rounded-full bg-cash-ink/[0.05]">
               <img
                 src={iconStocks}
                 alt=""
@@ -209,7 +209,7 @@ export function MoneyScreen() {
             ))}
           </div>
 
-          <hr className="mt-8 border-black/10" />
+          <hr className="mt-8 border-cash-ink/10" />
 
           <h2 className="mt-8 font-display text-[24px] font-bold tracking-[-0.02em] text-cash-ink">
             Add money
@@ -227,7 +227,7 @@ export function MoneyScreen() {
             ))}
           </div>
 
-          <hr className="mt-8 border-black/10" />
+          <hr className="mt-8 border-cash-ink/10" />
 
           <div className="mt-6 space-y-4 font-mono text-[12px] leading-relaxed text-cash-ink/45">
             <p>

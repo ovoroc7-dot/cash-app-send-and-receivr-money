@@ -91,7 +91,7 @@ export function ActivityScreen() {
               </span>
               <button
                 type="button"
-                className="h-9 rounded-full bg-black/[0.06] px-4 font-display text-[14px] font-semibold text-cash-ink"
+                className="h-9 rounded-full bg-cash-ink/[0.06] px-4 font-display text-[14px] font-semibold text-cash-ink"
               >
                 Review
               </button>
@@ -115,7 +115,7 @@ function PaymentDetail({ payment, onClose }: { payment: Payment; onClose: () => 
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="flex size-10 items-center justify-center rounded-full bg-black/[0.05]"
+          className="flex size-10 items-center justify-center rounded-full bg-cash-ink/[0.05]"
         >
           <X className="size-6 text-cash-ink" strokeWidth={2.5} />
         </button>
@@ -132,7 +132,7 @@ function PaymentDetail({ payment, onClose }: { payment: Payment; onClose: () => 
           {fmtAmount(payment.amount)}
         </p>
 
-        <hr className="mt-7 border-black/10" />
+        <hr className="mt-7 border-cash-ink/10" />
         <h3 className="mt-6 font-display text-[22px] font-bold tracking-[-0.02em] text-cash-ink">
           Transaction details
         </h3>
@@ -148,7 +148,7 @@ function PaymentDetail({ payment, onClose }: { payment: Payment; onClose: () => 
           </span>
         </div>
 
-        <hr className="mt-6 border-black/10" />
+        <hr className="mt-6 border-cash-ink/10" />
         <h3 className="mt-6 font-display text-[22px] font-bold tracking-[-0.02em] text-cash-ink">
           What you can do
         </h3>
@@ -185,7 +185,7 @@ function PaymentDetail({ payment, onClose }: { payment: Payment; onClose: () => 
             cancelPayment(payment.id);
             onClose();
           }}
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
+          className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised"
         >
           <Ban className="size-5" strokeWidth={2.2} />
           Cancel Payment
