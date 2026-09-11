@@ -75,7 +75,17 @@ export function MoneyScreen() {
               <EyeOff className="size-6 text-cash-ink" strokeWidth={2.2} />
             </button>
           </div>
-          <p className="mt-1 font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink">
+          <p
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            aria-label={
+              hidden
+                ? "Cash balance hidden"
+                : `Cash balance ${balance.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}`
+            }
+            className="mt-1 font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink"
+          >
             {hidden
               ? "••••"
               : balance.toLocaleString("en-US", {
