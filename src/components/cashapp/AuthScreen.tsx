@@ -319,6 +319,10 @@ export function AuthScreen() {
         <p className="mt-2 font-display text-[15px] text-foreground/60">
           You will be able to change this later in settings
         </p>
+      ) : step === "pin" ? (
+        <p className="mt-2 font-display text-[15px] leading-snug text-foreground/60">
+          You’ll use this to log in to Cash App and for sending money
+        </p>
       ) : null}
 
       <form
