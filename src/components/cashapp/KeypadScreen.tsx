@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Search, Briefcase, ScanLine } from "lucide-react";
 import { PayFlow } from "./PayFlow";
 import { sanitizeAmount } from "./AddMoneyFlow";
-import { haptic } from "./store";
+import { fitSize, groupDisplay, haptic, speakMoney } from "./store";
 
 const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "<"];
 
@@ -52,13 +52,15 @@ export function KeypadScreen() {
         </div>
       </header>
 
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex min-w-0 flex-1 items-center justify-center">
         <span
           role="status"
           aria-live="polite"
-          className="font-display text-[84px] font-semibold leading-none tracking-[-0.04em] text-cash-key"
+          aria-label={`Amount ${speakMoney(Number(amount || 0))}`}
+          style={{ fontSize: `${fitSize(groupDisplay(amount), 84, 6)}px` }}
+          className="w-full max-w-full truncate text-center font-display font-semibold leading-none tracking-[-0.04em] text-cash-key"
         >
-          ${amount}
+          {groupDisplay(amount)}
         </span>
       </div>
 

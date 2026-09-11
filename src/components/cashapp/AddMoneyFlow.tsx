@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronRight, Plus, X, CreditCard, Wallet } from "lucide-react";
-import { haptic, speakMoney, useCash } from "./store";
+import { fitSize, groupDisplay, haptic, speakMoney, useCash } from "./store";
 
 function CashLoading() {
   return (

@@ -84,7 +84,20 @@ export function MoneyScreen() {
                 ? "Cash balance hidden"
                 : `Cash balance ${balance.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}`
             }
-            className="mt-1 font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink"
+            style={{
+              fontSize: `${fitSize(
+                hidden
+                  ? "••••"
+                  : balance.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      minimumFractionDigits: 2,
+                    }),
+                64,
+                9,
+              )}px`,
+            }}
+            className="mt-1 w-full max-w-full truncate font-display font-bold leading-none tracking-[-0.04em] text-cash-ink"
           >
             {hidden
               ? "••••"
