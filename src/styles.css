@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant sysdark (@media (prefers-color-scheme: dark));
 
 /*
  * Design system definition.

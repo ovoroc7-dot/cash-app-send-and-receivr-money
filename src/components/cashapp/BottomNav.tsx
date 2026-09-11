@@ -62,7 +62,7 @@ export function BottomNav({
           aria-hidden="true"
           className={`h-[28px] w-auto object-contain transition-opacity duration-100 ease-out ${
             payActive ? "opacity-100" : "opacity-35"
-          } ${green ? "" : "dark:invert"}`}
+          } ${green ? "" : "dark:invert sysdark:invert"}`}
         />
       </button>
 
