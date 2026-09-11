@@ -15,11 +15,16 @@ import iconPools from "@/assets/icon-pools.png";
 import iconSavings from "@/assets/icon-savings.png";
 import iconBitcoin from "@/assets/icon-bitcoin.png";
 import avatar from "@/assets/avatar.jpg";
+import { AddMoneyFlow } from "./AddMoneyFlow";
+import { useCash } from "./store";
 
 export function MoneyScreen() {
   const [hidden, setHidden] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
+  const { balance } = useCash();
 
   return (
+    <>
     <div className="h-full overflow-y-auto bg-surface pb-28">
       <header className="flex items-center justify-between px-6 pt-4">
         <h1 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
@@ -71,13 +76,20 @@ export function MoneyScreen() {
             </button>
           </div>
           <p className="mt-1 font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink">
-            {hidden ? "••••" : "$100.00"}
+            {hidden
+              ? "••••"
+              : balance.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: 2,
+                })}
           </p>
 
           <div className="mt-12 grid grid-cols-2 gap-3">
             <button
               type="button"
-              className="h-16 rounded-full bg-surface-raised font-display text-[19px] font-bold text-cash-ink"
+              onClick={() => setAddOpen(true)}
+              className="h-16 rounded-full bg-surface-raised font-display text-[19px] font-bold text-cash-ink active:opacity-70"
             >
               Add money
             </button>
@@ -223,6 +235,8 @@ export function MoneyScreen() {
         </div>
       </section>
     </div>
+    {addOpen ? <AddMoneyFlow onClose={() => setAddOpen(false)} /> : null}
+    </>
   );
 }
 

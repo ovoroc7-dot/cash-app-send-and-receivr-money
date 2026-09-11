@@ -14,16 +14,26 @@ type Store = {
   pending: Payment[];
   addPayment: (p: Omit<Payment, "id" | "time">) => string;
   cancelPayment: (id: string) => void;
+  balance: number;
+  addFunds: (amount: number) => void;
+  autoReload: boolean;
+  setAutoReload: (on: boolean) => void;
 };
 
 const Ctx = createContext<Store | null>(null);
 
 export function CashProvider({ children }: { children: ReactNode }) {
   const [pending, setPending] = useState<Payment[]>([]);
+  const [balance, setBalance] = useState(100);
+  const [autoReload, setAutoReload] = useState(false);
 
   const value = useMemo<Store>(
     () => ({
       pending,
+      balance,
+      autoReload,
+      setAutoReload,
+      addFunds: (amount) => setBalance((b) => b + amount),
       addPayment: (p) => {
         const id = Math.random().toString(36).slice(2);
         setPending((list) => [
@@ -38,7 +48,7 @@ export function CashProvider({ children }: { children: ReactNode }) {
       },
       cancelPayment: (id) => setPending((list) => list.filter((p) => p.id !== id)),
     }),
-    [pending],
+    [pending, balance, autoReload],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
