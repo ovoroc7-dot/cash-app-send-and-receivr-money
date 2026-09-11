@@ -116,19 +116,19 @@ export function AuthScreen() {
   const back = () => {
     haptic();
     setMsg(null);
-    setStep((s) =>
-      s === "cashtag"
-        ? "card"
-        : s === "card"
-          ? "dob"
-          : s === "dob"
-            ? "password"
-            : s === "password"
-              ? "code"
-              : s === "code"
-                ? "entry"
-                : "welcome",
-    );
+    const prev: Record<string, Step> = {
+      contacts: "cashcard",
+      cashcard: "pin",
+      pin: "zipcode",
+      zipcode: "cashtag",
+      cashtag: "card",
+      card: "dob",
+      dob: "password",
+      password: "code",
+      code: "entry",
+      entry: "welcome",
+    };
+    setStep((s) => prev[s] ?? "welcome");
   };
 
   if (step === "welcome") {
