@@ -36,6 +36,8 @@ export function AuthScreen() {
   const [resendIn, setResendIn] = useState(45);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [homeZip, setHomeZip] = useState("");
+  const [pin, setPin] = useState("");
   const signUpFlow = useRef(false);
 
   useEffect(() => {
