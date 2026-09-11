@@ -162,7 +162,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
 
   if (step === "form") {
     return (
-      <div className="absolute inset-0 z-50 flex flex-col bg-surface">
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
         <div className="px-5 pt-4">
           <CloseX onClick={() => go("card")} label="Close link card" />
         </div>
@@ -233,7 +233,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
 
   if (step === "card") {
     return (
-      <div className="absolute inset-0 z-50 flex flex-col bg-surface">
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
         <div className="px-5 pt-4">
           <CloseX onClick={() => go("source")} label="Close link card" />
         </div>
@@ -288,7 +288,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
       </span>
     );
     return (
-      <div className="absolute inset-0 z-50 flex flex-col bg-surface">
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
         <div className="px-5 pt-4">
           <CloseX onClick={() => setStep("amount")} label="Close add money from" />
         </div>
@@ -361,7 +361,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
 
   if (step === "amount") {
     return (
-      <div className="absolute inset-0 z-50 flex flex-col bg-surface">
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
         <div className="relative px-5 pt-4">
           <div className="absolute left-5 top-3">
             <CloseX onClick={onClose} label="Close add money" />
@@ -409,12 +409,12 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         type="button"
         aria-label="Dismiss"
         onClick={onClose}
-        className={`flex-1 cursor-default bg-black/35 transition-opacity duration-200 ${
+        className={`flex-1 cursor-default bg-black/35 transition-opacity duration-300 ${
           up ? "opacity-100" : "opacity-0"
         }`}
       />
       <div
-        className={`rounded-t-[22px] bg-surface px-5 pb-8 pt-3 transition-transform duration-200 ease-out ${
+        className={`rounded-t-[22px] bg-surface px-5 pb-8 pt-3 transition-transform duration-[320ms] ease-out ${
           up ? "translate-y-0" : "translate-y-full"
         }`}
       >
