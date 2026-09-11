@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Ban, Briefcase, Clock, MessageSquare, ChevronRight, Search, X } from "lucide-react";
-import { useCash, type Payment } from "./store";
+import { fmtAmount, useCash, type Payment } from "./store";
 
 const history = [
   {
@@ -60,11 +60,11 @@ export function ActivityScreen() {
                   {p.name}
                 </span>
                 <span className="block font-display text-[14px] text-cash-ink/50">
-                  ${p.amount} for {p.note}
+                  {fmtAmount(p.amount)} for {p.note}
                 </span>
                 <span className="block font-display text-[14px] text-cash-ink/50">{p.time}</span>
               </span>
-              <span className="font-display text-[15px] text-cash-ink/60">${p.amount}</span>
+              <span className="font-display text-[15px] text-cash-ink/60">{fmtAmount(p.amount)}</span>
             </button>
           ))}
         </section>
@@ -129,7 +129,7 @@ function PaymentDetail({ payment, onClose }: { payment: Payment; onClose: () => 
         <p className="mt-2 font-display text-[16px] text-cash-ink/55">Today at {payment.time}</p>
         <p className="font-display text-[16px] text-cash-ink/55">For {payment.note}</p>
         <p className="mt-2 font-display text-[56px] font-bold leading-none tracking-[-0.04em] text-cash-ink/60">
-          ${Number(payment.amount).toFixed(2)}
+          {fmtAmount(payment.amount)}
         </p>
 
         <hr className="mt-7 border-black/10" />

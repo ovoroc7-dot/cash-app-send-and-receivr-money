@@ -11,7 +11,7 @@ import {
   ScanLine,
   X,
 } from "lucide-react";
-import { contacts, useCash } from "./store";
+import { contacts, fmtAmount, useCash } from "./store";
 
 type Step = "contacts" | "note" | "review" | "method" | "sent" | "receipt";
 
@@ -71,7 +71,7 @@ export function PayFlow({
             <p className="font-display text-[15px] text-cash-ink/55">For {note}</p>
           ) : null}
           <p className="mt-3 font-display text-[52px] font-semibold leading-none tracking-[-0.04em] text-cash-ink/70">
-            ${amount}
+            {fmtAmount(amount)}
           </p>
 
           <div className="mt-8 border-t border-black/10" />
@@ -159,7 +159,7 @@ export function PayFlow({
         </span>
 
         <h2 className="mt-7 max-w-[360px] font-display text-[48px] font-semibold leading-[1.04] text-cash-ink">
-          You sent ${amount} to {person?.name}
+          You sent {fmtAmount(amount)} to {person?.name}
         </h2>
 
         <div className="flex-1" />

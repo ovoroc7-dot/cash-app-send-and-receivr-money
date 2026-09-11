@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 
+export const fmtAmount = (amount: string) => `$${Number(amount).toFixed(2)}`;
+
 export type Payment = {
   id: string;
   name: string;
