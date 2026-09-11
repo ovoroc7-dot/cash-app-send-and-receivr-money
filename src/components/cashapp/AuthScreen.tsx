@@ -45,6 +45,18 @@ export function AuthScreen() {
     return () => clearInterval(t);
   }, [step]);
 
+  // Paint the status-bar area to match the welcome screen's black background.
+  useEffect(() => {
+    if (step === "welcome") {
+      document.body.style.backgroundColor = "#000000";
+    } else {
+      document.body.style.backgroundColor = "var(--surface)";
+    }
+    return () => {
+      document.body.style.backgroundColor = "";
+    };
+  }, [step]);
+
   const nextFromEntry = () => {
     haptic();
     if (mode === "phone") {
