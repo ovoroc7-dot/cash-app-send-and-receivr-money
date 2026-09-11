@@ -1,16 +1,24 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Search, Briefcase, ScanLine } from "lucide-react";
 import { PayFlow } from "./PayFlow";
 import { sanitizeAmount } from "./AddMoneyFlow";
+import { haptic } from "./store";
+
+const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "<"];
 
 export function KeypadScreen() {
   const [amount, setAmount] = useState("0");
   const [flow, setFlow] = useState<"Pay" | "Request" | null>(null);
-  const input = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (!flow) input.current?.focus();
-  }, [flow]);
+  const press = (k: string) =>
+    setAmount((a) => {
+      const cur = a === "0" ? "" : a;
+      if (k === "<") return cur.slice(0, -1) || "0";
+      if (k === "." && cur.includes(".")) return cur || "0";
+      return sanitizeAmount(cur + k) || "0";
+    });
+
+
 
 
   return (
@@ -41,7 +49,7 @@ export function KeypadScreen() {
         </div>
       </header>
 
-      <div className="relative flex flex-1 items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <span
           role="status"
           aria-live="polite"
@@ -49,18 +57,26 @@ export function KeypadScreen() {
         >
           ${amount}
         </span>
-        <input
-          ref={input}
-          type="text"
-          inputMode="decimal"
-          enterKeyHint="done"
-          autoComplete="off"
-          aria-label="Amount"
-          value={amount === "0" ? "" : amount}
-          onChange={(e) => setAmount(sanitizeAmount(e.target.value) || "0")}
-          className="absolute inset-0 h-full w-full bg-transparent text-center text-transparent caret-transparent outline-none"
-        />
       </div>
+
+      <div role="group" aria-label="Number pad" className="grid grid-cols-3">
+        {keys.map((k) => (
+          <button
+            key={k}
+            type="button"
+            aria-label={k === "<" ? "Delete" : k === "." ? "Decimal point" : k}
+            onClick={() => {
+              haptic();
+              press(k);
+            }}
+            className="flex h-[68px] items-center justify-center font-display text-[30px] font-semibold text-cash-key active:opacity-50"
+          >
+            {k === "<" ? "‹" : k}
+          </button>
+        ))}
+      </div>
+
+
 
 
       <div className="mt-6 grid grid-cols-2 gap-4">
