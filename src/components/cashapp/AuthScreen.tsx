@@ -11,7 +11,11 @@ type Step =
   | "password"
   | "dob"
   | "card"
-  | "cashtag";
+  | "cashtag"
+  | "zipcode"
+  | "pin"
+  | "cashcard"
+  | "contacts";
 type Mode = "phone" | "email";
 
 const CODE_PREFIX = "962-";
@@ -32,6 +36,8 @@ export function AuthScreen() {
   const [resendIn, setResendIn] = useState(45);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [homeZip, setHomeZip] = useState("");
+  const [pin, setPin] = useState("");
   const signUpFlow = useRef(false);
 
   useEffect(() => {
@@ -110,19 +116,19 @@ export function AuthScreen() {
   const back = () => {
     haptic();
     setMsg(null);
-    setStep((s) =>
-      s === "cashtag"
-        ? "card"
-        : s === "card"
-          ? "dob"
-          : s === "dob"
-            ? "password"
-            : s === "password"
-              ? "code"
-              : s === "code"
-                ? "entry"
-                : "welcome",
-    );
+    const prev: Record<string, Step> = {
+      contacts: "cashcard",
+      cashcard: "pin",
+      pin: "zipcode",
+      zipcode: "cashtag",
+      cashtag: "card",
+      card: "dob",
+      dob: "password",
+      password: "code",
+      code: "entry",
+      entry: "welcome",
+    };
+    setStep((s) => prev[s] ?? "welcome");
   };
 
   if (step === "welcome") {
@@ -159,25 +165,125 @@ export function AuthScreen() {
     );
   }
 
+  const titles: Partial<Record<Step, string>> = {
+    code: "Please enter the code sent to",
+    password: "Enter your password",
+    dob: "What’s your date of birth?",
+    card: "Add a bank using your debit card",
+    cashtag: "Choose a $Cashtag",
+    zipcode: "Please enter your ZIP code",
+    pin: "Create a Cash App PIN",
+  };
   const title =
-    step === "code"
-      ? "Please enter the code sent to"
-      : step === "password"
-        ? "Enter your password"
-        : step === "dob"
-          ? "What’s your date of birth?"
-          : step === "card"
-            ? "Add a bank using your debit card"
-            : step === "cashtag"
-              ? "Choose a $Cashtag"
-              : mode === "phone"
-                ? "Enter your phone or email"
-                : "Enter your email";
+    titles[step] ?? (mode === "phone" ? "Enter your phone or email" : "Enter your email");
 
   const field =
     "h-14 w-full rounded-xl border border-foreground/25 bg-transparent px-4 font-display text-[17px] text-foreground placeholder:text-foreground/45 outline-none focus:border-foreground";
   const primary =
     "h-14 w-full rounded-full bg-foreground font-display text-[16px] font-semibold text-surface disabled:bg-foreground/20 disabled:text-foreground/40 active:opacity-80";
+
+  if (step === "cashcard") {
+    return (
+      <div className="flex h-full flex-col overflow-y-auto bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+        <div className="mx-auto mt-4 h-16 w-32 -rotate-6 rounded-lg bg-cash" />
+        <h1 className="mt-6 text-center font-display text-[30px] font-bold leading-[1.1] tracking-[-0.02em] text-foreground">
+          Meet the Cash App Card
+        </h1>
+        <ul className="mt-6 space-y-4">
+          {[
+            "Customizable design",
+            "Instant discounts",
+            "No hidden fees",
+            "FDIC insurance*",
+          ].map((t) => (
+            <li key={t} className="flex items-center gap-3 font-display text-[16px] text-foreground">
+              <span className="flex size-6 items-center justify-center rounded-full border border-foreground/40 text-[12px]">
+                ✦
+              </span>
+              {t}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-6 font-display text-[12px] leading-snug text-foreground/60">
+          *With a Cash App Card, your balance is eligible for FDIC pass-through insurance through
+          partner banks, Members FDIC for up to $250,000 per customer when aggregated with all other
+          deposits held in the same legal capacity at each bank, if certain conditions are met.
+        </p>
+        <div className="flex-1" />
+        <button
+          type="button"
+          onClick={() => {
+            haptic();
+            setStep("contacts");
+          }}
+          className="mt-6 h-14 w-full rounded-full bg-foreground/10 font-display text-[16px] font-semibold text-foreground active:opacity-70"
+        >
+          Skip
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            haptic();
+            setStep("contacts");
+          }}
+          className={`mt-3 ${primary}`}
+        >
+          Next
+        </button>
+      </div>
+    );
+  }
+
+  if (step === "contacts") {
+    return (
+      <div className="flex h-full flex-col bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+        <button
+          type="button"
+          aria-label="Close"
+          onClick={() => void finish()}
+          className="-ml-1 w-8 text-left font-display text-[22px] text-foreground active:opacity-60"
+        >
+          ✕
+        </button>
+        <div className="mt-6 flex size-14 items-center justify-center rounded-full bg-cash text-[22px]">
+          👥
+        </div>
+        <h1 className="mt-6 font-display text-[30px] font-bold leading-[1.1] tracking-[-0.02em] text-foreground">
+          Sync your contacts to find them on Cash App
+        </h1>
+        <p className="mt-3 font-display text-[15px] leading-snug text-foreground/60">
+          This helps you find, invite, and securely pay friends. You can manage syncing anytime in
+          your Security &amp; privacy settings.
+        </p>
+        <div className="flex-1" />
+        <p className="mb-5 text-center font-display text-[14px] font-semibold text-foreground underline">
+          How Cash App uses your contacts
+        </p>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void finish()}
+          className="h-14 w-full rounded-full bg-foreground/10 font-display text-[16px] font-semibold text-foreground active:opacity-70"
+        >
+          Not now
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void finish()}
+          className={`mt-3 ${primary}`}
+        >
+          {busy ? "Please wait…" : "Sync contacts"}
+        </button>
+        {msg ? (
+          <p role="status" className="mt-4 text-center font-display text-[14px] text-foreground/80">
+            {msg}
+          </p>
+        ) : null}
+      </div>
+    );
+  }
+
 
   return (
     <div className="flex h-full flex-col overflow-y-auto bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
@@ -212,6 +318,10 @@ export function AuthScreen() {
       ) : step === "cashtag" ? (
         <p className="mt-2 font-display text-[15px] text-foreground/60">
           You will be able to change this later in settings
+        </p>
+      ) : step === "pin" ? (
+        <p className="mt-2 font-display text-[15px] leading-snug text-foreground/60">
+          You’ll use this to log in to Cash App and for sending money
         </p>
       ) : null}
 
@@ -436,14 +546,76 @@ export function AuthScreen() {
             </p>
             <button
               type="button"
-              disabled={busy || cashtag.length < 3}
-              onClick={() => void finish()}
+              disabled={cashtag.length < 3}
+              onClick={() => {
+                haptic();
+                setStep("zipcode");
+              }}
               className={`mt-8 ${primary}`}
             >
-              {busy ? "Please wait…" : "Next"}
+              Next
             </button>
           </>
         ) : null}
+
+        {step === "zipcode" ? (
+          <>
+            <input
+              type="text"
+              inputMode="numeric"
+              autoFocus
+              value={homeZip}
+              onChange={(e) => setHomeZip(e.target.value.replace(/\D/g, "").slice(0, 5))}
+              placeholder="ZIP Code"
+              aria-label="ZIP code"
+              className={field}
+            />
+            <button
+              type="button"
+              disabled={homeZip.length < 5}
+              onClick={() => {
+                haptic();
+                setPin("");
+                setStep("pin");
+              }}
+              className={`mt-8 ${primary}`}
+            >
+              Next
+            </button>
+          </>
+        ) : null}
+
+        {step === "pin" ? (
+          <>
+            <div className="mt-2 flex gap-4" aria-hidden>
+              {[0, 1, 2, 3].map((i) => (
+                <span
+                  key={i}
+                  className={`size-5 rounded-full border-2 border-foreground/40 ${
+                    pin.length > i ? "bg-foreground" : ""
+                  }`}
+                />
+              ))}
+            </div>
+            <input
+              type="password"
+              inputMode="numeric"
+              autoFocus
+              value={pin}
+              onChange={(e) => {
+                const v = e.target.value.replace(/\D/g, "").slice(0, 4);
+                setPin(v);
+                if (v.length === 4) {
+                  haptic("success");
+                  setTimeout(() => setStep("cashcard"), 200);
+                }
+              }}
+              aria-label="Cash App PIN"
+              className="mt-6 h-14 w-full rounded-xl border border-foreground/25 bg-transparent px-4 font-display text-[17px] tracking-[0.5em] text-foreground outline-none focus:border-foreground"
+            />
+          </>
+        ) : null}
+
 
         {step === "entry" ? (
           <button
