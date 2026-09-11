@@ -1,22 +1,17 @@
-import { useState } from "react";
-import { ChevronLeft, Search, Briefcase, ScanLine } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Search, Briefcase, ScanLine } from "lucide-react";
 import { PayFlow } from "./PayFlow";
+import { sanitizeAmount } from "./AddMoneyFlow";
 
 export function KeypadScreen() {
   const [amount, setAmount] = useState("0");
   const [flow, setFlow] = useState<"Pay" | "Request" | null>(null);
+  const input = useRef<HTMLInputElement>(null);
 
-  const press = (k: string) => {
-    setAmount((a) => {
-      if (k === "<") return a.length <= 1 ? "0" : a.slice(0, -1);
-      if (k === ".") return a.includes(".") ? a : a + ".";
-      if (a === "0") return k;
-      if ((a.split(".")[1] ?? "").length >= 2) return a;
-      return a + k;
-    });
-  };
+  useEffect(() => {
+    if (!flow) input.current?.focus();
+  }, [flow]);
 
-  const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "<"];
 
   return (
     <div className="flex h-full flex-col bg-cash px-6 pt-4">

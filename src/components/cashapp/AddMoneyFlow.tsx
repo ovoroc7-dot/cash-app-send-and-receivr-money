@@ -326,10 +326,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         <div className="px-5 pb-8">
           <button
             type="button"
-            onClick={() => {
-              setField("card");
-              go("form");
-            }}
+            onClick={() => go("form")}
             className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80"
           >
             Continue
