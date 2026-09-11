@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+
 import dollarSign from "@/assets/dollar-sign.png";
 import { haptic } from "./store";
 
