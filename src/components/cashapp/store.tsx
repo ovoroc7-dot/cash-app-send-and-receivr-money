@@ -31,6 +31,7 @@ type Store = {
   addFunds: (amount: number) => void;
   autoReload: boolean;
   setAutoReload: (on: boolean) => void;
+  announce: (message: string) => void;
 };
 
 const Ctx = createContext<Store | null>(null);
