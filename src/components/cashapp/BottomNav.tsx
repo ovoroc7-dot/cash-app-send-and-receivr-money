@@ -14,7 +14,13 @@ export function BottomNav({
   green?: boolean;
 }) {
   const { balance } = useCash();
-  const balanceLabel = `$${Math.round(balance).toLocaleString("en-US")}`;
+  const compact = (n: number) => {
+    const v = Math.round(n);
+    if (v >= 1_000_000) return `${trim(v / 1_000_000)}M`;
+    if (v >= 1_000) return `${trim(v / 1_000)}K`;
+    return v.toLocaleString("en-US");
+  };
+  const balanceLabel = `$${compact(balance)}`;
   const moneyActive = tab === "money";
   const payActive = tab === "pay";
   const activityActive = tab === "activity";
