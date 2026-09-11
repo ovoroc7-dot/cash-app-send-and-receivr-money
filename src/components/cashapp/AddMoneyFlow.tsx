@@ -208,6 +208,40 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
     );
   }
 
+  if (step === "done") {
+    const shown = Number.isInteger(added) ? `$${added.toLocaleString("en-US")}` : money(added);
+    return (
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
+        <div className="flex-1 px-6 pt-10">
+          <span className="flex size-14 items-center justify-center rounded-full bg-cash">
+            <Check className="size-8 text-white" strokeWidth={3.2} />
+          </span>
+          <h2
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            className="mt-6 font-display text-[34px] font-bold leading-[1.12] tracking-[-0.02em] text-cash-ink"
+          >
+            You added {shown} to your Cash App
+          </h2>
+        </div>
+        <div className="px-5 pb-8">
+          <button
+            type="button"
+            aria-label="Done, back to Cash balance"
+            onClick={() => {
+              haptic();
+              onClose();
+            }}
+            className="h-[56px] w-full rounded-full bg-cash font-display text-[18px] font-bold text-cash-key active:opacity-80"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (step === "form") {
     return (
       <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
