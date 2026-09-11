@@ -16,7 +16,7 @@ import iconSavings from "@/assets/icon-savings.png";
 import iconBitcoin from "@/assets/icon-bitcoin.png";
 import avatar from "@/assets/avatar.jpg";
 import { AddMoneyFlow } from "./AddMoneyFlow";
-import { useCash } from "./store";
+import { fitSize, useCash } from "./store";
 
 export function MoneyScreen() {
   const [hidden, setHidden] = useState(false);
@@ -84,7 +84,20 @@ export function MoneyScreen() {
                 ? "Cash balance hidden"
                 : `Cash balance ${balance.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}`
             }
-            className="mt-1 font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink"
+            style={{
+              fontSize: `${fitSize(
+                hidden
+                  ? "••••"
+                  : balance.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      minimumFractionDigits: 2,
+                    }),
+                64,
+                9,
+              )}px`,
+            }}
+            className="mt-1 w-full max-w-full truncate font-display font-bold leading-none tracking-[-0.04em] text-cash-ink"
           >
             {hidden
               ? "••••"
