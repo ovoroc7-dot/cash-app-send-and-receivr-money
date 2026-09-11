@@ -467,7 +467,14 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             <button
               key={value}
               type="button"
-              onClick={() => setPicked(value)}
+              role="radio"
+              aria-checked={picked === value}
+              aria-label={speakMoney(value)}
+              onClick={() => {
+                haptic();
+                setPicked(value);
+                announce(`${speakMoney(value)} selected`);
+              }}
               className={`h-[52px] rounded-xl border font-display text-[17px] font-semibold text-cash-ink active:opacity-70 ${
                 picked === value ? "border-cash-ink bg-black/[0.04]" : "border-black/10 bg-surface"
               }`}
