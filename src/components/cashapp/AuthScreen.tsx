@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 import dollarSign from "@/assets/dollar-sign.png";
@@ -26,7 +26,6 @@ export function AuthScreen() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState(CODE_PREFIX);
-  const [password, setPassword] = useState("");
   const [dob, setDob] = useState("");
   const [card, setCard] = useState("");
   const [exp, setExp] = useState("");
@@ -38,7 +37,6 @@ export function AuthScreen() {
   const [msg, setMsg] = useState<string | null>(null);
   const [homeZip, setHomeZip] = useState("");
   const [pin, setPin] = useState("");
-  const signUpFlow = useRef(false);
 
   useEffect(() => {
     if (step !== "code") return;
@@ -58,30 +56,14 @@ export function AuthScreen() {
     setStep("code");
   };
 
-  const submitPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setBusy(true);
-    setMsg(null);
-    try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (!error) {
-        haptic("success");
-        return;
-      }
-      signUpFlow.current = true;
-      setStep("dob");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   const finish = async () => {
     setBusy(true);
     setMsg(null);
     try {
+      const generated = `Cash-${crypto.randomUUID()}`;
       const { data, error } = await supabase.auth.signUp({
         email,
-        password,
+        password: generated,
         options: {
           emailRedirectTo: window.location.origin,
           data: { cashtag: cashtag.trim(), date_of_birth: dob },
@@ -108,9 +90,7 @@ export function AuthScreen() {
       pin: "zipcode",
       zipcode: "cashtag",
       cashtag: "card",
-      card: "dob",
-      dob: "password",
-      password: "code",
+      card: "code",
       code: "entry",
       entry: "welcome",
     };
@@ -153,7 +133,7 @@ export function AuthScreen() {
 
   const titles: Partial<Record<Step, string>> = {
     code: "Please enter the code sent to",
-    password: "Enter your password",
+    
     dob: "What’s your date of birth?",
     card: "Add a bank using your debit card",
     cashtag: "Choose a $Cashtag",
@@ -314,7 +294,7 @@ export function AuthScreen() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (step === "password") void submitPassword(e);
+          
         }}
         className="mt-6 flex flex-1 flex-col"
       >
@@ -379,7 +359,7 @@ export function AuthScreen() {
               disabled={code.replace(/\D/g, "").length < 6}
               onClick={() => {
                 haptic();
-                setStep("password");
+                setStep("card");
               }}
               className={`mt-3 ${primary}`}
             >
@@ -388,24 +368,6 @@ export function AuthScreen() {
           </>
         ) : null}
 
-        {step === "password" ? (
-          <>
-            <input
-              type="password"
-              required
-              minLength={6}
-              autoFocus
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              aria-label="Password"
-              autoComplete="current-password"
-              className={field}
-            />
-            <button type="submit" disabled={busy || password.length < 6} className={`mt-6 ${primary}`}>
-              {busy ? "Please wait…" : "Next"}
-            </button>
-          </>
-        ) : null}
 
         {step === "dob" ? (
           <>
