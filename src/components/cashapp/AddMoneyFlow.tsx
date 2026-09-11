@@ -502,6 +502,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         <button
           type="button"
           disabled={picked === null}
+          aria-label={picked !== null ? `Add ${speakMoney(picked)} to Cash balance` : "Add"}
           onClick={() => {
             if (picked !== null) addFunds(picked);
             onClose();
