@@ -1,8 +1,19 @@
 import { useState } from "react";
-import { ArrowLeft, Check, ChevronDown, Search, ScanLine, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Ban,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Clock3,
+  MessageSquare,
+  Search,
+  ScanLine,
+  X,
+} from "lucide-react";
 import { contacts, useCash } from "./store";
 
-type Step = "contacts" | "note" | "review" | "method" | "sent";
+type Step = "contacts" | "note" | "review" | "method" | "sent" | "receipt";
 
 const methods = [
   { key: "cash", label: "Cash balance", sub: "$0 available", disabled: true },
@@ -32,6 +43,105 @@ export function PayFlow({
     </h2>
   );
 
+  if (step === "receipt") {
+    const time = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    return (
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface-raised">
+        <div className="flex-1 overflow-y-auto px-5 pb-40 pt-4">
+          <button
+            type="button"
+            aria-label="Close receipt"
+            onClick={() => setStep("sent")}
+            className="flex size-10 items-center justify-center rounded-full bg-black/[0.05]"
+          >
+            <X className="size-5 text-cash-ink" strokeWidth={2.6} />
+          </button>
+
+          <span
+            className={`mt-6 flex size-16 items-center justify-center rounded-full font-display text-[28px] font-bold text-white ${person?.color}`}
+          >
+            {person?.name[0]}
+          </span>
+
+          <h2 className="mt-5 font-display text-[32px] font-bold tracking-[-0.02em] text-cash-ink">
+            {person?.name}
+          </h2>
+          <p className="mt-1 font-display text-[15px] text-cash-ink/55">Today at {time}</p>
+          {note ? (
+            <p className="font-display text-[15px] text-cash-ink/55">For {note}</p>
+          ) : null}
+          <p className="mt-3 font-display text-[52px] font-semibold leading-none tracking-[-0.04em] text-cash-ink/70">
+            ${amount}
+          </p>
+
+          <div className="mt-8 border-t border-black/10" />
+          <h3 className="mt-6 font-display text-[22px] font-bold text-cash-ink">
+            Transaction details
+          </h3>
+          <div className="mt-4 flex items-start gap-4">
+            <span className="mt-0.5 font-display text-[18px] font-bold leading-none tracking-[0.2em] text-cash-ink">
+              •••
+            </span>
+            <span>
+              <span className="block font-display text-[16px] font-semibold text-cash-ink">
+                Pending
+              </span>
+              <span className="block font-display text-[14px] text-cash-ink/50">
+                Payment has not settled yet
+              </span>
+            </span>
+          </div>
+
+          <div className="mt-8 border-t border-black/10" />
+          <h3 className="mt-6 font-display text-[22px] font-bold text-cash-ink">
+            What you can do
+          </h3>
+          <div className="mt-2 divide-y divide-black/[0.06]">
+            {[
+              { icon: Ban, label: "Cancel payment" },
+              { icon: Clock3, label: `View history with ${person?.name}` },
+              { icon: MessageSquare, label: "Contact Support" },
+            ].map((row) => (
+              <button
+                key={row.label}
+                type="button"
+                className="flex w-full items-center gap-4 py-4 text-left"
+              >
+                <row.icon className="size-5 text-cash-ink" strokeWidth={2.2} />
+                <span className="flex-1 font-display text-[16px] font-semibold text-cash-ink">
+                  {row.label}
+                </span>
+                <ChevronRight className="size-4 text-cash-ink/40" strokeWidth={2.4} />
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-6 font-mono text-[11px] leading-relaxed text-cash-ink/50">
+            <p className="font-semibold text-cash-ink/70">Block, Inc.</p>
+            <p>1955 Broadway, Suite 600</p>
+            <p>Oakland, CA 94612</p>
+            <p>(800) 969-1940</p>
+            <p className="mt-2">NMLS #: 942933</p>
+            <p className="mt-2 underline">cash.app</p>
+          </div>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 bg-surface-raised px-5 pb-6 pt-3">
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+            }}
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
+          >
+            <Ban className="size-5" strokeWidth={2.4} />
+            Cancel Payment
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (step === "sent") {
     return (
       <div className="absolute inset-0 z-40 flex flex-col bg-surface-raised px-4 pb-5 pt-4">
@@ -57,6 +167,7 @@ export function PayFlow({
         <div className="space-y-2">
           <button
             type="button"
+            onClick={() => setStep("receipt")}
             className="flex h-14 w-full items-center justify-center rounded-full bg-black/[0.08] font-display text-[20px] font-semibold text-cash-ink"
           >
             Receipt
