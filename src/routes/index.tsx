@@ -51,11 +51,11 @@ function Index() {
                 alt="Cash App"
                 className="size-[150px] rounded-[34px] object-contain sysdark:hidden"
               />
-              <div className="hidden size-[150px] items-center justify-center rounded-[34px] bg-white sysdark:flex">
+              <div className="hidden size-[105px] items-center justify-center rounded-[24px] bg-white sysdark:flex">
                 <img
                   src={dollarSign}
                   alt="Cash App"
-                  className="h-[74px] w-auto object-contain"
+                  className="h-[62px] w-auto object-contain"
                 />
               </div>
             </div>
