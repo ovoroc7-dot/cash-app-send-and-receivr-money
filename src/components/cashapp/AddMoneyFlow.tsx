@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { ChevronRight, Delete, Plus, X, CreditCard, Wallet } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronRight, Delete, Plus, X, CreditCard, Wallet, Loader2 } from "lucide-react";
 import { useCash } from "./store";
 
 const quick = [10, 25, 50, 100, 200];
