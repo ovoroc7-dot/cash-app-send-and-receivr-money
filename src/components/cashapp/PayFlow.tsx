@@ -362,7 +362,8 @@ export function PayFlow({
                 <button
                   type="button"
                   onClick={() => {
-                    addPayment({ name: person!.name, amount, note });
+                    const id = addPayment({ name: person!.name, amount, note });
+                    setPaymentId(id);
                     setStep("sent");
                   }}
                   className="mt-3 h-14 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
