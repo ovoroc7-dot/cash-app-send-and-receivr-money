@@ -21,7 +21,7 @@ export function ActivityScreen() {
   const [open, setOpen] = useState<Payment | null>(null);
 
   return (
-    <div className="h-full overflow-y-auto bg-surface-raised pb-28">
+    <div className="h-full overflow-y-auto bg-surface pb-28">
       <header className="flex items-center justify-between px-6 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
         <h1 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
           Activity
@@ -109,7 +109,7 @@ function PaymentDetail({ payment, onClose }: { payment: Payment; onClose: () => 
   const { cancelPayment } = useCash();
 
   return (
-    <div className="absolute inset-0 z-40 flex flex-col bg-surface-raised">
+    <div className="absolute inset-0 z-40 flex flex-col bg-surface">
       <div className="flex-1 overflow-y-auto px-6 pb-28 pt-6">
         <button
           type="button"
@@ -178,14 +178,14 @@ function PaymentDetail({ payment, onClose }: { payment: Payment; onClose: () => 
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 bg-surface-raised px-6 pb-6 pt-2">
+      <div className="absolute inset-x-0 bottom-0 bg-surface px-6 pb-6 pt-2">
         <button
           type="button"
           onClick={() => {
             cancelPayment(payment.id);
             onClose();
           }}
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised"
+          className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface"
         >
           <Ban className="size-5" strokeWidth={2.2} />
           Cancel Payment
