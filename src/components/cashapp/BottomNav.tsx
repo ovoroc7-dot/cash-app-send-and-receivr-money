@@ -44,7 +44,7 @@ export function BottomNav({
         aria-label={`Money, cash balance ${balanceLabel}`}
         aria-current={moneyActive ? "page" : undefined}
         onClick={() => select("money")}
-        className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
+        className="relative flex flex-1 items-center justify-center pb-1 transition-opacity duration-75 ease-out active:opacity-70"
       >
         <span
           className={`font-display text-[22px] font-bold leading-none transition-colors duration-100 ease-out ${
@@ -60,7 +60,7 @@ export function BottomNav({
         aria-label="Pay"
         aria-current={payActive ? "page" : undefined}
         onClick={() => select("pay")}
-        className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
+        className="relative flex flex-1 items-center justify-center pb-1 transition-opacity duration-75 ease-out active:opacity-70"
       >
         <img
           src={dollarSign}
@@ -77,7 +77,7 @@ export function BottomNav({
         aria-label="Activity"
         aria-current={activityActive ? "page" : undefined}
         onClick={() => select("activity")}
-        className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
+        className="relative flex flex-1 items-center justify-center pb-1 transition-opacity duration-75 ease-out active:opacity-70"
       >
         <div className="relative">
           <Clock

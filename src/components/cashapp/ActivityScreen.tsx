@@ -21,7 +21,7 @@ export function ActivityScreen() {
   const [open, setOpen] = useState<Payment | null>(null);
 
   return (
-    <div className="h-full overflow-y-auto bg-surface pb-28">
+    <div className="h-full overflow-y-auto overscroll-contain bg-surface pb-28">
       <header className="flex items-center justify-between px-6 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
         <h1 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
           Activity
