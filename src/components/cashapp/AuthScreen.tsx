@@ -1,21 +1,45 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import dollarSign from "@/assets/dollar-sign.png";
 import { haptic } from "./store";
 
-type Step = "welcome" | "entry" | "password";
+type Step =
+  | "welcome"
+  | "entry"
+  | "code"
+  | "password"
+  | "dob"
+  | "card"
+  | "cashtag";
 type Mode = "phone" | "email";
+
+const CODE_PREFIX = "962-";
 
 export function AuthScreen() {
   const [step, setStep] = useState<Step>("welcome");
   const [mode, setMode] = useState<Mode>("phone");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [code, setCode] = useState(CODE_PREFIX);
   const [password, setPassword] = useState("");
-  const [newAccount, setNewAccount] = useState(false);
+  const [dob, setDob] = useState("");
+  const [card, setCard] = useState("");
+  const [exp, setExp] = useState("");
+  const [cvv, setCvv] = useState("");
+  const [zip, setZip] = useState("");
+  const [cashtag, setCashtag] = useState("");
+  const [resendIn, setResendIn] = useState(45);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const signUpFlow = useRef(false);
+
+  useEffect(() => {
+    if (step !== "code") return;
+    setResendIn(45);
+    const t = setInterval(() => setResendIn((s) => (s > 0 ? s - 1 : 0)), 1000);
+    return () => clearInterval(t);
+  }, [step]);
 
   const nextFromEntry = () => {
     haptic();
@@ -24,27 +48,43 @@ export function AuthScreen() {
       return;
     }
     setMsg(null);
-    setStep("password");
+    setCode(CODE_PREFIX);
+    setStep("code");
   };
 
-  const submit = async (e: React.FormEvent) => {
+  const submitPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     setMsg(null);
     try {
-      if (newAccount) {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: window.location.origin },
-        });
-        if (error) throw error;
-        if (!data.session) setMsg("Check your email to confirm your account.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (!error) {
+        haptic("success");
+        return;
       }
-      haptic("success");
+      signUpFlow.current = true;
+      setStep("dob");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const finish = async () => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin,
+          data: { cashtag: cashtag.trim(), date_of_birth: dob },
+        },
+      });
+      if (error) throw error;
+      if (cashtag.trim()) localStorage.setItem("cash.cashtag", cashtag.trim());
+      if (!data.session) setMsg("Check your email to confirm your account.");
+      else haptic("success");
     } catch (err) {
       setMsg(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
@@ -65,6 +105,24 @@ export function AuthScreen() {
     }
     if (result.redirected) return;
     setBusy(false);
+  };
+
+  const back = () => {
+    haptic();
+    setMsg(null);
+    setStep((s) =>
+      s === "cashtag"
+        ? "card"
+        : s === "card"
+          ? "dob"
+          : s === "dob"
+            ? "password"
+            : s === "password"
+              ? "code"
+              : s === "code"
+                ? "entry"
+                : "welcome",
+    );
   };
 
   if (step === "welcome") {
@@ -101,19 +159,33 @@ export function AuthScreen() {
     );
   }
 
-  const onPassword = step === "password";
+  const title =
+    step === "code"
+      ? "Please enter the code sent to"
+      : step === "password"
+        ? "Enter your password"
+        : step === "dob"
+          ? "What’s your date of birth?"
+          : step === "card"
+            ? "Add a bank using your debit card"
+            : step === "cashtag"
+              ? "Choose a $Cashtag"
+              : mode === "phone"
+                ? "Enter your phone or email"
+                : "Enter your email";
+
+  const field =
+    "h-14 w-full rounded-xl border border-foreground/25 bg-transparent px-4 font-display text-[17px] text-foreground placeholder:text-foreground/45 outline-none focus:border-foreground";
+  const primary =
+    "h-14 w-full rounded-full bg-foreground font-display text-[16px] font-semibold text-surface disabled:bg-foreground/20 disabled:text-foreground/40 active:opacity-80";
 
   return (
-    <div className="flex h-full flex-col bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+    <div className="flex h-full flex-col overflow-y-auto bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
       <div className="flex items-center justify-between">
         <button
           type="button"
           aria-label="Back"
-          onClick={() => {
-            haptic();
-            setMsg(null);
-            setStep(onPassword ? "entry" : "welcome");
-          }}
+          onClick={back}
           className="-ml-1 font-display text-[22px] text-foreground active:opacity-60"
         >
           ‹
@@ -124,29 +196,33 @@ export function AuthScreen() {
       </div>
 
       <h1 className="mt-6 font-display text-[30px] font-bold leading-[1.1] tracking-[-0.02em] text-foreground">
-        {onPassword
-          ? newAccount
-            ? "Create a password"
-            : "Enter your password"
-          : mode === "phone"
-            ? "Enter your phone or email"
-            : "Enter your email"}
+        {title}
       </h1>
 
-      <form onSubmit={submit} className="mt-6 flex flex-1 flex-col">
-        {onPassword ? (
-          <input
-            type="password"
-            required
-            minLength={6}
-            autoFocus
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            aria-label="Password"
-            autoComplete={newAccount ? "new-password" : "current-password"}
-            className="h-14 w-full rounded-xl border border-foreground/25 bg-transparent px-4 font-display text-[17px] text-foreground outline-none focus:border-foreground"
-          />
-        ) : mode === "phone" ? (
+      {step === "code" ? (
+        <p className="mt-1 font-display text-[17px] text-foreground/70">{email}</p>
+      ) : step === "dob" ? (
+        <p className="mt-2 font-display text-[15px] leading-snug text-foreground/60">
+          Incorrect date of birth will impact access to most features on Cash App.
+        </p>
+      ) : step === "card" ? (
+        <p className="mt-2 font-display text-[15px] leading-snug text-foreground/60">
+          Linking an external account allows you to move money in and out of your Cash App balance.
+        </p>
+      ) : step === "cashtag" ? (
+        <p className="mt-2 font-display text-[15px] text-foreground/60">
+          You will be able to change this later in settings
+        </p>
+      ) : null}
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (step === "password") void submitPassword(e);
+        }}
+        className="mt-6 flex flex-1 flex-col"
+      >
+        {step === "entry" && mode === "phone" ? (
           <div className="flex h-14 w-full items-center rounded-xl border border-foreground/25 px-4">
             <span className="font-display text-[17px] text-foreground/60">+1</span>
             <input
@@ -160,7 +236,9 @@ export function AuthScreen() {
               className="ml-3 h-full w-full bg-transparent font-display text-[17px] text-foreground placeholder:text-foreground/45 outline-none"
             />
           </div>
-        ) : (
+        ) : null}
+
+        {step === "entry" && mode === "email" ? (
           <input
             type="email"
             required
@@ -169,17 +247,213 @@ export function AuthScreen() {
             onChange={(e) => setEmail(e.target.value)}
             aria-label="Email"
             autoComplete="email"
-            className="h-14 w-full rounded-xl border border-foreground/25 bg-transparent px-4 font-display text-[17px] text-foreground outline-none focus:border-foreground"
+            className={field}
           />
-        )}
+        ) : null}
 
-        <button
-          type="button"
-          onClick={() => setMsg("Reach out to support and we’ll help you get back in.")}
-          className="mx-auto mt-5 font-display text-[15px] font-semibold text-foreground underline"
-        >
-          Need help logging in?
-        </button>
+        {step === "code" ? (
+          <>
+            <input
+              type="text"
+              inputMode="numeric"
+              autoFocus
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              aria-label="Verification code"
+              className={field}
+            />
+            <p className="mt-2 font-display text-[14px] text-foreground/60">
+              {resendIn > 0
+                ? `You can request another code in ${resendIn} seconds`
+                : "You can request another code now"}
+            </p>
+            <button
+              type="button"
+              disabled={resendIn > 0}
+              onClick={() => {
+                haptic();
+                setResendIn(45);
+              }}
+              className="mt-4 h-14 w-full rounded-full bg-foreground/10 font-display text-[16px] font-semibold text-foreground disabled:text-foreground/40"
+            >
+              Resend Code
+            </button>
+            <button
+              type="button"
+              disabled={code.replace(/\D/g, "").length < 6}
+              onClick={() => {
+                haptic();
+                setStep("password");
+              }}
+              className={`mt-3 ${primary}`}
+            >
+              Next
+            </button>
+          </>
+        ) : null}
+
+        {step === "password" ? (
+          <>
+            <input
+              type="password"
+              required
+              minLength={6}
+              autoFocus
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              aria-label="Password"
+              autoComplete="current-password"
+              className={field}
+            />
+            <button type="submit" disabled={busy || password.length < 6} className={`mt-6 ${primary}`}>
+              {busy ? "Please wait…" : "Next"}
+            </button>
+          </>
+        ) : null}
+
+        {step === "dob" ? (
+          <>
+            <input
+              type="text"
+              inputMode="numeric"
+              autoFocus
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+              placeholder="MM / DD / YYYY"
+              aria-label="Date of birth"
+              className={field}
+            />
+            <button
+              type="button"
+              disabled={dob.replace(/\D/g, "").length < 8}
+              onClick={() => {
+                haptic();
+                setStep("card");
+              }}
+              className={`mt-8 ${primary}`}
+            >
+              Next
+            </button>
+          </>
+        ) : null}
+
+        {step === "card" ? (
+          <>
+            <label className="font-display text-[15px] font-semibold text-foreground">
+              Debit Card Number
+            </label>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={card}
+              onChange={(e) => setCard(e.target.value)}
+              placeholder="Debit Card Number"
+              aria-label="Debit card number"
+              className={`mt-2 ${field}`}
+            />
+            <div className="mt-4 flex gap-4">
+              <div className="flex-1">
+                <label className="font-display text-[15px] font-semibold text-foreground">
+                  Expiration date
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={exp}
+                  onChange={(e) => setExp(e.target.value)}
+                  placeholder="MM/YY"
+                  aria-label="Expiration date"
+                  className={`mt-2 ${field}`}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="font-display text-[15px] font-semibold text-foreground">CVV</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value)}
+                  placeholder="3-Digit CVV"
+                  aria-label="CVV"
+                  className={`mt-2 ${field}`}
+                />
+              </div>
+            </div>
+            <label className="mt-4 font-display text-[15px] font-semibold text-foreground">
+              ZIP Code
+            </label>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={zip}
+              onChange={(e) => setZip(e.target.value)}
+              placeholder="ZIP Code"
+              aria-label="ZIP code"
+              className={`mt-2 ${field}`}
+            />
+            <p className="mt-3 font-display text-[13px] text-foreground/60">
+              🔒 Secured with 256-bit encryption
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                haptic();
+                setStep("cashtag");
+              }}
+              className="mt-6 h-14 w-full rounded-full bg-foreground/10 font-display text-[16px] font-semibold text-foreground active:opacity-70"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              disabled={card.replace(/\D/g, "").length < 12}
+              onClick={() => {
+                haptic();
+                setStep("cashtag");
+              }}
+              className={`mt-3 ${primary}`}
+            >
+              Link Card
+            </button>
+          </>
+        ) : null}
+
+        {step === "cashtag" ? (
+          <>
+            <div className="flex h-14 w-full items-center rounded-xl border border-foreground/25 px-4">
+              <span className="font-display text-[17px] text-foreground">$</span>
+              <input
+                type="text"
+                autoFocus
+                value={cashtag}
+                onChange={(e) => setCashtag(e.target.value.replace(/[^A-Za-z0-9_]/g, ""))}
+                aria-label="Cashtag"
+                className="ml-1 h-full w-full bg-transparent font-display text-[17px] text-foreground outline-none"
+              />
+            </div>
+            <p className="mt-2 font-display text-[14px] text-foreground/60">
+              cash.app/${cashtag}
+            </p>
+            <button
+              type="button"
+              disabled={busy || cashtag.length < 3}
+              onClick={() => void finish()}
+              className={`mt-8 ${primary}`}
+            >
+              {busy ? "Please wait…" : "Next"}
+            </button>
+          </>
+        ) : null}
+
+        {step === "entry" ? (
+          <button
+            type="button"
+            onClick={() => setMsg("Reach out to support and we’ll help you get back in.")}
+            className="mx-auto mt-5 font-display text-[15px] font-semibold text-foreground underline"
+          >
+            Need help logging in?
+          </button>
+        ) : null}
 
         {msg ? (
           <p role="status" className="mt-4 text-center font-display text-[14px] text-foreground/80">
@@ -189,69 +463,44 @@ export function AuthScreen() {
 
         <div className="flex-1" />
 
-        <p className="mb-4 text-center font-display text-[13px] leading-snug text-foreground/60">
-          By entering and tapping Next, you agree to the{" "}
-          <span className="font-semibold text-foreground underline">Terms</span>,{" "}
-          <span className="font-semibold text-foreground underline">E-Sign Consent</span> &{" "}
-          <span className="font-semibold text-foreground underline">Privacy Notice</span>
-        </p>
-
-        <div className="flex gap-3">
-          {onPassword ? (
+        {step === "entry" ? (
+          <>
+            <p className="mb-4 text-center font-display text-[13px] leading-snug text-foreground/60">
+              By entering and tapping Next, you agree to the{" "}
+              <span className="font-semibold text-foreground underline">Terms</span>,{" "}
+              <span className="font-semibold text-foreground underline">E-Sign Consent</span> &{" "}
+              <span className="font-semibold text-foreground underline">Privacy Notice</span>
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  haptic();
+                  setMode((m) => (m === "phone" ? "email" : "phone"));
+                  setMsg(null);
+                }}
+                className="h-14 flex-1 rounded-full bg-foreground/10 font-display text-[16px] font-semibold text-foreground active:opacity-70"
+              >
+                {mode === "phone" ? "Use Email" : "Use Phone"}
+              </button>
+              <button
+                type="button"
+                onClick={nextFromEntry}
+                disabled={mode === "email" ? !email.includes("@") : phone.length < 3}
+                className="h-14 flex-1 rounded-full bg-foreground font-display text-[16px] font-semibold text-surface disabled:bg-foreground/20 disabled:text-foreground/40"
+              >
+                Next
+              </button>
+            </div>
             <button
               type="button"
-              onClick={() => {
-                haptic();
-                setNewAccount((v) => !v);
-                setMsg(null);
-              }}
-              className="h-14 flex-1 rounded-full bg-foreground/10 font-display text-[16px] font-semibold text-foreground active:opacity-70"
+              onClick={google}
+              disabled={busy}
+              className="mt-3 h-14 w-full rounded-full border border-foreground/20 font-display text-[16px] font-semibold text-foreground active:opacity-70 disabled:opacity-60"
             >
-              {newAccount ? "Sign in" : "Sign up"}
+              Continue with Google
             </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                haptic();
-                setMode((m) => (m === "phone" ? "email" : "phone"));
-                setMsg(null);
-              }}
-              className="h-14 flex-1 rounded-full bg-foreground/10 font-display text-[16px] font-semibold text-foreground active:opacity-70"
-            >
-              {mode === "phone" ? "Use Email" : "Use Phone"}
-            </button>
-          )}
-
-          {onPassword ? (
-            <button
-              type="submit"
-              disabled={busy || password.length < 6}
-              className="h-14 flex-1 rounded-full bg-foreground font-display text-[16px] font-semibold text-surface disabled:bg-foreground/20 disabled:text-foreground/40"
-            >
-              {busy ? "Please wait…" : newAccount ? "Create" : "Next"}
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={nextFromEntry}
-              disabled={mode === "email" ? !email.includes("@") : phone.length < 3}
-              className="h-14 flex-1 rounded-full bg-foreground font-display text-[16px] font-semibold text-surface disabled:bg-foreground/20 disabled:text-foreground/40"
-            >
-              Next
-            </button>
-          )}
-        </div>
-
-        {!onPassword ? (
-          <button
-            type="button"
-            onClick={google}
-            disabled={busy}
-            className="mt-3 h-14 w-full rounded-full border border-foreground/20 font-display text-[16px] font-semibold text-foreground active:opacity-70 disabled:opacity-60"
-          >
-            Continue with Google
-          </button>
+          </>
         ) : null}
       </form>
     </div>
