@@ -44,51 +44,15 @@ function DiscoverBadge() {
   );
 }
 
-function Keypad({ onPress }: { onPress: (key: string) => void }) {
-  const keys: [string, string][] = [
-    ["1", ""],
-    ["2", "ABC"],
-    ["3", "DEF"],
-    ["4", "GHI"],
-    ["5", "JKL"],
-    ["6", "MNO"],
-    ["7", "PQRS"],
-    ["8", "TUV"],
-    ["9", "WXYZ"],
-    [".", ""],
-    ["0", ""],
-    ["back", ""],
-  ];
-  return (
-    <div className="grid grid-cols-3 gap-x-2 gap-y-2 bg-keys px-1.5 pb-8 pt-2">
-      {keys.map(([key, letters]) => (
-        <button
-          key={key}
-          type="button"
-          aria-label={key === "back" ? "Delete" : key === "." ? "Decimal point" : key}
-          onClick={() => {
-            haptic();
-            onPress(key);
-          }}
-          className={`flex h-[46px] flex-col items-center justify-center rounded-[6px] font-display text-cash-ink active:opacity-60 ${
-            key === "." || key === "back" ? "bg-transparent" : "bg-surface-raised shadow-sm"
-          }`}
-        >
-          {key === "back" ? (
-            <Delete className="size-6" strokeWidth={1.8} />
-          ) : (
-            <>
-              <span className="text-[24px] font-normal leading-none">{key}</span>
-              {letters ? (
-                <span className="mt-0.5 text-[9px] font-semibold tracking-[0.12em]">{letters}</span>
-              ) : null}
-            </>
-          )}
-        </button>
-      ))}
-    </div>
-  );
+export function sanitizeAmount(raw: string) {
+  let v = raw.replace(/[^0-9.]/g, "");
+  const first = v.indexOf(".");
+  if (first !== -1) v = v.slice(0, first + 1) + v.slice(first + 1).replace(/\./g, "");
+  const [whole, dec] = v.split(".");
+  const w = (whole ?? "").replace(/^0+(?=\d)/, "").slice(0, 9);
+  return dec === undefined ? w : `${w || "0"}.${dec.slice(0, 2)}`;
 }
+
 
 function Amount({ value }: { value: string }) {
   const [whole, decimals] = value.split(".");
