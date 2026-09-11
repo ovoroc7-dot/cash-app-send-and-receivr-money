@@ -75,10 +75,17 @@ export function CashProvider({ children }: { children: ReactNode }) {
       },
       cancelPayment: (id) => setPending((list) => list.filter((p) => p.id !== id)),
     }),
-    [pending, balance, autoReload],
+    [pending, balance, autoReload, announce],
   );
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={value}>
+      {children}
+      <p aria-live="polite" aria-atomic="true" role="status" className="sr-only">
+        {live}
+      </p>
+    </Ctx.Provider>
+  );
 }
 
 export function useCash() {
