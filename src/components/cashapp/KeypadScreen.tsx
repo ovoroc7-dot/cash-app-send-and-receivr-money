@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Search, Briefcase, ScanLine } from "lucide-react";
 import { PayFlow } from "./PayFlow";
 import { sanitizeAmount } from "./AddMoneyFlow";
-import { fitSize, groupDisplay, haptic, speakMoney } from "./store";
+import { groupDisplay, haptic } from "./store";
+import { FitAmount } from "./FitAmount";
 
 const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "<"];
 
