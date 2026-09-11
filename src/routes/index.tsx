@@ -42,8 +42,8 @@ function Index() {
 
   return (
     <CashProvider>
-      <main className={green ? "min-h-screen bg-cash" : "min-h-screen bg-surface"}>
-        <div className="relative mx-auto h-screen max-w-md overflow-hidden">
+      <main className={green ? "min-h-[100dvh] bg-cash" : "min-h-[100dvh] bg-surface"}>
+        <div className="relative mx-auto h-[100dvh] w-full max-w-md overflow-x-hidden overflow-y-hidden">
           {splash ? (
             <div className="flex h-full items-center justify-center bg-cash sysdark:bg-black">
               <img
