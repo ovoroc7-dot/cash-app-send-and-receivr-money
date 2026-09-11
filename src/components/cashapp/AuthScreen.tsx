@@ -151,7 +151,7 @@ export function AuthScreen() {
 
   const titles: Partial<Record<Step, string>> = {
     code: "Please enter the code sent to",
-    password: "Enter your password",
+    
     dob: "What’s your date of birth?",
     card: "Add a bank using your debit card",
     cashtag: "Choose a $Cashtag",
