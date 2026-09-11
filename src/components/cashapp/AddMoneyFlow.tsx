@@ -65,8 +65,11 @@ function Keypad({ onPress }: { onPress: (key: string) => void }) {
         <button
           key={key}
           type="button"
-          aria-label={key === "back" ? "Backspace" : key}
-          onClick={() => onPress(key)}
+          aria-label={key === "back" ? "Delete" : key === "." ? "Decimal point" : key}
+          onClick={() => {
+            haptic();
+            onPress(key);
+          }}
           className={`flex h-[46px] flex-col items-center justify-center rounded-[6px] font-display text-cash-ink active:opacity-60 ${
             key === "." || key === "back" ? "bg-transparent" : "bg-white shadow-sm"
           }`}
