@@ -5,6 +5,8 @@ import dollarSign from "@/assets/dollar-sign.png";
 import { haptic } from "./store";
 
 type Step =
+  | "chooser"
+  | "loading"
   | "welcome"
   | "entry"
   | "code"
@@ -21,7 +23,8 @@ type Mode = "phone" | "email";
 const CODE_PREFIX = "962-";
 
 export function AuthScreen() {
-  const [step, setStep] = useState<Step>("welcome");
+  const [step, setStep] = useState<Step>("chooser");
+  const [afterLoading, setAfterLoading] = useState<Step>("welcome");
   const [mode, setMode] = useState<Mode>("phone");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -45,9 +48,23 @@ export function AuthScreen() {
     return () => clearInterval(t);
   }, [step]);
 
+  // Loading spinner interlude, then continue to the queued step.
+  useEffect(() => {
+    if (step !== "loading") return;
+    const t = setTimeout(() => setStep(afterLoading), 1400);
+    return () => clearTimeout(t);
+  }, [step, afterLoading]);
+
+  const goWithSpinner = (next: Step) => {
+    haptic();
+    setMsg(null);
+    setAfterLoading(next);
+    setStep("loading");
+  };
+
   // Paint the status-bar area to match the welcome screen's black background.
   useEffect(() => {
-    if (step === "welcome") {
+    if (step === "welcome" || step === "loading") {
       document.body.style.backgroundColor = "#000000";
     } else {
       document.body.style.backgroundColor = "var(--surface)";
@@ -105,9 +122,83 @@ export function AuthScreen() {
       card: "code",
       code: "entry",
       entry: "welcome",
+      welcome: "chooser",
     };
-    setStep((s) => prev[s] ?? "welcome");
+    setStep((s) => prev[s] ?? "chooser");
   };
+
+  if (step === "chooser") {
+    const accounts = [
+      { tag: "$sugarmummy1072", name: "Sugar Mummy", initial: "S", verified: false },
+      { tag: "$bkhodae", name: "Emily", initial: "E", verified: true },
+    ];
+    return (
+      <div className="h-full overflow-y-auto bg-surface px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+        <div className="flex justify-end">
+          <button type="button" aria-label="More options" className="p-2 text-foreground active:opacity-60">
+            <span className="font-display text-[20px] font-bold leading-none">···</span>
+          </button>
+        </div>
+
+        <div className="mt-4 flex size-[52px] items-center justify-center rounded-[14px] bg-cash">
+          <img src={dollarSign} alt="" className="h-7 w-auto object-contain" />
+        </div>
+
+        <h1 className="mt-5 font-display text-[30px] font-bold tracking-[-0.02em] text-foreground">
+          Choose an account
+        </h1>
+
+        <div className="mt-5">
+          {accounts.map((a) => (
+            <button
+              key={a.tag}
+              type="button"
+              onClick={() => goWithSpinner("welcome")}
+              className="flex w-full items-center gap-4 py-4 text-left active:opacity-60"
+            >
+              <span className="flex size-[44px] shrink-0 items-center justify-center rounded-full bg-[#f038b0] font-display text-[18px] font-bold text-white">
+                {a.initial}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-display text-[16px] font-semibold text-foreground">
+                  {a.tag}
+                  {a.verified ? <span className="ml-1 text-cash">●</span> : null}
+                </span>
+                <span className="block truncate text-[14px] text-muted-foreground">{a.name}</span>
+              </span>
+              <span className="text-[18px] text-muted-foreground">›</span>
+            </button>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => goWithSpinner("welcome")}
+            className="flex w-full items-center gap-4 py-4 text-left active:opacity-60"
+          >
+            <span className="flex size-[44px] shrink-0 items-center justify-center rounded-full bg-foreground/8 font-display text-[22px] font-semibold text-foreground">
+              +
+            </span>
+            <span className="min-w-0 flex-1 font-display text-[16px] font-semibold text-foreground">
+              Sign in to another account
+            </span>
+            <span className="text-[18px] text-muted-foreground">›</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === "loading") {
+    return (
+      <div
+        className="flex h-full items-center justify-center bg-black"
+        role="status"
+        aria-label="Loading"
+      >
+        <span className="size-8 animate-spin rounded-full border-2 border-white/25 border-t-white" />
+      </div>
+    );
+  }
 
   if (step === "welcome") {
     return (
@@ -131,10 +222,7 @@ export function AuthScreen() {
 
         <button
           type="button"
-          onClick={() => {
-            haptic();
-            setStep("entry");
-          }}
+          onClick={() => goWithSpinner("entry")}
           className="mt-8 h-14 w-full rounded-full bg-white/12 font-display text-[17px] font-semibold text-white active:opacity-70"
         >
           Get started
