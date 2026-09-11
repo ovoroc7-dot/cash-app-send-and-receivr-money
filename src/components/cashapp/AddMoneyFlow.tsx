@@ -55,18 +55,14 @@ export function sanitizeAmount(raw: string) {
 
 
 function Amount({ value }: { value: string }) {
-  const text = groupDisplay(value);
   return (
-    <p
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-      aria-label={`Amount ${speakMoney(Number(value || 0))}`}
-      style={{ fontSize: `${fitSize(text, 64)}px` }}
-      className="w-full max-w-full truncate text-center font-display font-bold leading-none tracking-[-0.04em] text-cash-ink"
-    >
-      {text}
-    </p>
+    <FitAmount
+      text={groupDisplay(value)}
+      value={Number(value || 0)}
+      base={64}
+      min={22}
+      className="font-display font-bold tracking-[-0.04em] text-cash-ink"
+    />
   );
 }
 
