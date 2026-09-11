@@ -122,9 +122,83 @@ export function AuthScreen() {
       card: "code",
       code: "entry",
       entry: "welcome",
+      welcome: "chooser",
     };
-    setStep((s) => prev[s] ?? "welcome");
+    setStep((s) => prev[s] ?? "chooser");
   };
+
+  if (step === "chooser") {
+    const accounts = [
+      { tag: "$sugarmummy1072", name: "Sugar Mummy", initial: "S", verified: false },
+      { tag: "$bkhodae", name: "Emily", initial: "E", verified: true },
+    ];
+    return (
+      <div className="h-full overflow-y-auto bg-surface px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+        <div className="flex justify-end">
+          <button type="button" aria-label="More options" className="p-2 text-foreground active:opacity-60">
+            <span className="font-display text-[20px] font-bold leading-none">···</span>
+          </button>
+        </div>
+
+        <div className="mt-4 flex size-[52px] items-center justify-center rounded-[14px] bg-cash">
+          <img src={dollarSign} alt="" className="h-7 w-auto object-contain" />
+        </div>
+
+        <h1 className="mt-5 font-display text-[30px] font-bold tracking-[-0.02em] text-foreground">
+          Choose an account
+        </h1>
+
+        <div className="mt-5">
+          {accounts.map((a) => (
+            <button
+              key={a.tag}
+              type="button"
+              onClick={() => goWithSpinner("welcome")}
+              className="flex w-full items-center gap-4 py-4 text-left active:opacity-60"
+            >
+              <span className="flex size-[44px] shrink-0 items-center justify-center rounded-full bg-[#f038b0] font-display text-[18px] font-bold text-white">
+                {a.initial}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-display text-[16px] font-semibold text-foreground">
+                  {a.tag}
+                  {a.verified ? <span className="ml-1 text-cash">●</span> : null}
+                </span>
+                <span className="block truncate text-[14px] text-muted-foreground">{a.name}</span>
+              </span>
+              <span className="text-[18px] text-muted-foreground">›</span>
+            </button>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => goWithSpinner("welcome")}
+            className="flex w-full items-center gap-4 py-4 text-left active:opacity-60"
+          >
+            <span className="flex size-[44px] shrink-0 items-center justify-center rounded-full bg-foreground/8 font-display text-[22px] font-semibold text-foreground">
+              +
+            </span>
+            <span className="min-w-0 flex-1 font-display text-[16px] font-semibold text-foreground">
+              Sign in to another account
+            </span>
+            <span className="text-[18px] text-muted-foreground">›</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === "loading") {
+    return (
+      <div
+        className="flex h-full items-center justify-center bg-black"
+        role="status"
+        aria-label="Loading"
+      >
+        <span className="size-8 animate-spin rounded-full border-2 border-white/25 border-t-white" />
+      </div>
+    );
+  }
 
   if (step === "welcome") {
     return (
