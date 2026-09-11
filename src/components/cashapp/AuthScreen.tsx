@@ -650,14 +650,6 @@ export function AuthScreen() {
                 Next
               </button>
             </div>
-            <button
-              type="button"
-              onClick={google}
-              disabled={busy}
-              className="mt-3 h-14 w-full rounded-full border border-foreground/20 font-display text-[16px] font-semibold text-foreground active:opacity-70 disabled:opacity-60"
-            >
-              Continue with Google
-            </button>
           </>
         ) : null}
       </form>
