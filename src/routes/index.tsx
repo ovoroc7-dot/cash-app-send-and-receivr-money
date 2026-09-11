@@ -45,17 +45,17 @@ function Index() {
       <main className={green ? "min-h-screen bg-cash" : "min-h-screen bg-surface"}>
         <div className="relative mx-auto h-screen max-w-md overflow-hidden">
           {splash ? (
-            <div className="flex h-full items-center justify-center bg-cash dark:bg-black">
+            <div className="flex h-full items-center justify-center bg-cash sysdark:bg-black">
               <img
                 src={cashAppLogo.url}
                 alt="Cash App"
-                className="size-[150px] rounded-[34px] object-contain dark:hidden"
+                className="size-[150px] rounded-[34px] object-contain sysdark:hidden"
               />
-              <div className="hidden size-[150px] items-center justify-center rounded-[34px] bg-white dark:flex">
+              <div className="hidden size-[150px] items-center justify-center rounded-[34px] bg-white sysdark:flex">
                 <img
                   src={dollarSign}
                   alt="Cash App"
-                  className="h-[88px] w-auto object-contain"
+                  className="h-[92px] w-auto object-contain"
                 />
               </div>
             </div>
