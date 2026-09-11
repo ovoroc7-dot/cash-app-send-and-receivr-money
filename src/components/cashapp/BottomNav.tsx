@@ -1,5 +1,5 @@
 import { Clock } from "lucide-react";
-import { haptic } from "./store";
+import { haptic, useCash } from "./store";
 import dollarSign from "@/assets/dollar-sign.png";
 
 export type Tab = "money" | "pay" | "activity";
