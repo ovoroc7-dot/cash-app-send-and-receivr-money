@@ -75,13 +75,20 @@ export function MoneyScreen() {
             </button>
           </div>
           <p className="mt-1 font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink">
-            {hidden ? "••••" : "$100.00"}
+            {hidden
+              ? "••••"
+              : balance.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: 2,
+                })}
           </p>
 
           <div className="mt-12 grid grid-cols-2 gap-3">
             <button
               type="button"
-              className="h-16 rounded-full bg-surface-raised font-display text-[19px] font-bold text-cash-ink"
+              onClick={() => setAddOpen(true)}
+              className="h-16 rounded-full bg-surface-raised font-display text-[19px] font-bold text-cash-ink active:opacity-70"
             >
               Add money
             </button>
