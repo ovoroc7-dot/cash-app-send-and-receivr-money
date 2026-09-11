@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronRight, Delete, Plus, X, CreditCard, Wallet } from "lucide-react";
-import { useCash } from "./store";
+import { haptic, speakMoney, useCash } from "./store";
 
 function CashLoading() {
   return (
@@ -65,8 +65,11 @@ function Keypad({ onPress }: { onPress: (key: string) => void }) {
         <button
           key={key}
           type="button"
-          aria-label={key === "back" ? "Backspace" : key}
-          onClick={() => onPress(key)}
+          aria-label={key === "back" ? "Delete" : key === "." ? "Decimal point" : key}
+          onClick={() => {
+            haptic();
+            onPress(key);
+          }}
           className={`flex h-[46px] flex-col items-center justify-center rounded-[6px] font-display text-cash-ink active:opacity-60 ${
             key === "." || key === "back" ? "bg-transparent" : "bg-white shadow-sm"
           }`}
@@ -91,7 +94,13 @@ function Amount({ value }: { value: string }) {
   const [whole, decimals] = value.split(".");
   const grouped = Number(whole || 0).toLocaleString("en-US");
   return (
-    <p className="font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink">
+    <p
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      aria-label={`Amount ${speakMoney(Number(value || 0))}`}
+      className="font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink"
+    >
       ${grouped}
       {value.includes(".") ? (
         <span className="text-cash-ink/30">.{(decimals ?? "").padEnd(2, "0").slice(0, 2)}</span>
@@ -101,7 +110,7 @@ function Amount({ value }: { value: string }) {
 }
 
 export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
-  const { balance, addFunds } = useCash();
+  const { balance, addFunds, announce } = useCash();
   const [step, setStep] = useState<"sheet" | "amount" | "source" | "card" | "form">("sheet");
   const [up, setUp] = useState(false);
   const [picked, setPicked] = useState<number | null>(null);
@@ -413,6 +422,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             disabled={typed <= 0}
+            aria-label={typed > 0 ? `Add ${speakMoney(typed)} to Cash balance` : "Add"}
             onClick={() => {
               addFunds(typed);
               onClose();
@@ -457,7 +467,14 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             <button
               key={value}
               type="button"
-              onClick={() => setPicked(value)}
+              role="radio"
+              aria-checked={picked === value}
+              aria-label={speakMoney(value)}
+              onClick={() => {
+                haptic();
+                setPicked(value);
+                announce(`${speakMoney(value)} selected`);
+              }}
               className={`h-[52px] rounded-xl border font-display text-[17px] font-semibold text-cash-ink active:opacity-70 ${
                 picked === value ? "border-cash-ink bg-black/[0.04]" : "border-black/10 bg-surface"
               }`}
@@ -485,6 +502,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         <button
           type="button"
           disabled={picked === null}
+          aria-label={picked !== null ? `Add ${speakMoney(picked)} to Cash balance` : "Add"}
           onClick={() => {
             if (picked !== null) addFunds(picked);
             onClose();

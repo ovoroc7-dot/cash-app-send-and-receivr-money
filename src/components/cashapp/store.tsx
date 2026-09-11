@@ -1,6 +1,19 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 
 export const fmtAmount = (amount: string) => `$${Number(amount).toFixed(2)}`;
+
+export const speakMoney = (n: number) =>
+  n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });
+
+/** Phone haptics: short tick on taps, double tick on success. */
+export function haptic(kind: "tap" | "success" = "tap") {
+  if (typeof navigator === "undefined" || typeof navigator.vibrate !== "function") return;
+  try {
+    navigator.vibrate(kind === "success" ? [12, 40, 22] : 10);
+  } catch {
+    /* ignore */
+  }
+}
 
 export type Payment = {
   id: string;
@@ -18,6 +31,7 @@ type Store = {
   addFunds: (amount: number) => void;
   autoReload: boolean;
   setAutoReload: (on: boolean) => void;
+  announce: (message: string) => void;
 };
 
 const Ctx = createContext<Store | null>(null);
@@ -26,6 +40,12 @@ export function CashProvider({ children }: { children: ReactNode }) {
   const [pending, setPending] = useState<Payment[]>([]);
   const [balance, setBalance] = useState(100);
   const [autoReload, setAutoReload] = useState(false);
+  const [live, setLive] = useState("");
+
+  const announce = useCallback((message: string) => {
+    setLive("");
+    requestAnimationFrame(() => setLive(message));
+  }, []);
 
   const value = useMemo<Store>(
     () => ({
@@ -33,7 +53,14 @@ export function CashProvider({ children }: { children: ReactNode }) {
       balance,
       autoReload,
       setAutoReload,
-      addFunds: (amount) => setBalance((b) => b + amount),
+      announce,
+      addFunds: (amount) =>
+        setBalance((b) => {
+          const next = b + amount;
+          haptic("success");
+          announce(`Added ${speakMoney(amount)}. Cash balance ${speakMoney(next)}.`);
+          return next;
+        }),
       addPayment: (p) => {
         const id = Math.random().toString(36).slice(2);
         setPending((list) => [
@@ -48,10 +75,17 @@ export function CashProvider({ children }: { children: ReactNode }) {
       },
       cancelPayment: (id) => setPending((list) => list.filter((p) => p.id !== id)),
     }),
-    [pending, balance, autoReload],
+    [pending, balance, autoReload, announce],
   );
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={value}>
+      {children}
+      <p aria-live="polite" aria-atomic="true" role="status" className="sr-only">
+        {live}
+      </p>
+    </Ctx.Provider>
+  );
 }
 
 export function useCash() {
