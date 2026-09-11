@@ -48,7 +48,7 @@ function Index() {
               <img
                 src={cashAppLogo.url}
                 alt="Cash App"
-                className="size-[86px] rounded-[24px] object-contain"
+                className="size-[150px] rounded-[34px] object-contain"
               />
             </div>
           ) : (
