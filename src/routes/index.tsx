@@ -35,7 +35,7 @@ function Index() {
   const green = tab === "pay";
 
   useEffect(() => {
-    const t = setTimeout(() => setSplash(false), 1600);
+    const t = setTimeout(() => setSplash(false), 1000);
     return () => clearTimeout(t);
   }, []);
 
