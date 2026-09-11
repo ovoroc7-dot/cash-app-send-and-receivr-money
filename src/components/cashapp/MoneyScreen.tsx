@@ -267,6 +267,7 @@ export function MoneyScreen() {
       </section>
     </div>
     {addOpen ? <AddMoneyFlow onClose={() => setAddOpen(false)} /> : null}
+    {btcOpen ? <BitcoinScreen onClose={() => setBtcOpen(false)} /> : null}
     </>
   );
 }
