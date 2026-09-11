@@ -68,6 +68,7 @@ export function PayFlow({
         <div className="space-y-2">
           <button
             type="button"
+            onClick={() => setStep("receipt")}
             className="flex h-14 w-full items-center justify-center rounded-full bg-black/[0.08] font-display text-[20px] font-semibold text-cash-ink"
           >
             Receipt
