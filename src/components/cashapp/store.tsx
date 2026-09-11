@@ -12,7 +12,7 @@ export type Payment = {
 
 type Store = {
   pending: Payment[];
-  addPayment: (p: Omit<Payment, "id" | "time">) => void;
+  addPayment: (p: Omit<Payment, "id" | "time">) => string;
   cancelPayment: (id: string) => void;
 };
 
@@ -24,15 +24,18 @@ export function CashProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Store>(
     () => ({
       pending,
-      addPayment: (p) =>
+      addPayment: (p) => {
+        const id = Math.random().toString(36).slice(2);
         setPending((list) => [
           {
             ...p,
-            id: Math.random().toString(36).slice(2),
+            id,
             time: new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }),
           },
           ...list,
-        ]),
+        ]);
+        return id;
+      },
       cancelPayment: (id) => setPending((list) => list.filter((p) => p.id !== id)),
     }),
     [pending],

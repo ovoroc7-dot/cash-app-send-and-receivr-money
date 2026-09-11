@@ -30,11 +30,12 @@ export function PayFlow({
   mode: "Pay" | "Request";
   onClose: () => void;
 }) {
-  const { addPayment } = useCash();
+  const { addPayment, cancelPayment } = useCash();
   const [step, setStep] = useState<Step>("contacts");
   const [person, setPerson] = useState<(typeof contacts)[number] | null>(null);
   const [note, setNote] = useState("");
   const [method, setMethod] = useState("discover");
+  const [paymentId, setPaymentId] = useState<string | null>(null);
 
   const title = (
     <h2 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
@@ -130,6 +131,7 @@ export function PayFlow({
           <button
             type="button"
             onClick={() => {
+              if (paymentId) cancelPayment(paymentId);
               onClose();
             }}
             className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
@@ -361,7 +363,8 @@ export function PayFlow({
                 <button
                   type="button"
                   onClick={() => {
-                    addPayment({ name: person!.name, amount, note });
+                    const id = addPayment({ name: person!.name, amount, note });
+                    setPaymentId(id);
                     setStep("sent");
                   }}
                   className="mt-3 h-14 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
