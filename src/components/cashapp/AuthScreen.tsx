@@ -542,14 +542,76 @@ export function AuthScreen() {
             </p>
             <button
               type="button"
-              disabled={busy || cashtag.length < 3}
-              onClick={() => void finish()}
+              disabled={cashtag.length < 3}
+              onClick={() => {
+                haptic();
+                setStep("zipcode");
+              }}
               className={`mt-8 ${primary}`}
             >
-              {busy ? "Please wait…" : "Next"}
+              Next
             </button>
           </>
         ) : null}
+
+        {step === "zipcode" ? (
+          <>
+            <input
+              type="text"
+              inputMode="numeric"
+              autoFocus
+              value={homeZip}
+              onChange={(e) => setHomeZip(e.target.value.replace(/\D/g, "").slice(0, 5))}
+              placeholder="ZIP Code"
+              aria-label="ZIP code"
+              className={field}
+            />
+            <button
+              type="button"
+              disabled={homeZip.length < 5}
+              onClick={() => {
+                haptic();
+                setPin("");
+                setStep("pin");
+              }}
+              className={`mt-8 ${primary}`}
+            >
+              Next
+            </button>
+          </>
+        ) : null}
+
+        {step === "pin" ? (
+          <>
+            <div className="mt-2 flex gap-4" aria-hidden>
+              {[0, 1, 2, 3].map((i) => (
+                <span
+                  key={i}
+                  className={`size-5 rounded-full border-2 border-foreground/40 ${
+                    pin.length > i ? "bg-foreground" : ""
+                  }`}
+                />
+              ))}
+            </div>
+            <input
+              type="password"
+              inputMode="numeric"
+              autoFocus
+              value={pin}
+              onChange={(e) => {
+                const v = e.target.value.replace(/\D/g, "").slice(0, 4);
+                setPin(v);
+                if (v.length === 4) {
+                  haptic("success");
+                  setTimeout(() => setStep("cashcard"), 200);
+                }
+              }}
+              aria-label="Cash App PIN"
+              className="mt-6 h-14 w-full rounded-xl border border-foreground/25 bg-transparent px-4 font-display text-[17px] tracking-[0.5em] text-foreground outline-none focus:border-foreground"
+            />
+          </>
+        ) : null}
+
 
         {step === "entry" ? (
           <button
