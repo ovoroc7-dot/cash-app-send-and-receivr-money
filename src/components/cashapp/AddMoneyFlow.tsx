@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronRight, Delete, Plus, X, CreditCard, Wallet } from "lucide-react";
+import { Check, ChevronRight, Delete, Plus, X, CreditCard, Wallet } from "lucide-react";
 import { haptic, speakMoney, useCash } from "./store";
 
 function CashLoading() {
@@ -111,7 +111,10 @@ function Amount({ value }: { value: string }) {
 
 export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   const { balance, addFunds, announce } = useCash();
-  const [step, setStep] = useState<"sheet" | "amount" | "source" | "card" | "form">("sheet");
+  const [step, setStep] = useState<"sheet" | "amount" | "source" | "card" | "form" | "done">(
+    "sheet",
+  );
+  const [added, setAdded] = useState(0);
   const [up, setUp] = useState(false);
   const [picked, setPicked] = useState<number | null>(null);
   const [digits, setDigits] = useState("");
@@ -140,6 +143,15 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
     }, 650);
   };
 
+
+  const confirm = (amount: number) => {
+    if (amount <= 0) return;
+    haptic();
+    addFunds(amount);
+    setAdded(amount);
+    announce(`You added ${speakMoney(amount)} to your Cash App`);
+    go("done");
+  };
 
   const typed = digits ? Number(digits) : 0;
   const sourceLabel = source === "discover" ? "Discover debit 9607" : "Apple Pay";
@@ -192,6 +204,40 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
     return (
       <div className="absolute inset-0 z-50 flex justify-center bg-surface pt-[26vh] animate-fade-in">
         <CashLoading />
+      </div>
+    );
+  }
+
+  if (step === "done") {
+    const shown = Number.isInteger(added) ? `$${added.toLocaleString("en-US")}` : money(added);
+    return (
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
+        <div className="flex-1 px-6 pt-10">
+          <span className="flex size-14 items-center justify-center rounded-full bg-cash">
+            <Check className="size-8 text-white" strokeWidth={3.2} />
+          </span>
+          <h2
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            className="mt-6 font-display text-[34px] font-bold leading-[1.12] tracking-[-0.02em] text-cash-ink"
+          >
+            You added {shown} to your Cash App
+          </h2>
+        </div>
+        <div className="px-5 pb-8">
+          <button
+            type="button"
+            aria-label="Done, back to Cash balance"
+            onClick={() => {
+              haptic();
+              onClose();
+            }}
+            className="h-[56px] w-full rounded-full bg-cash font-display text-[18px] font-bold text-cash-key active:opacity-80"
+          >
+            Done
+          </button>
+        </div>
       </div>
     );
   }
@@ -424,8 +470,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             disabled={typed <= 0}
             aria-label={typed > 0 ? `Add ${speakMoney(typed)} to Cash balance` : "Add"}
             onClick={() => {
-              addFunds(typed);
-              onClose();
+              confirm(typed);
             }}
             className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80 disabled:bg-[#adadad] disabled:text-surface-raised/70"
           >
@@ -504,8 +549,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
           disabled={picked === null}
           aria-label={picked !== null ? `Add ${speakMoney(picked)} to Cash balance` : "Add"}
           onClick={() => {
-            if (picked !== null) addFunds(picked);
-            onClose();
+            if (picked !== null) confirm(picked);
           }}
           className="mt-2 h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80 disabled:bg-[#adadad] disabled:text-surface-raised/70"
         >
