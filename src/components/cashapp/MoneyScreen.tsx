@@ -16,7 +16,7 @@ import iconSavings from "@/assets/icon-savings.png";
 import iconBitcoin from "@/assets/icon-bitcoin.png";
 import avatar from "@/assets/avatar.jpg";
 import { AddMoneyFlow } from "./AddMoneyFlow";
-import { useCash } from "./store";
+import { fitSize, useCash } from "./store";
 
 export function MoneyScreen() {
   const [hidden, setHidden] = useState(false);
