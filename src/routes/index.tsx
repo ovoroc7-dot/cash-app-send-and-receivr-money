@@ -6,6 +6,7 @@ import { MoneyScreen } from "@/components/cashapp/MoneyScreen";
 import { ActivityScreen } from "@/components/cashapp/ActivityScreen";
 import { CashProvider } from "@/components/cashapp/store";
 import cashAppLogo from "@/assets/cash-app-logo.png.asset.json";
+import dollarSign from "@/assets/dollar-sign.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -44,12 +45,19 @@ function Index() {
       <main className={green ? "min-h-screen bg-cash" : "min-h-screen bg-surface"}>
         <div className="relative mx-auto h-screen max-w-md overflow-hidden">
           {splash ? (
-            <div className="flex h-full items-center justify-center bg-cash">
+            <div className="flex h-full items-center justify-center bg-cash dark:bg-black">
               <img
                 src={cashAppLogo.url}
                 alt="Cash App"
-                className="size-[150px] rounded-[34px] object-contain"
+                className="size-[150px] rounded-[34px] object-contain dark:hidden"
               />
+              <div className="hidden size-[150px] items-center justify-center rounded-[34px] bg-white dark:flex">
+                <img
+                  src={dollarSign}
+                  alt="Cash App"
+                  className="h-[88px] w-auto object-contain"
+                />
+              </div>
             </div>
           ) : (
             <>
