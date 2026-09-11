@@ -426,9 +426,9 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             <CloseX onClick={onClose} label="Close add money" />
           </div>
           <div className="text-center">
-            <p className="font-display text-[15px] font-semibold text-cash-ink">Add money</p>
-            <p className="font-display text-[14px] text-cash-ink/45">
-              Cash balance {money(balance)}
+            <p className="font-display text-[17px] font-bold text-cash-ink">Amount</p>
+            <p className="mt-1 font-display text-[14px] text-cash-ink/45">
+              Cash Balance: {money(balance)}
             </p>
           </div>
         </div>
@@ -437,25 +437,20 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
           <AmountField value={digits} onChange={setDigits} />
         </div>
 
-        <div className="px-5">
-          <SourceRow onClick={() => go("source")} />
-        </div>
-
-        <div className="px-5 pt-3">
+        <div className="px-5 pb-6">
           <button
             type="button"
             disabled={typed <= 0}
-            aria-label={typed > 0 ? `Add ${speakMoney(typed)} to Cash balance` : "Add"}
+            aria-label={typed > 0 ? `Continue, add ${speakMoney(typed)} to Cash balance` : "Continue"}
             onClick={() => {
               confirm(typed);
             }}
-            className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80 disabled:bg-[#adadad] disabled:text-surface-raised/70"
+            className="h-[56px] w-full rounded-full bg-cash-ink font-display text-[18px] font-semibold text-surface-raised active:opacity-80 disabled:bg-[#adadad] disabled:text-surface-raised/70"
           >
-            Add
+            Continue
           </button>
         </div>
       </div>
-
     );
   }
 
