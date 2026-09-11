@@ -73,26 +73,26 @@ function Amount({ value }: { value: string }) {
   );
 }
 
-/** Big amount display backed by a real input so the phone keyboard opens. */
-function AmountField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const ref = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    ref.current?.focus();
-  }, []);
+const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "<"];
+
+/** In-app number pad for the Add money amount screen. */
+function Keypad({ onPress }: { onPress: (k: string) => void }) {
   return (
-    <div className="relative flex w-full items-center justify-center">
-      <Amount value={value || "0"} />
-      <input
-        ref={ref}
-        type="text"
-        inputMode="decimal"
-        enterKeyHint="done"
-        autoComplete="off"
-        aria-label="Amount"
-        value={value}
-        onChange={(e) => onChange(sanitizeAmount(e.target.value))}
-        className="absolute inset-0 h-full w-full bg-transparent text-center text-transparent caret-transparent outline-none"
-      />
+    <div role="group" aria-label="Number pad" className="grid grid-cols-3 gap-y-2">
+      {keys.map((k) => (
+        <button
+          key={k}
+          type="button"
+          aria-label={k === "<" ? "Delete" : k === "." ? "Decimal point" : k}
+          onClick={() => {
+            haptic();
+            onPress(k);
+          }}
+          className="mx-auto flex h-16 w-full items-center justify-center font-display text-[30px] font-semibold text-cash-ink active:opacity-40"
+        >
+          {k === "<" ? "⌫" : k}
+        </button>
+      ))}
     </div>
   );
 }
