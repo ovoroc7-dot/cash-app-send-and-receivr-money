@@ -15,9 +15,13 @@ import iconPools from "@/assets/icon-pools.png";
 import iconSavings from "@/assets/icon-savings.png";
 import iconBitcoin from "@/assets/icon-bitcoin.png";
 import avatar from "@/assets/avatar.jpg";
+import { AddMoneyFlow } from "./AddMoneyFlow";
+import { useCash } from "./store";
 
 export function MoneyScreen() {
   const [hidden, setHidden] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
+  const { balance } = useCash();
 
   return (
     <div className="h-full overflow-y-auto bg-surface pb-28">
