@@ -152,6 +152,14 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
     </button>
   );
 
+  if (loading) {
+    return (
+      <div className="absolute inset-0 z-50 flex justify-center bg-surface pt-[26vh] animate-fade-in">
+        <Loader2 className="size-8 animate-spin text-cash-ink" strokeWidth={2.4} />
+      </div>
+    );
+  }
+
   if (step === "form") {
     return (
       <div className="absolute inset-0 z-50 flex flex-col bg-surface">
