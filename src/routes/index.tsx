@@ -55,7 +55,7 @@ function Index() {
                 <img
                   src={dollarSign}
                   alt="Cash App"
-                  className="h-[92px] w-auto object-contain"
+                  className="h-[74px] w-auto object-contain"
                 />
               </div>
             </div>
