@@ -144,6 +144,15 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   };
 
 
+  const confirm = (amount: number) => {
+    if (amount <= 0) return;
+    haptic();
+    addFunds(amount);
+    setAdded(amount);
+    announce(`You added ${speakMoney(amount)} to your Cash App`);
+    go("done");
+  };
+
   const typed = digits ? Number(digits) : 0;
   const sourceLabel = source === "discover" ? "Discover debit 9607" : "Apple Pay";
 
