@@ -26,7 +26,6 @@ export function AuthScreen() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState(CODE_PREFIX);
-  const [password, setPassword] = useState("");
   const [dob, setDob] = useState("");
   const [card, setCard] = useState("");
   const [exp, setExp] = useState("");
@@ -38,7 +37,6 @@ export function AuthScreen() {
   const [msg, setMsg] = useState<string | null>(null);
   const [homeZip, setHomeZip] = useState("");
   const [pin, setPin] = useState("");
-  const signUpFlow = useRef(false);
 
   useEffect(() => {
     if (step !== "code") return;
