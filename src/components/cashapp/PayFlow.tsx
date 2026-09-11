@@ -1,8 +1,19 @@
 import { useState } from "react";
-import { ArrowLeft, Check, ChevronDown, Search, ScanLine, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Ban,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Clock3,
+  MessageSquare,
+  Search,
+  ScanLine,
+  X,
+} from "lucide-react";
 import { contacts, useCash } from "./store";
 
-type Step = "contacts" | "note" | "review" | "method" | "sent";
+type Step = "contacts" | "note" | "review" | "method" | "sent" | "receipt";
 
 const methods = [
   { key: "cash", label: "Cash balance", sub: "$0 available", disabled: true },
