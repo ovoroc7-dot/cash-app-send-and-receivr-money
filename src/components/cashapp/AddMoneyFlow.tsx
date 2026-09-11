@@ -549,8 +549,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
           disabled={picked === null}
           aria-label={picked !== null ? `Add ${speakMoney(picked)} to Cash balance` : "Add"}
           onClick={() => {
-            if (picked !== null) addFunds(picked);
-            onClose();
+            if (picked !== null) confirm(picked);
           }}
           className="mt-2 h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80 disabled:bg-[#adadad] disabled:text-surface-raised/70"
         >
