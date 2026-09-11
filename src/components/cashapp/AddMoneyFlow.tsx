@@ -110,7 +110,7 @@ function Amount({ value }: { value: string }) {
 }
 
 export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
-  const { balance, addFunds } = useCash();
+  const { balance, addFunds, announce } = useCash();
   const [step, setStep] = useState<"sheet" | "amount" | "source" | "card" | "form">("sheet");
   const [up, setUp] = useState(false);
   const [picked, setPicked] = useState<number | null>(null);
