@@ -69,6 +69,7 @@
   --color-magenta: var(--magenta);
   --color-cash-light: var(--cash-light);
   --color-alert: var(--alert);
+  --color-keys: var(--keys);
   --font-display: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -84,6 +85,7 @@
   --magenta: #fa54bd;
   --cash-light: #c6f24f;
   --alert: #f5303e;
+  --keys: #d6dae1;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);

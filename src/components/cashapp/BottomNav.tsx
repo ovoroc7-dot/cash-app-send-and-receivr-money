@@ -21,7 +21,7 @@ export function BottomNav({
       className={`absolute inset-x-0 bottom-0 z-20 flex h-[84px] items-end pb-7 transition-colors duration-100 ease-out will-change-transform ${
         green
           ? "bg-cash shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
-          : "bg-white shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
+          : "bg-surface-raised shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
       }`}
     >
       <button
