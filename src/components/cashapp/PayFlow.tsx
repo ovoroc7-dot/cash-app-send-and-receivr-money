@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowLeft,
   Ban,
@@ -36,6 +36,8 @@ export function PayFlow({
   const [note, setNote] = useState("");
   const [method, setMethod] = useState("discover");
   const [paymentId, setPaymentId] = useState<string | null>(null);
+  const [showReceiptAction, setShowReceiptAction] = useState(true);
+  const lastReceiptScrollTop = useRef(0);
 
   const title = (
     <h2 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
@@ -48,7 +50,18 @@ export function PayFlow({
     const time = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
     return (
       <div className="absolute inset-0 z-50 flex flex-col bg-surface-raised">
-        <div className="flex-1 overflow-y-auto px-5 pb-40 pt-4">
+        <div
+          className="flex-1 overflow-y-auto px-5 pb-40 pt-4"
+          onScroll={(event) => {
+            const nextScrollTop = event.currentTarget.scrollTop;
+            const movement = nextScrollTop - lastReceiptScrollTop.current;
+
+            if (Math.abs(movement) > 3) {
+              setShowReceiptAction(movement < 0 || nextScrollTop <= 2);
+              lastReceiptScrollTop.current = nextScrollTop;
+            }
+          }}
+        >
           <button
             type="button"
             aria-label="Close receipt"
@@ -127,7 +140,12 @@ export function PayFlow({
           </div>
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 bg-surface-raised px-5 pb-6 pt-3">
+        <div
+          aria-hidden={!showReceiptAction}
+          className={`absolute inset-x-0 bottom-0 bg-surface-raised px-5 pb-6 pt-3 transition-transform duration-150 ease-out motion-reduce:transition-none ${
+            showReceiptAction ? "translate-y-0" : "translate-y-full pointer-events-none"
+          }`}
+        >
           <button
             type="button"
             onClick={() => {
@@ -363,7 +381,8 @@ export function PayFlow({
                 <button
                   type="button"
                   onClick={() => {
-                    const id = addPayment({ name: person!.name, amount, note });
+                    if (!person) return;
+                    const id = addPayment({ name: person.name, amount, note });
                     setPaymentId(id);
                     setStep("sent");
                   }}
