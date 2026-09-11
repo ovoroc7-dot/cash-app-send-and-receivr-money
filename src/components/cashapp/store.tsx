@@ -40,6 +40,12 @@ export function CashProvider({ children }: { children: ReactNode }) {
   const [pending, setPending] = useState<Payment[]>([]);
   const [balance, setBalance] = useState(100);
   const [autoReload, setAutoReload] = useState(false);
+  const [live, setLive] = useState("");
+
+  const announce = useCallback((message: string) => {
+    setLive("");
+    requestAnimationFrame(() => setLive(message));
+  }, []);
 
   const value = useMemo<Store>(
     () => ({
@@ -47,7 +53,14 @@ export function CashProvider({ children }: { children: ReactNode }) {
       balance,
       autoReload,
       setAutoReload,
-      addFunds: (amount) => setBalance((b) => b + amount),
+      announce,
+      addFunds: (amount) =>
+        setBalance((b) => {
+          const next = b + amount;
+          haptic("success");
+          announce(`Added ${speakMoney(amount)}. Cash balance ${speakMoney(next)}.`);
+          return next;
+        }),
       addPayment: (p) => {
         const id = Math.random().toString(36).slice(2);
         setPending((list) => [
