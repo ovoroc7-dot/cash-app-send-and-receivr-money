@@ -98,20 +98,6 @@ export function AuthScreen() {
     }
   };
 
-  const google = async () => {
-    setBusy(true);
-    setMsg(null);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      setMsg("Could not sign in with Google.");
-      setBusy(false);
-      return;
-    }
-    if (result.redirected) return;
-    setBusy(false);
-  };
 
   const back = () => {
     haptic();
