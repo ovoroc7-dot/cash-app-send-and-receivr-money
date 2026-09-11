@@ -5,6 +5,8 @@ import { KeypadScreen } from "@/components/cashapp/KeypadScreen";
 import { MoneyScreen } from "@/components/cashapp/MoneyScreen";
 import { ActivityScreen } from "@/components/cashapp/ActivityScreen";
 import { CashProvider } from "@/components/cashapp/store";
+import { AuthScreen } from "@/components/cashapp/AuthScreen";
+import { supabase } from "@/integrations/supabase/client";
 import cashAppLogo from "@/assets/cash-app-logo.png.asset.json";
 import dollarSign from "@/assets/dollar-sign.png";
 
@@ -33,11 +35,20 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [splash, setSplash] = useState(true);
   const [tab, setTab] = useState<Tab>("pay");
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const green = tab === "pay";
 
   useEffect(() => {
     const t = setTimeout(() => setSplash(false), 1000);
     return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    void supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) =>
+      setSignedIn(!!session),
+    );
+    return () => sub.subscription.unsubscribe();
   }, []);
 
   // Paint the page (including the area behind the phone status bar) with the
