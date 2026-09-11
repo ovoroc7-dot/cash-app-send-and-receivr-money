@@ -24,18 +24,18 @@ export function BottomNav({
   const iconOn = "text-cash-ink";
   const iconOff = green ? "text-cash-ink/45" : "text-cash-ink/60";
 
-  const item = "relative z-10 flex h-11 w-[56px] items-center justify-center";
+  const item = "relative z-10 flex h-11 w-[72px] items-center justify-center";
 
   return (
     <nav className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center pb-6">
       <div
-        className={`pointer-events-auto relative flex items-center rounded-full px-1.5 py-1.5 backdrop-blur ${pillBg}`}
+        className={`pointer-events-auto relative flex items-center rounded-full px-2 py-1.5 backdrop-blur ${pillBg}`}
       >
         {/* sliding active highlight */}
         <span
           aria-hidden
-          className={`absolute left-1.5 top-1.5 h-11 w-[56px] rounded-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${hiBg}`}
-          style={{ transform: `translateX(${index * 56}px)` } as CSSProperties}
+          className={`absolute left-2 top-1.5 h-11 w-[72px] rounded-2xl transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${hiBg}`}
+          style={{ transform: `translateX(${index * 72}px)` } as CSSProperties}
         />
         <button
           type="button"
