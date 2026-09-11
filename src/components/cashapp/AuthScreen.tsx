@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 import dollarSign from "@/assets/dollar-sign.png";
@@ -61,7 +61,6 @@ export function AuthScreen() {
     setMsg(null);
     try {
       const generated = `Cash-${crypto.randomUUID()}`;
-      setPassword(generated);
       const { data, error } = await supabase.auth.signUp({
         email,
         password: generated,
