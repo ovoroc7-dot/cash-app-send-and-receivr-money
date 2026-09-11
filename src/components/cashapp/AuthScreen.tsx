@@ -379,7 +379,7 @@ export function AuthScreen() {
               disabled={code.replace(/\D/g, "").length < 6}
               onClick={() => {
                 haptic();
-                setStep("password");
+                setStep("card");
               }}
               className={`mt-3 ${primary}`}
             >
