@@ -52,16 +52,14 @@ export function KeypadScreen() {
         </div>
       </header>
 
-      <div className="flex min-w-0 flex-1 items-center justify-center">
-        <span
-          role="status"
-          aria-live="polite"
-          aria-label={`Amount ${speakMoney(Number(amount || 0))}`}
-          style={{ fontSize: `${fitSize(groupDisplay(amount), 84, 6)}px` }}
-          className="w-full max-w-full truncate text-center font-display font-semibold leading-none tracking-[-0.04em] text-cash-key"
-        >
-          {groupDisplay(amount)}
-        </span>
+      <div className="flex min-w-0 flex-1 items-center justify-center px-1">
+        <FitAmount
+          text={groupDisplay(amount)}
+          value={Number(amount || 0)}
+          base={84}
+          min={26}
+          className="font-display font-semibold tracking-[-0.04em] text-cash-key"
+        />
       </div>
 
       <div role="group" aria-label="Number pad" className="grid grid-cols-3">
