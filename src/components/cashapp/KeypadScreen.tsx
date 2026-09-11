@@ -26,7 +26,7 @@ export function KeypadScreen() {
           aria-label="Scan QR code"
           className="flex size-11 items-center justify-center rounded-full bg-cash-lite"
         >
-          <ScanLine className="size-5 text-cash-ink" strokeWidth={2.5} />
+          <ScanLine className="size-5 text-cash-key" strokeWidth={2.5} />
         </button>
         <div className="flex items-center gap-3">
           <button
@@ -34,20 +34,20 @@ export function KeypadScreen() {
             aria-label="Search"
             className="flex size-11 items-center justify-center rounded-full bg-cash-lite"
           >
-            <Search className="size-5 text-cash-ink" strokeWidth={2.8} />
+            <Search className="size-5 text-cash-key" strokeWidth={2.8} />
           </button>
           <button
             type="button"
             aria-label="Profile"
             className="flex size-11 items-center justify-center rounded-full bg-magenta"
           >
-            <Briefcase className="size-5 text-cash-ink" strokeWidth={2.5} />
+            <Briefcase className="size-5 text-cash-key" strokeWidth={2.5} />
           </button>
         </div>
       </header>
 
       <div className="flex flex-1 items-center justify-center">
-        <span className="font-display text-[84px] font-semibold leading-none tracking-[-0.04em] text-cash-ink">
+        <span className="font-display text-[84px] font-semibold leading-none tracking-[-0.04em] text-cash-key">
           ${amount}
         </span>
       </div>
@@ -70,14 +70,14 @@ export function KeypadScreen() {
         <button
           type="button"
           onClick={() => amount !== "0" && setFlow("Request")}
-          className="h-14 rounded-full bg-cash-deep font-display text-[17px] font-semibold text-cash-ink active:opacity-80"
+          className="h-14 rounded-full bg-cash-deep font-display text-[17px] font-semibold text-cash-key active:opacity-80"
         >
           Request
         </button>
         <button
           type="button"
           onClick={() => amount !== "0" && setFlow("Pay")}
-          className="h-14 rounded-full bg-cash-deep font-display text-[17px] font-semibold text-cash-ink active:opacity-80"
+          className="h-14 rounded-full bg-cash-deep font-display text-[17px] font-semibold text-cash-key active:opacity-80"
         >
           Pay
         </button>

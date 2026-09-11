@@ -60,7 +60,7 @@ function Keypad({ onPress }: { onPress: (key: string) => void }) {
     ["back", ""],
   ];
   return (
-    <div className="grid grid-cols-3 gap-x-2 gap-y-2 bg-[#d6dae1] px-1.5 pb-8 pt-2">
+    <div className="grid grid-cols-3 gap-x-2 gap-y-2 bg-keys px-1.5 pb-8 pt-2">
       {keys.map(([key, letters]) => (
         <button
           key={key}
@@ -71,7 +71,7 @@ function Keypad({ onPress }: { onPress: (key: string) => void }) {
             onPress(key);
           }}
           className={`flex h-[46px] flex-col items-center justify-center rounded-[6px] font-display text-cash-ink active:opacity-60 ${
-            key === "." || key === "back" ? "bg-transparent" : "bg-white shadow-sm"
+            key === "." || key === "back" ? "bg-transparent" : "bg-surface-raised shadow-sm"
           }`}
         >
           {key === "back" ? (
@@ -182,7 +182,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="flex size-9 items-center justify-center rounded-full bg-black/[0.04]"
+      className="flex size-9 items-center justify-center rounded-full bg-cash-ink/[0.04]"
     >
       <X className="size-5 text-cash-ink" strokeWidth={2.6} />
     </button>
@@ -218,7 +218,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             type="button"
             onClick={() => setField("card")}
             className={`mt-2 flex h-[52px] w-full items-center rounded-xl border bg-surface px-4 text-left font-display text-[16px] ${
-              field === "card" ? "border-cash-ink" : "border-black/15"
+              field === "card" ? "border-cash-ink" : "border-cash-ink/15"
             } ${card ? "text-cash-ink" : "text-cash-ink/35"}`}
           >
             {card || "Debit Card Number"}
@@ -231,7 +231,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
                 type="button"
                 onClick={() => setField("exp")}
                 className={`mt-2 flex h-[52px] w-full items-center rounded-xl border bg-surface px-4 text-left font-display text-[16px] ${
-                  field === "exp" ? "border-cash-ink" : "border-black/15"
+                  field === "exp" ? "border-cash-ink" : "border-cash-ink/15"
                 } ${exp ? "text-cash-ink" : "text-cash-ink/35"}`}
               >
                 {exp || "MM/YY"}
@@ -243,7 +243,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
                 type="button"
                 onClick={() => setField("cvv")}
                 className={`mt-2 flex h-[52px] w-full items-center rounded-xl border bg-surface px-4 text-left font-display text-[16px] ${
-                  field === "cvv" ? "border-cash-ink" : "border-black/15"
+                  field === "cvv" ? "border-cash-ink" : "border-cash-ink/15"
                 } ${cvv ? "text-cash-ink" : "text-cash-ink/35"}`}
               >
                 {cvv || "3 Digit CVV"}
@@ -257,7 +257,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             type="button"
             disabled={card.length < 15 || exp.length < 4 || cvv.length < 3}
             onClick={() => go("source")}
-            className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white active:opacity-80 disabled:bg-[#adadad] disabled:text-white/70"
+            className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80 disabled:bg-[#adadad] disabled:text-surface-raised/70"
           >
             Link Card
           </button>
@@ -285,10 +285,10 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             out of Cash App.
           </p>
 
-          <hr className="mt-6 border-black/10" />
+          <hr className="mt-6 border-cash-ink/10" />
 
           <div className="flex items-center gap-4 py-5">
-            <span className="flex size-10 items-center justify-center rounded-full bg-black/[0.05]">
+            <span className="flex size-10 items-center justify-center rounded-full bg-cash-ink/[0.05]">
               <CreditCard className="size-5 text-cash-ink" strokeWidth={2} />
             </span>
             <div>
@@ -304,7 +304,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
               setField("card");
               go("form");
             }}
-            className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white active:opacity-80"
+            className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80"
           >
             Continue
           </button>
@@ -317,7 +317,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
     const Radio = ({ on }: { on: boolean }) => (
       <span
         className={`flex size-[22px] items-center justify-center rounded-full border-2 ${
-          on ? "border-cash-ink" : "border-black/20"
+          on ? "border-cash-ink" : "border-cash-ink/20"
         }`}
       >
         {on ? <span className="size-[11px] rounded-full bg-cash-ink" /> : null}
@@ -350,7 +350,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             onClick={() => setSource("applepay")}
             className="mt-6 flex w-full items-center gap-4 text-left"
           >
-            <span className="rounded-[4px] border border-black/15 bg-white px-1.5 py-1 font-display text-[10px] font-semibold text-cash-ink">
+            <span className="rounded-[4px] border border-cash-ink/15 bg-surface-raised px-1.5 py-1 font-display text-[10px] font-semibold text-cash-ink">
               Pay
             </span>
             <span className="flex-1">
@@ -369,7 +369,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             onClick={() => go("card")}
             className="mt-6 flex w-full items-center gap-4 text-left"
           >
-            <span className="flex size-9 items-center justify-center rounded-full bg-black/[0.05]">
+            <span className="flex size-9 items-center justify-center rounded-full bg-cash-ink/[0.05]">
               <Plus className="size-5 text-cash-ink" strokeWidth={2.4} />
             </span>
             <span className="flex-1">
@@ -386,7 +386,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={() => setStep("amount")}
-            className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white active:opacity-80"
+            className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80"
           >
             Done
           </button>
@@ -427,7 +427,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
               addFunds(typed);
               onClose();
             }}
-            className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white active:opacity-80 disabled:bg-[#adadad] disabled:text-white/70"
+            className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80 disabled:bg-[#adadad] disabled:text-surface-raised/70"
           >
             Add
           </button>
@@ -446,7 +446,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         type="button"
         aria-label="Dismiss"
         onClick={onClose}
-        className={`flex-1 cursor-default bg-black/35 transition-opacity duration-300 ${
+        className={`flex-1 cursor-default bg-cash-ink/35 transition-opacity duration-300 ${
           up ? "opacity-100" : "opacity-0"
         }`}
       />
@@ -455,7 +455,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
           up ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        <span className="mx-auto block h-1 w-9 rounded-full bg-black/15" />
+        <span className="mx-auto block h-1 w-9 rounded-full bg-cash-ink/15" />
 
         <div className="mt-3 text-center">
           <h2 className="font-display text-[19px] font-bold text-cash-ink">Add money</h2>
@@ -476,7 +476,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
                 announce(`${speakMoney(value)} selected`);
               }}
               className={`h-[52px] rounded-xl border font-display text-[17px] font-semibold text-cash-ink active:opacity-70 ${
-                picked === value ? "border-cash-ink bg-black/[0.04]" : "border-black/10 bg-surface"
+                picked === value ? "border-cash-ink bg-cash-ink/[0.04]" : "border-cash-ink/10 bg-surface"
               }`}
             >
               ${value}
@@ -489,7 +489,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
               setDigits("");
               setStep("amount");
             }}
-            className="h-[52px] rounded-xl border border-black/10 bg-surface font-display text-[17px] font-semibold text-cash-ink active:opacity-70"
+            className="h-[52px] rounded-xl border border-cash-ink/10 bg-surface font-display text-[17px] font-semibold text-cash-ink active:opacity-70"
           >
             •••
           </button>
@@ -507,7 +507,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             if (picked !== null) addFunds(picked);
             onClose();
           }}
-          className="mt-2 h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white active:opacity-80 disabled:bg-[#adadad] disabled:text-white/70"
+          className="mt-2 h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80 disabled:bg-[#adadad] disabled:text-surface-raised/70"
         >
           Add
         </button>

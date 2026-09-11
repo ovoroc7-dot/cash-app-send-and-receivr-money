@@ -66,7 +66,7 @@ export function PayFlow({
             type="button"
             aria-label="Close receipt"
             onClick={() => setStep("sent")}
-            className="flex size-10 items-center justify-center rounded-full bg-black/[0.05]"
+            className="flex size-10 items-center justify-center rounded-full bg-cash-ink/[0.05]"
           >
             <X className="size-5 text-cash-ink" strokeWidth={2.6} />
           </button>
@@ -88,7 +88,7 @@ export function PayFlow({
             {fmtAmount(amount)}
           </p>
 
-          <div className="mt-8 border-t border-black/10" />
+          <div className="mt-8 border-t border-cash-ink/10" />
           <h3 className="mt-6 font-display text-[22px] font-bold text-cash-ink">
             Transaction details
           </h3>
@@ -106,11 +106,11 @@ export function PayFlow({
             </span>
           </div>
 
-          <div className="mt-8 border-t border-black/10" />
+          <div className="mt-8 border-t border-cash-ink/10" />
           <h3 className="mt-6 font-display text-[22px] font-bold text-cash-ink">
             What you can do
           </h3>
-          <div className="mt-2 divide-y divide-black/[0.06]">
+          <div className="mt-2 divide-y divide-cash-ink/[0.06]">
             {[
               { icon: Ban, label: "Cancel payment" },
               { icon: Clock3, label: `View history with ${person?.name}` },
@@ -152,7 +152,7 @@ export function PayFlow({
               if (paymentId) cancelPayment(paymentId);
               onClose();
             }}
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised"
           >
             <Ban className="size-5" strokeWidth={2.4} />
             Cancel Payment
@@ -188,14 +188,14 @@ export function PayFlow({
           <button
             type="button"
             onClick={() => setStep("receipt")}
-            className="flex h-14 w-full items-center justify-center rounded-full bg-black/[0.08] font-display text-[20px] font-semibold text-cash-ink"
+            className="flex h-14 w-full items-center justify-center rounded-full bg-cash-ink/[0.08] font-display text-[20px] font-semibold text-cash-ink"
           >
             Receipt
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="flex h-14 w-full items-center justify-center rounded-full bg-cash-ink font-display text-[20px] font-semibold text-white"
+            className="flex h-14 w-full items-center justify-center rounded-full bg-cash-ink font-display text-[20px] font-semibold text-surface-raised"
           >
             Done
           </button>
@@ -205,9 +205,9 @@ export function PayFlow({
   }
 
   return (
-    <div className="absolute inset-0 z-40 flex flex-col justify-end bg-black/30">
+    <div className="absolute inset-0 z-40 flex flex-col justify-end bg-cash-ink/30">
       <div className="relative flex h-[93%] flex-col rounded-t-[22px] bg-surface-raised px-6 pb-6 pt-4">
-        <span className="absolute left-1/2 top-2 h-1 w-9 -translate-x-1/2 rounded-full bg-black/15" />
+        <span className="absolute left-1/2 top-2 h-1 w-9 -translate-x-1/2 rounded-full bg-cash-ink/15" />
 
         {step === "method" ? (
           <>
@@ -243,14 +243,14 @@ export function PayFlow({
                   <span
                     className={`size-5 rounded-full border-2 ${
                       method === m.key
-                        ? "border-cash-ink bg-cash-ink ring-2 ring-inset ring-white"
-                        : "border-black/25"
+                        ? "border-cash-ink bg-cash-ink ring-2 ring-inset ring-surface-raised"
+                        : "border-cash-ink/25"
                     }`}
                   />
                 </button>
               ))}
               <div className="flex items-center gap-4">
-                <span className="flex size-9 items-center justify-center rounded-full border border-black/15 font-display text-[20px] text-cash-ink">
+                <span className="flex size-9 items-center justify-center rounded-full border border-cash-ink/15 font-display text-[20px] text-cash-ink">
                   +
                 </span>
                 <span>
@@ -265,7 +265,7 @@ export function PayFlow({
             <button
               type="button"
               onClick={() => setStep("review")}
-              className="h-14 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
+              className="h-14 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised"
             >
               Done
             </button>
@@ -277,7 +277,7 @@ export function PayFlow({
             </button>
             <div className="mt-5">{title}</div>
             <div className="mt-4 flex items-center gap-3">
-              <label className="flex h-11 flex-1 items-center gap-2 rounded-full bg-black/[0.05] px-4">
+              <label className="flex h-11 flex-1 items-center gap-2 rounded-full bg-cash-ink/[0.05] px-4">
                 <Search className="size-4 text-cash-ink/50" strokeWidth={2.6} />
                 <input
                   placeholder="Name, $cashtag, email, phone, US..."
@@ -356,7 +356,7 @@ export function PayFlow({
                   type="button"
                   disabled={!note.trim()}
                   onClick={() => setStep("review")}
-                  className="h-10 rounded-full bg-cash-ink px-5 font-display text-[15px] font-semibold text-white disabled:bg-black/10 disabled:text-cash-ink/40"
+                  className="h-10 rounded-full bg-cash-ink px-5 font-display text-[15px] font-semibold text-surface-raised disabled:bg-cash-ink/10 disabled:text-cash-ink/40"
                 >
                   Review
                 </button>
@@ -367,7 +367,7 @@ export function PayFlow({
                 <button
                   type="button"
                   onClick={() => setStep("method")}
-                  className="flex h-12 items-center gap-2 rounded-full bg-black/[0.05] px-4"
+                  className="flex h-12 items-center gap-2 rounded-full bg-cash-ink/[0.05] px-4"
                 >
                   <span className="size-4 rounded-full bg-[#2b6fe8]" />
                   <span className="flex-1 text-left font-display text-[15px] font-semibold text-cash-ink">
@@ -386,7 +386,7 @@ export function PayFlow({
                     setPaymentId(id);
                     setStep("sent");
                   }}
-                  className="mt-3 h-14 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
+                  className="mt-3 h-14 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised"
                 >
                   {mode}
                 </button>
