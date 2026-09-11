@@ -1,5 +1,5 @@
 import { Clock } from "lucide-react";
-import { haptic } from "./store";
+import { haptic, useCash } from "./store";
 import dollarSign from "@/assets/dollar-sign.png";
 
 export type Tab = "money" | "pay" | "activity";
@@ -13,6 +13,8 @@ export function BottomNav({
   onChange: (t: Tab) => void;
   green?: boolean;
 }) {
+  const { balance } = useCash();
+  const balanceLabel = `$${Math.round(balance).toLocaleString("en-US")}`;
   const moneyActive = tab === "money";
   const payActive = tab === "pay";
   const activityActive = tab === "activity";
@@ -33,7 +35,7 @@ export function BottomNav({
     >
       <button
         type="button"
-        aria-label="Money"
+        aria-label={`Money, cash balance ${balanceLabel}`}
         aria-current={moneyActive ? "page" : undefined}
         onClick={() => select("money")}
         className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
@@ -43,7 +45,7 @@ export function BottomNav({
             moneyActive ? inkOn : inkOff
           }`}
         >
-          $100
+          {balanceLabel}
         </span>
       </button>
 
