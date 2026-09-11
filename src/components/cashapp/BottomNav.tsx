@@ -30,7 +30,7 @@ export function BottomNav({
       className={`absolute inset-x-0 bottom-0 z-20 flex h-[84px] items-end pb-7 transition-colors duration-100 ease-out will-change-transform ${
         green
           ? "bg-cash shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
-          : "bg-surface-raised shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
+          : "bg-surface-raised shadow-[0_-2px_12px_rgba(0,0,0,0.06)] dark:bg-black dark:shadow-none"
       }`}
     >
       <button
@@ -62,7 +62,7 @@ export function BottomNav({
           aria-hidden="true"
           className={`h-[28px] w-auto object-contain transition-opacity duration-100 ease-out ${
             payActive ? "opacity-100" : "opacity-35"
-          }`}
+          } ${green ? "" : "dark:invert"}`}
         />
       </button>
 
