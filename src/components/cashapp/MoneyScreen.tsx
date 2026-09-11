@@ -235,6 +235,8 @@ export function MoneyScreen() {
         </div>
       </section>
     </div>
+    {addOpen ? <AddMoneyFlow onClose={() => setAddOpen(false)} /> : null}
+    </>
   );
 }
 
