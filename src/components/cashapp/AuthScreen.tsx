@@ -222,10 +222,7 @@ export function AuthScreen() {
 
         <button
           type="button"
-          onClick={() => {
-            haptic();
-            setStep("entry");
-          }}
+          onClick={() => goWithSpinner("entry")}
           className="mt-8 h-14 w-full rounded-full bg-white/12 font-display text-[17px] font-semibold text-white active:opacity-70"
         >
           Get started
