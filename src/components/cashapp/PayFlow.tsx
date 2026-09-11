@@ -131,6 +131,7 @@ export function PayFlow({
           <button
             type="button"
             onClick={() => {
+              if (paymentId) cancelPayment(paymentId);
               onClose();
             }}
             className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white"
