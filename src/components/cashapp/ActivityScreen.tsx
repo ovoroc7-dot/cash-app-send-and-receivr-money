@@ -81,7 +81,7 @@ export function ActivityScreen() {
           <span className="font-display text-[34px] font-bold leading-none text-white">$</span>
         </QuickTile>
         {people.map((p) => (
-          <QuickTile key={p.id} label={p.name.split(" ")[0]}>
+          <QuickTile key={p.id} label={p.name.split(" ")[0] ?? p.name}>
             <span className="font-display text-[28px] font-bold leading-none text-white">
               {p.name[0]}
             </span>
