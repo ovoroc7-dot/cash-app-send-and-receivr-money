@@ -48,6 +48,9 @@ export function BottomNav({
         >
           $
         </span>
+        {payActive && (
+          <span className="absolute bottom-0 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full bg-cash" />
+        )}
       </button>
 
       <button
