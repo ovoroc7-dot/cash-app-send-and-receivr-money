@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { ChevronRight, Delete, Plus, X, CreditCard, Wallet } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronRight, Delete, Plus, X, CreditCard, Wallet, Loader2 } from "lucide-react";
 import { useCash } from "./store";
 
 const quick = [10, 25, 50, 100, 200];
@@ -85,10 +85,25 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   const [cvv, setCvv] = useState("");
   const [field, setField] = useState<"card" | "exp" | "cvv">("card");
 
+  const [loading, setLoading] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     const id = requestAnimationFrame(() => setUp(true));
-    return () => cancelAnimationFrame(id);
+    return () => {
+      cancelAnimationFrame(id);
+      if (timer.current) clearTimeout(timer.current);
+    };
   }, []);
+
+  const go = (next: typeof step) => {
+    setLoading(true);
+    timer.current = setTimeout(() => {
+      setStep(next);
+      setLoading(false);
+    }, 650);
+  };
+
 
   const typed = digits ? Number(digits) : 0;
   const sourceLabel = source === "discover" ? "Discover debit 9607" : "Apple Pay";
@@ -137,11 +152,19 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
     </button>
   );
 
+  if (loading) {
+    return (
+      <div className="absolute inset-0 z-50 flex justify-center bg-surface pt-[26vh] animate-fade-in">
+        <Loader2 className="size-8 animate-spin text-cash-ink" strokeWidth={2.4} />
+      </div>
+    );
+  }
+
   if (step === "form") {
     return (
-      <div className="absolute inset-0 z-50 flex flex-col bg-surface">
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
         <div className="px-5 pt-4">
-          <CloseX onClick={() => setStep("card")} label="Close link card" />
+          <CloseX onClick={() => go("card")} label="Close link card" />
         </div>
         <div className="flex-1 overflow-y-auto px-5 pt-3">
           <h2 className="font-display text-[26px] font-bold tracking-[-0.02em] text-cash-ink">
@@ -197,7 +220,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             disabled={card.length < 15 || exp.length < 4 || cvv.length < 3}
-            onClick={() => setStep("source")}
+            onClick={() => go("source")}
             className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white active:opacity-80 disabled:bg-[#adadad] disabled:text-white/70"
           >
             Link Card
@@ -210,9 +233,9 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
 
   if (step === "card") {
     return (
-      <div className="absolute inset-0 z-50 flex flex-col bg-surface">
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
         <div className="px-5 pt-4">
-          <CloseX onClick={() => setStep("source")} label="Close link card" />
+          <CloseX onClick={() => go("source")} label="Close link card" />
         </div>
         <div className="flex-1 px-5 pt-4">
           <span className="flex size-12 items-center justify-center rounded-full bg-cash">
@@ -243,7 +266,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             type="button"
             onClick={() => {
               setField("card");
-              setStep("form");
+              go("form");
             }}
             className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-white active:opacity-80"
           >
@@ -265,7 +288,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
       </span>
     );
     return (
-      <div className="absolute inset-0 z-50 flex flex-col bg-surface">
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
         <div className="px-5 pt-4">
           <CloseX onClick={() => setStep("amount")} label="Close add money from" />
         </div>
@@ -307,7 +330,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
 
           <button
             type="button"
-            onClick={() => setStep("card")}
+            onClick={() => go("card")}
             className="mt-6 flex w-full items-center gap-4 text-left"
           >
             <span className="flex size-9 items-center justify-center rounded-full bg-black/[0.05]">
@@ -338,7 +361,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
 
   if (step === "amount") {
     return (
-      <div className="absolute inset-0 z-50 flex flex-col bg-surface">
+      <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
         <div className="relative px-5 pt-4">
           <div className="absolute left-5 top-3">
             <CloseX onClick={onClose} label="Close add money" />
@@ -356,7 +379,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="px-5">
-          <SourceRow onClick={() => setStep("source")} />
+          <SourceRow onClick={() => go("source")} />
         </div>
 
         <div className="px-5 pt-3">
@@ -386,12 +409,12 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         type="button"
         aria-label="Dismiss"
         onClick={onClose}
-        className={`flex-1 cursor-default bg-black/35 transition-opacity duration-200 ${
+        className={`flex-1 cursor-default bg-black/35 transition-opacity duration-300 ${
           up ? "opacity-100" : "opacity-0"
         }`}
       />
       <div
-        className={`rounded-t-[22px] bg-surface px-5 pb-8 pt-3 transition-transform duration-200 ease-out ${
+        className={`rounded-t-[22px] bg-surface px-5 pb-8 pt-3 transition-transform duration-[320ms] ease-out ${
           up ? "translate-y-0" : "translate-y-full"
         }`}
       >
@@ -429,7 +452,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="mt-3">
-          <SourceRow onClick={() => setStep("source")} />
+          <SourceRow onClick={() => go("source")} />
         </div>
 
         <button
