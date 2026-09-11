@@ -1,22 +1,17 @@
-import { useState } from "react";
-import { ChevronLeft, Search, Briefcase, ScanLine } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Search, Briefcase, ScanLine } from "lucide-react";
 import { PayFlow } from "./PayFlow";
+import { sanitizeAmount } from "./AddMoneyFlow";
 
 export function KeypadScreen() {
   const [amount, setAmount] = useState("0");
   const [flow, setFlow] = useState<"Pay" | "Request" | null>(null);
+  const input = useRef<HTMLInputElement>(null);
 
-  const press = (k: string) => {
-    setAmount((a) => {
-      if (k === "<") return a.length <= 1 ? "0" : a.slice(0, -1);
-      if (k === ".") return a.includes(".") ? a : a + ".";
-      if (a === "0") return k;
-      if ((a.split(".")[1] ?? "").length >= 2) return a;
-      return a + k;
-    });
-  };
+  useEffect(() => {
+    if (!flow) input.current?.focus();
+  }, [flow]);
 
-  const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "<"];
 
   return (
     <div className="flex h-full flex-col bg-cash px-6 pt-4">
@@ -46,25 +41,27 @@ export function KeypadScreen() {
         </div>
       </header>
 
-      <div className="flex flex-1 items-center justify-center">
-        <span className="font-display text-[84px] font-semibold leading-none tracking-[-0.04em] text-cash-key">
+      <div className="relative flex flex-1 items-center justify-center">
+        <span
+          role="status"
+          aria-live="polite"
+          className="font-display text-[84px] font-semibold leading-none tracking-[-0.04em] text-cash-key"
+        >
           ${amount}
         </span>
+        <input
+          ref={input}
+          type="text"
+          inputMode="decimal"
+          enterKeyHint="done"
+          autoComplete="off"
+          aria-label="Amount"
+          value={amount === "0" ? "" : amount}
+          onChange={(e) => setAmount(sanitizeAmount(e.target.value) || "0")}
+          className="absolute inset-0 h-full w-full bg-transparent text-center text-transparent caret-transparent outline-none"
+        />
       </div>
 
-      <div className="grid grid-cols-3 gap-y-3">
-        {keys.map((k) => (
-          <button
-            key={k}
-            type="button"
-            aria-label={k === "<" ? "Backspace" : k}
-            onClick={() => press(k)}
-            className="flex h-14 items-center justify-center font-display text-[28px] font-semibold text-cash-key active:opacity-50"
-          >
-            {k === "<" ? <ChevronLeft className="size-7" strokeWidth={2.5} /> : k}
-          </button>
-        ))}
-      </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4">
         <button

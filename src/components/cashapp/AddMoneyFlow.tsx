@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronRight, Delete, Plus, X, CreditCard, Wallet } from "lucide-react";
+import { Check, ChevronRight, Plus, X, CreditCard, Wallet } from "lucide-react";
 import { haptic, speakMoney, useCash } from "./store";
 
 function CashLoading() {
@@ -44,51 +44,15 @@ function DiscoverBadge() {
   );
 }
 
-function Keypad({ onPress }: { onPress: (key: string) => void }) {
-  const keys: [string, string][] = [
-    ["1", ""],
-    ["2", "ABC"],
-    ["3", "DEF"],
-    ["4", "GHI"],
-    ["5", "JKL"],
-    ["6", "MNO"],
-    ["7", "PQRS"],
-    ["8", "TUV"],
-    ["9", "WXYZ"],
-    [".", ""],
-    ["0", ""],
-    ["back", ""],
-  ];
-  return (
-    <div className="grid grid-cols-3 gap-x-2 gap-y-2 bg-keys px-1.5 pb-8 pt-2">
-      {keys.map(([key, letters]) => (
-        <button
-          key={key}
-          type="button"
-          aria-label={key === "back" ? "Delete" : key === "." ? "Decimal point" : key}
-          onClick={() => {
-            haptic();
-            onPress(key);
-          }}
-          className={`flex h-[46px] flex-col items-center justify-center rounded-[6px] font-display text-cash-ink active:opacity-60 ${
-            key === "." || key === "back" ? "bg-transparent" : "bg-surface-raised shadow-sm"
-          }`}
-        >
-          {key === "back" ? (
-            <Delete className="size-6" strokeWidth={1.8} />
-          ) : (
-            <>
-              <span className="text-[24px] font-normal leading-none">{key}</span>
-              {letters ? (
-                <span className="mt-0.5 text-[9px] font-semibold tracking-[0.12em]">{letters}</span>
-              ) : null}
-            </>
-          )}
-        </button>
-      ))}
-    </div>
-  );
+export function sanitizeAmount(raw: string) {
+  let v = raw.replace(/[^0-9.]/g, "");
+  const first = v.indexOf(".");
+  if (first !== -1) v = v.slice(0, first + 1) + v.slice(first + 1).replace(/\./g, "");
+  const [whole, dec] = v.split(".");
+  const w = (whole ?? "").replace(/^0+(?=\d)/, "").slice(0, 9);
+  return dec === undefined ? w : `${w || "0"}.${dec.slice(0, 2)}`;
 }
+
 
 function Amount({ value }: { value: string }) {
   const [whole, decimals] = value.split(".");
@@ -109,6 +73,35 @@ function Amount({ value }: { value: string }) {
   );
 }
 
+/** Big amount display backed by a real input so the phone keyboard opens. */
+function AmountField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    ref.current?.focus();
+  }, []);
+  return (
+    <div className="relative flex w-full items-center justify-center">
+      <Amount value={value || "0"} />
+      <input
+        ref={ref}
+        type="text"
+        inputMode="decimal"
+        enterKeyHint="done"
+        autoComplete="off"
+        aria-label="Amount"
+        value={value}
+        onChange={(e) => onChange(sanitizeAmount(e.target.value))}
+        className="absolute inset-0 h-full w-full bg-transparent text-center text-transparent caret-transparent outline-none"
+      />
+    </div>
+  );
+}
+
+const fieldClass = (filled: boolean) =>
+  `mt-2 h-[52px] w-full rounded-xl border bg-surface px-4 font-display text-[16px] outline-none placeholder:text-cash-ink/35 focus:border-cash-ink ${
+    filled ? "border-cash-ink/40 text-cash-ink" : "border-cash-ink/15 text-cash-ink"
+  }`;
+
 export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   const { balance, addFunds, announce } = useCash();
   const [step, setStep] = useState<"sheet" | "amount" | "source" | "card" | "form" | "done">(
@@ -122,7 +115,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   const [card, setCard] = useState("");
   const [exp, setExp] = useState("");
   const [cvv, setCvv] = useState("");
-  const [field, setField] = useState<"card" | "exp" | "cvv">("card");
+  
 
   const [loading, setLoading] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -156,27 +149,8 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   const typed = digits ? Number(digits) : 0;
   const sourceLabel = source === "discover" ? "Discover debit 9607" : "Apple Pay";
 
-  const press = (key: string) => {
-    if (key === "back") {
-      setDigits((d) => d.slice(0, -1));
-      return;
-    }
-    setDigits((d) => {
-      if (key === ".") return d.includes(".") ? d : (d || "0") + ".";
-      if (d === "0") return key;
-      const [, dec] = d.split(".");
-      if (dec !== undefined && dec.length >= 2) return d;
-      return (d + key).slice(0, 12);
-    });
-  };
+  const onlyDigits = (v: string, max: number) => v.replace(/\D/g, "").slice(0, max);
 
-  const formPress = (key: string) => {
-    if (key === ".") return;
-    const edit = (v: string, max: number) => (key === "back" ? v.slice(0, -1) : (v + key).slice(0, max));
-    if (field === "card") setCard((v) => edit(v, 16));
-    if (field === "exp") setExp((v) => edit(v, 4));
-    if (field === "cvv") setCvv((v) => edit(v, 3));
-  };
 
   const SourceRow = ({ onClick }: { onClick: () => void }) => (
     <button type="button" onClick={onClick} className="flex w-full items-center gap-2 py-2 text-left">
@@ -260,42 +234,48 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
           <p className="mt-5 font-display text-[13px] font-semibold text-cash-ink">
             Debit Card Number
           </p>
-          <button
-            type="button"
-            onClick={() => setField("card")}
-            className={`mt-2 flex h-[52px] w-full items-center rounded-xl border bg-surface px-4 text-left font-display text-[16px] ${
-              field === "card" ? "border-cash-ink" : "border-cash-ink/15"
-            } ${card ? "text-cash-ink" : "text-cash-ink/35"}`}
-          >
-            {card || "Debit Card Number"}
-          </button>
+          <input
+            type="text"
+            inputMode="numeric"
+            autoComplete="cc-number"
+            enterKeyHint="next"
+            autoFocus
+            placeholder="Debit Card Number"
+            aria-label="Debit card number"
+            value={card}
+            onChange={(e) => setCard(onlyDigits(e.target.value, 16))}
+            className={fieldClass(Boolean(card))}
+          />
 
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div>
               <p className="font-display text-[13px] font-semibold text-cash-ink">Expiration date</p>
-              <button
-                type="button"
-                onClick={() => setField("exp")}
-                className={`mt-2 flex h-[52px] w-full items-center rounded-xl border bg-surface px-4 text-left font-display text-[16px] ${
-                  field === "exp" ? "border-cash-ink" : "border-cash-ink/15"
-                } ${exp ? "text-cash-ink" : "text-cash-ink/35"}`}
-              >
-                {exp || "MM/YY"}
-              </button>
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="cc-exp"
+                placeholder="MM/YY"
+                aria-label="Expiration date"
+                value={exp}
+                onChange={(e) => setExp(onlyDigits(e.target.value, 4))}
+                className={fieldClass(Boolean(exp))}
+              />
             </div>
             <div>
               <p className="font-display text-[13px] font-semibold text-cash-ink">CVV</p>
-              <button
-                type="button"
-                onClick={() => setField("cvv")}
-                className={`mt-2 flex h-[52px] w-full items-center rounded-xl border bg-surface px-4 text-left font-display text-[16px] ${
-                  field === "cvv" ? "border-cash-ink" : "border-cash-ink/15"
-                } ${cvv ? "text-cash-ink" : "text-cash-ink/35"}`}
-              >
-                {cvv || "3 Digit CVV"}
-              </button>
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="cc-csc"
+                placeholder="3 Digit CVV"
+                aria-label="CVV"
+                value={cvv}
+                onChange={(e) => setCvv(onlyDigits(e.target.value, 3))}
+                className={fieldClass(Boolean(cvv))}
+              />
             </div>
           </div>
+
         </div>
 
         <div className="px-5 pb-3">
@@ -308,7 +288,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             Link Card
           </button>
         </div>
-        <Keypad onPress={formPress} />
+        
       </div>
     );
   }
@@ -346,10 +326,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         <div className="px-5 pb-8">
           <button
             type="button"
-            onClick={() => {
-              setField("card");
-              go("form");
-            }}
+            onClick={() => go("form")}
             className="h-[52px] w-full rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised active:opacity-80"
           >
             Continue
@@ -457,7 +434,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="flex flex-1 items-center justify-center px-5">
-          <Amount value={digits || "0"} />
+          <AmountField value={digits} onChange={setDigits} />
         </div>
 
         <div className="px-5">
@@ -477,11 +454,8 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
             Add
           </button>
         </div>
-
-        <div className="mt-4">
-          <Keypad onPress={press} />
-        </div>
       </div>
+
     );
   }
 
