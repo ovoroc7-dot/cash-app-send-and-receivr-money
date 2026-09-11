@@ -1,6 +1,19 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 
 export const fmtAmount = (amount: string) => `$${Number(amount).toFixed(2)}`;
+
+export const speakMoney = (n: number) =>
+  n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });
+
+/** Phone haptics: short tick on taps, double tick on success. */
+export function haptic(kind: "tap" | "success" = "tap") {
+  if (typeof navigator === "undefined" || typeof navigator.vibrate !== "function") return;
+  try {
+    navigator.vibrate(kind === "success" ? [12, 40, 22] : 10);
+  } catch {
+    /* ignore */
+  }
+}
 
 export type Payment = {
   id: string;
