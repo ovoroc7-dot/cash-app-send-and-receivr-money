@@ -37,13 +37,6 @@ export function BottomNav({
         >
           $100
         </span>
-        {moneyActive && (
-          <span
-            className={`absolute bottom-0 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full ${
-              green ? "bg-cash-deep" : "bg-cash"
-            }`}
-          />
-        )}
       </button>
 
       <button
@@ -60,13 +53,6 @@ export function BottomNav({
         >
           $
         </span>
-        {payActive && (
-          <span
-            className={`absolute bottom-0 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full ${
-              green ? "bg-cash-deep" : "bg-cash"
-            }`}
-          />
-        )}
       </button>
 
       <button
