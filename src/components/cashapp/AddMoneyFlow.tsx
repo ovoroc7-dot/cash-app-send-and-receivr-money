@@ -434,10 +434,22 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="flex flex-1 items-center justify-center px-5">
-          <AmountField value={digits} onChange={setDigits} />
+          <Amount value={digits || "0"} />
         </div>
 
-        <div className="px-5 pb-6">
+        <div className="px-5">
+          <Keypad
+            onPress={(k) =>
+              setDigits((d) => {
+                if (k === "<") return d.slice(0, -1);
+                if (k === "." && d.includes(".")) return d;
+                return sanitizeAmount((d || "") + k);
+              })
+            }
+          />
+        </div>
+
+        <div className="px-5 pb-6 pt-3">
           <button
             type="button"
             disabled={typed <= 0}
