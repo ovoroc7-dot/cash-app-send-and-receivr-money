@@ -17,7 +17,7 @@ export function BottomNav({
 
   return (
     <nav
-      className={`absolute inset-x-0 bottom-0 z-20 flex h-[84px] items-end pb-7 transition-colors duration-300 ${
+      className={`absolute inset-x-0 bottom-0 z-20 flex h-[84px] items-end pb-7 transition-colors duration-100 ease-out will-change-transform ${
         green
           ? "bg-cash shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
           : "bg-white shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
@@ -28,10 +28,10 @@ export function BottomNav({
         aria-label="Money"
         aria-current={moneyActive ? "page" : undefined}
         onClick={() => onChange("money")}
-        className="relative flex flex-1 items-center justify-center pb-1"
+        className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
         <span
-          className={`font-display text-[22px] font-bold leading-none ${
+          className={`font-display text-[22px] font-bold leading-none transition-colors duration-100 ease-out ${
             moneyActive ? "text-cash-ink" : "text-cash-ink/35"
           }`}
         >
@@ -44,10 +44,10 @@ export function BottomNav({
         aria-label="Pay"
         aria-current={payActive ? "page" : undefined}
         onClick={() => onChange("pay")}
-        className="relative flex flex-1 items-center justify-center pb-1"
+        className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
         <span
-          className={`font-display text-[28px] font-bold leading-none ${
+          className={`font-display text-[28px] font-bold leading-none transition-colors duration-100 ease-out ${
             payActive ? "text-cash-ink" : "text-cash-ink/35"
           }`}
         >
@@ -60,11 +60,11 @@ export function BottomNav({
         aria-label="Activity"
         aria-current={activityActive ? "page" : undefined}
         onClick={() => onChange("activity")}
-        className="relative flex flex-1 items-center justify-center pb-1"
+        className="relative flex flex-1 items-center justify-center pb-1 transition-transform duration-75 ease-out active:scale-95 active:opacity-90"
       >
         <div className="relative">
           <Clock
-            className={`size-[26px] ${
+            className={`size-[26px] transition-colors duration-100 ease-out ${
               activityActive ? "text-cash-ink" : "text-cash-ink/35"
             }`}
             strokeWidth={2.2}
