@@ -205,7 +205,7 @@ export function PayFlow({
 
   if (step === "sent") {
     return (
-      <div className="absolute inset-0 z-40 flex flex-col bg-surface-raised px-4 pb-5 pt-4">
+      <div className="absolute inset-0 z-40 flex flex-col bg-surface-raised px-4 pb-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
         <button
           type="button"
           aria-label="Close receipt"

@@ -219,7 +219,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   if (step === "form") {
     return (
       <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
-        <div className="px-5 pt-4">
+        <div className="px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
           <CloseX onClick={() => go("card")} label="Close link card" />
         </div>
         <div className="flex-1 overflow-y-auto px-5 pt-3">
@@ -296,10 +296,10 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   if (step === "card") {
     return (
       <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
-        <div className="px-5 pt-4">
+        <div className="px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
           <CloseX onClick={() => go("source")} label="Close link card" />
         </div>
-        <div className="flex-1 px-5 pt-4">
+        <div className="flex-1 px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
           <span className="flex size-12 items-center justify-center rounded-full bg-cash">
             <Wallet className="size-6 text-cash-ink" strokeWidth={2.2} />
           </span>
@@ -348,7 +348,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
     );
     return (
       <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
-        <div className="px-5 pt-4">
+        <div className="px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
           <CloseX onClick={() => setStep("amount")} label="Close add money from" />
         </div>
         <div className="flex-1 px-5 pt-3">
@@ -421,7 +421,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   if (step === "amount") {
     return (
       <div className="absolute inset-0 z-50 flex flex-col bg-surface animate-fade-in">
-        <div className="relative px-5 pt-4">
+        <div className="relative px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
           <div className="absolute left-5 top-3">
             <CloseX onClick={onClose} label="Close add money" />
           </div>
