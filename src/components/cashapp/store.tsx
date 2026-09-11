@@ -12,7 +12,7 @@ export type Payment = {
 
 type Store = {
   pending: Payment[];
-  addPayment: (p: Omit<Payment, "id" | "time">) => void;
+  addPayment: (p: Omit<Payment, "id" | "time">) => string;
   cancelPayment: (id: string) => void;
 };
 
