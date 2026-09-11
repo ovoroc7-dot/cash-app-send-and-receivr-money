@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   Ban,
@@ -13,7 +13,34 @@ import {
 } from "lucide-react";
 import { contacts, fmtAmount, useCash } from "./store";
 
-type Step = "contacts" | "note" | "review" | "method" | "sent" | "receipt";
+type Step = "contacts" | "note" | "review" | "method" | "loading" | "sent" | "receipt";
+
+function CashLoading() {
+  return (
+    <svg
+      className="animate-spin text-cash-ink"
+      width="36"
+      height="36"
+      viewBox="0 0 36 36"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Loading"
+    >
+      <path
+        d="M18 4C18 2.89543 18.8954 2 20 2C25.5228 2 30.5228 4.61429 33.364 8.81966C34.0503 9.83958 33.7681 11.2237 32.7482 11.91C31.7283 12.5963 30.3442 12.3141 29.6579 11.2942C27.5334 8.13359 23.9557 6 20 6C18.8954 6 18 5.10457 18 4Z"
+        fill="currentColor"
+      />
+      <path
+        d="M32.7482 24.09C33.7681 24.7763 34.0503 26.1604 33.364 27.1803C30.5228 31.3857 25.5228 34 20 34C18.8954 34 18 33.1046 18 32C18 30.8954 18.8954 30 20 30C23.9557 30 27.5334 27.8664 29.6579 24.7058C30.3442 23.6859 31.7283 23.4037 32.7482 24.09Z"
+        fill="currentColor"
+      />
+      <path
+        d="M8.81966 2.63604C9.83958 1.94969 11.2237 2.23189 11.91 3.25182C12.5963 4.27174 12.3141 5.65584 11.2942 6.34219C8.13359 8.46656 6 12.0443 6 16C6 17.1046 5.10457 18 4 18C2.89543 18 2 17.1046 2 16C2 10.4772 4.61429 5.47716 8.81966 2.63604Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
 
 const methods = [
   { key: "cash", label: "Cash balance", sub: "$0 available", disabled: true },
@@ -38,6 +65,20 @@ export function PayFlow({
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [showReceiptAction, setShowReceiptAction] = useState(true);
   const lastReceiptScrollTop = useRef(0);
+
+  useEffect(() => {
+    if (step !== "loading") return;
+    const t = setTimeout(() => setStep("sent"), 900);
+    return () => clearTimeout(t);
+  }, [step]);
+
+  if (step === "loading") {
+    return (
+      <div className="absolute inset-0 z-50 flex items-center justify-center bg-surface-raised">
+        <CashLoading />
+      </div>
+    );
+  }
 
   const title = (
     <h2 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
@@ -384,7 +425,7 @@ export function PayFlow({
                     if (!person) return;
                     const id = addPayment({ name: person.name, amount, note });
                     setPaymentId(id);
-                    setStep("sent");
+                    setStep("loading");
                   }}
                   className="mt-3 h-14 rounded-full bg-cash-ink font-display text-[17px] font-semibold text-surface-raised"
                 >
