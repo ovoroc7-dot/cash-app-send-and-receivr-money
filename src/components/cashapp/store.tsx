@@ -1,4 +1,14 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const fmtAmount = (amount: string) => `$${Number(amount).toFixed(2)}`;
 
@@ -55,13 +65,54 @@ const Ctx = createContext<Store | null>(null);
 
 export function CashProvider({ children }: { children: ReactNode }) {
   const [pending, setPending] = useState<Payment[]>([]);
-  const [balance, setBalance] = useState(100);
+  const [balance, setBalance] = useState(0);
   const [autoReload, setAutoReload] = useState(false);
   const [live, setLive] = useState("");
+  const userId = useRef<string | null>(null);
 
   const announce = useCallback((message: string) => {
     setLive("");
     requestAnimationFrame(() => setLive(message));
+  }, []);
+
+  // Load the saved cash balance for the signed-in account, creating the
+  // wallet row on first sign-in so it persists on every device.
+  useEffect(() => {
+    let alive = true;
+    const load = async () => {
+      const { data } = await supabase.auth.getUser();
+      const id = data.user?.id ?? null;
+      userId.current = id;
+      if (!id || !alive) return;
+      const { data: wallet } = await supabase
+        .from("wallets")
+        .select("balance")
+        .eq("user_id", id)
+        .maybeSingle();
+      if (!alive) return;
+      if (wallet) {
+        setBalance(Number(wallet.balance));
+      } else {
+        await supabase.from("wallets").insert({ user_id: id, balance: 0 });
+        setBalance(0);
+      }
+    };
+    void load();
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT") void load();
+    });
+    return () => {
+      alive = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+
+  const persist = useCallback(async (next: number) => {
+    const id = userId.current;
+    if (!id) return;
+    await supabase
+      .from("wallets")
+      .upsert({ user_id: id, balance: next, updated_at: new Date().toISOString() });
   }, []);
 
   const value = useMemo<Store>(
@@ -76,6 +127,7 @@ export function CashProvider({ children }: { children: ReactNode }) {
           const next = b + amount;
           haptic("success");
           announce(`Added ${speakMoney(amount)}. Cash balance ${speakMoney(next)}.`);
+          void persist(next);
           return next;
         }),
       addPayment: (p) => {
@@ -92,7 +144,7 @@ export function CashProvider({ children }: { children: ReactNode }) {
       },
       cancelPayment: (id) => setPending((list) => list.filter((p) => p.id !== id)),
     }),
-    [pending, balance, autoReload, announce],
+    [pending, balance, autoReload, announce, persist],
   );
 
   return (
