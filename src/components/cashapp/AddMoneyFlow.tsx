@@ -94,7 +94,13 @@ function Amount({ value }: { value: string }) {
   const [whole, decimals] = value.split(".");
   const grouped = Number(whole || 0).toLocaleString("en-US");
   return (
-    <p className="font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink">
+    <p
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      aria-label={`Amount ${speakMoney(Number(value || 0))}`}
+      className="font-display text-[64px] font-bold leading-none tracking-[-0.04em] text-cash-ink"
+    >
       ${grouped}
       {value.includes(".") ? (
         <span className="text-cash-ink/30">.{(decimals ?? "").padEnd(2, "0").slice(0, 2)}</span>
