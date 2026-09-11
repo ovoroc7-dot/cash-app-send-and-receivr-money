@@ -187,8 +187,17 @@
     border-color: var(--color-border);
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overscroll-behavior-x: none;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
   }
 }
