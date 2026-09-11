@@ -16,11 +16,13 @@ import iconSavings from "@/assets/icon-savings.png";
 import iconBitcoin from "@/assets/icon-bitcoin.png";
 import avatar from "@/assets/avatar.jpg";
 import { AddMoneyFlow } from "./AddMoneyFlow";
+import { BitcoinScreen } from "./BitcoinScreen";
 import { fitSize, useCash } from "./store";
 
 export function MoneyScreen() {
   const [hidden, setHidden] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [btcOpen, setBtcOpen] = useState(false);
   const { balance } = useCash();
 
   return (
@@ -141,7 +143,13 @@ export function MoneyScreen() {
             </div>
           </article>
 
-          <article className="mt-4 flex items-center justify-between rounded-3xl bg-surface-raised p-5">
+          <article
+            role="button"
+            tabIndex={0}
+            onClick={() => setBtcOpen(true)}
+            onKeyDown={(e) => e.key === "Enter" && setBtcOpen(true)}
+            className="mt-4 flex cursor-pointer items-center justify-between rounded-3xl bg-surface-raised p-5 active:opacity-80"
+          >
             <div>
               <p className="font-display text-[17px] text-cash-ink">Bitcoin</p>
               <p className="font-display text-[34px] font-bold leading-tight tracking-[-0.03em] text-cash-ink">
