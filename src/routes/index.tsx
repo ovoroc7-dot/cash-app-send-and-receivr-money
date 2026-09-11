@@ -40,6 +40,17 @@ function Index() {
     return () => clearTimeout(t);
   }, []);
 
+  // Paint the page (including the area behind the phone status bar) with the
+  // current screen's background so nothing shows a white strip at the top.
+  useEffect(() => {
+    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const color = splash ? (dark ? "#000000" : "var(--cash)") : green ? "var(--cash)" : "var(--surface)";
+    document.body.style.backgroundColor = color;
+    return () => {
+      document.body.style.backgroundColor = "";
+    };
+  }, [green, splash]);
+
   return (
     <CashProvider>
       <main className={green ? "min-h-[100dvh] bg-cash" : "min-h-[100dvh] bg-surface"}>

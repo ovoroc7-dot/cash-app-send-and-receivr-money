@@ -194,7 +194,7 @@
   }
 
   body {
-    background-color: var(--color-background);
+    background-color: var(--surface);
     color: var(--color-foreground);
     overflow-x: hidden;
     overscroll-behavior-x: none;
