@@ -182,7 +182,7 @@ export function AddMoneyFlow({ onClose }: { onClose: () => void }) {
   if (loading) {
     return (
       <div className="absolute inset-0 z-50 flex justify-center bg-surface pt-[26vh] animate-fade-in">
-        <Loader2 className="size-8 animate-spin text-cash-ink" strokeWidth={2.4} />
+        <CashLoading />
       </div>
     );
   }
