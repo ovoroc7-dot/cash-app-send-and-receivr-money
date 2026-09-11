@@ -144,7 +144,7 @@ export function CashProvider({ children }: { children: ReactNode }) {
       },
       cancelPayment: (id) => setPending((list) => list.filter((p) => p.id !== id)),
     }),
-    [pending, balance, autoReload, announce],
+    [pending, balance, autoReload, announce, persist],
   );
 
   return (
