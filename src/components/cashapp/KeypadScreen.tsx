@@ -22,7 +22,10 @@ export function KeypadScreen() {
 
 
   return (
-    <div className="flex h-full flex-col bg-cash px-6 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+    <div
+      style={{ touchAction: "none" }}
+      className="flex h-full flex-col overflow-hidden overscroll-none bg-cash px-6 pt-[calc(env(safe-area-inset-top,0px)+1rem)]"
+    >
       <header className="flex items-center justify-between">
         <button
           type="button"
