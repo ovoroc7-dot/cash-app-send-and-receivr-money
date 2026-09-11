@@ -388,24 +388,6 @@ export function AuthScreen() {
           </>
         ) : null}
 
-        {step === "password" ? (
-          <>
-            <input
-              type="password"
-              required
-              minLength={6}
-              autoFocus
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              aria-label="Password"
-              autoComplete="current-password"
-              className={field}
-            />
-            <button type="submit" disabled={busy || password.length < 6} className={`mt-6 ${primary}`}>
-              {busy ? "Please wait…" : "Next"}
-            </button>
-          </>
-        ) : null}
 
         {step === "dob" ? (
           <>
