@@ -312,7 +312,7 @@ export function AuthScreen() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (step === "password") void submitPassword(e);
+          
         }}
         className="mt-6 flex flex-1 flex-col"
       >
