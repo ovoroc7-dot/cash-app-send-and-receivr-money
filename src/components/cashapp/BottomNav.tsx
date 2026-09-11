@@ -5,16 +5,24 @@ export type Tab = "money" | "pay" | "activity";
 export function BottomNav({
   tab,
   onChange,
+  green = false,
 }: {
   tab: Tab;
   onChange: (t: Tab) => void;
+  green?: boolean;
 }) {
   const moneyActive = tab === "money";
   const payActive = tab === "pay";
   const activityActive = tab === "activity";
 
   return (
-    <nav className="absolute inset-x-0 bottom-0 z-20 flex h-[84px] items-end bg-white pb-7 shadow-[0_-2px_12px_rgba(0,0,0,0.06)]">
+    <nav
+      className={`absolute inset-x-0 bottom-0 z-20 flex h-[84px] items-end pb-7 transition-colors duration-300 ${
+        green
+          ? "bg-cash shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
+          : "bg-white shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
+      }`}
+    >
       <button
         type="button"
         aria-label="Money"
@@ -30,7 +38,11 @@ export function BottomNav({
           $100
         </span>
         {moneyActive && (
-          <span className="absolute bottom-0 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full bg-cash" />
+          <span
+            className={`absolute bottom-0 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full ${
+              green ? "bg-cash-deep" : "bg-cash"
+            }`}
+          />
         )}
       </button>
 
@@ -49,7 +61,11 @@ export function BottomNav({
           $
         </span>
         {payActive && (
-          <span className="absolute bottom-0 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full bg-cash" />
+          <span
+            className={`absolute bottom-0 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full ${
+              green ? "bg-cash-deep" : "bg-cash"
+            }`}
+          />
         )}
       </button>
 
