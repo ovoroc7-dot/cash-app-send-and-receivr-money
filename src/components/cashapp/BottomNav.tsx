@@ -13,6 +13,8 @@ export function BottomNav({
   onChange: (t: Tab) => void;
   green?: boolean;
 }) {
+  const { balance } = useCash();
+  const balanceLabel = `$${Math.round(balance).toLocaleString("en-US")}`;
   const moneyActive = tab === "money";
   const payActive = tab === "pay";
   const activityActive = tab === "activity";
