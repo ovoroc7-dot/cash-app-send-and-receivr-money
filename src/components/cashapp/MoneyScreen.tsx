@@ -18,6 +18,7 @@ import avatar from "@/assets/avatar.jpg";
 import { AddMoneyFlow } from "./AddMoneyFlow";
 import { BitcoinScreen } from "./BitcoinScreen";
 import { fitSize, useCash } from "./store";
+import { supabase } from "@/integrations/supabase/client";
 
 export function MoneyScreen() {
   const [hidden, setHidden] = useState(false);
@@ -262,6 +263,13 @@ export function MoneyScreen() {
               Inc. Tax filing services by Cash App Taxes.
             </p>
             <p className="font-semibold text-cash-ink underline">Disclosures</p>
+            <button
+              type="button"
+              onClick={() => supabase.auth.signOut()}
+              className="font-display text-[17px] font-semibold text-cash-ink underline"
+            >
+              Sign out
+            </button>
           </div>
         </div>
       </section>
