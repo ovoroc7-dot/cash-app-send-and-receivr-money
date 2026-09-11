@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+
 import dollarSign from "@/assets/dollar-sign.png";
 import { haptic } from "./store";
 
@@ -98,20 +98,6 @@ export function AuthScreen() {
     }
   };
 
-  const google = async () => {
-    setBusy(true);
-    setMsg(null);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      setMsg("Could not sign in with Google.");
-      setBusy(false);
-      return;
-    }
-    if (result.redirected) return;
-    setBusy(false);
-  };
 
   const back = () => {
     haptic();
@@ -664,14 +650,6 @@ export function AuthScreen() {
                 Next
               </button>
             </div>
-            <button
-              type="button"
-              onClick={google}
-              disabled={busy}
-              className="mt-3 h-14 w-full rounded-full border border-foreground/20 font-display text-[16px] font-semibold text-foreground active:opacity-70 disabled:opacity-60"
-            >
-              Continue with Google
-            </button>
           </>
         ) : null}
       </form>
