@@ -22,7 +22,7 @@ export function KeypadScreen() {
 
 
   return (
-    <div className="flex h-full flex-col bg-cash px-6 pt-4">
+    <div className="flex h-full flex-col bg-cash px-6 pt-safe">
       <header className="flex items-center justify-between">
         <button
           type="button"

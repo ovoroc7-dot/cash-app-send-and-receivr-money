@@ -26,7 +26,7 @@ export function MoneyScreen() {
   return (
     <>
     <div className="h-full overflow-y-auto bg-surface pb-28">
-      <header className="flex items-center justify-between px-6 pt-4">
+      <header className="flex items-center justify-between px-6 pt-safe">
         <h1 className="font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
           Money
         </h1>
