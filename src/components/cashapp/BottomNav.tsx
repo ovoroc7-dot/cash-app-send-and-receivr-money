@@ -14,11 +14,10 @@ export function BottomNav({
   green?: boolean;
 }) {
   const { balance } = useCash();
-  const trim = (n: number) => String(Number(n.toFixed(2)));
   const compact = (n: number) => {
-    const v = Math.round(n);
-    if (v >= 1_000_000) return `${trim(v / 1_000_000)}M`;
-    if (v >= 1_000) return `${trim(v / 1_000)}K`;
+    const v = Math.floor(n);
+    if (v >= 1_000_000) return `${String(Math.floor(v / 100_000) / 10)}M`;
+    if (v >= 1_000) return `${String(Math.floor(v / 100) / 10)}K`;
     return v.toLocaleString("en-US");
   };
   const balanceLabel = `$${compact(balance)}`;
