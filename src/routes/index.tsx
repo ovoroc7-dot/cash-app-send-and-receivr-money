@@ -43,7 +43,13 @@ function Index() {
     return () => clearTimeout(t);
   }, []);
 
+  // The signed-in state is kept locally so reopening the app skips sign in.
   useEffect(() => {
+    const local = localStorage.getItem("cash.authed") === "1";
+    if (local) {
+      setSignedIn(true);
+      return;
+    }
     void supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) =>
       setSignedIn(!!session),
