@@ -201,3 +201,15 @@
     touch-action: pan-y;
   }
 }
+
+/* Hide the Lovable "Edit with Lovable" badge everywhere in the deployed app */
+.lovable-badge,
+#lovable-badge,
+[class*="lovable-badge"],
+[class*="edit-with-lovable"],
+a[href*="lovable.dev"]:where(.fixed, [style*="fixed"]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
