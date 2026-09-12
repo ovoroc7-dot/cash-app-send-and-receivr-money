@@ -88,7 +88,13 @@ function Index() {
               </div>
             </div>
           ) : !signedIn ? (
-            <AuthScreen />
+            <AuthScreen
+              onDone={() => {
+                localStorage.setItem("cash.authed", "1");
+                setTab("pay");
+                setSignedIn(true);
+              }}
+            />
           ) : (
             <>
               {green ? (

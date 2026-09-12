@@ -265,7 +265,11 @@ export function MoneyScreen() {
             <p className="font-semibold text-cash-ink underline">Disclosures</p>
             <button
               type="button"
-              onClick={() => supabase.auth.signOut()}
+              onClick={() => {
+                localStorage.removeItem("cash.authed");
+                void supabase.auth.signOut();
+                window.location.reload();
+              }}
               className="font-display text-[17px] font-semibold text-cash-ink underline"
             >
               Sign out
