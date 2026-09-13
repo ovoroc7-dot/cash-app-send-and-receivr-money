@@ -352,66 +352,89 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
     );
   }
 
-  // Phone number sign in.
+  // Phone / email sign in.
+  const canContinue = useEmail ? /^\S+@\S+\.\S+$/.test(email) : phone.length >= 10;
   return (
-    <div className="flex h-full flex-col overflow-y-auto bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+    <div className="flex h-full flex-col overflow-y-auto bg-black px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
       <div className="flex items-center justify-between">
         <button
           type="button"
           aria-label="Back"
           onClick={back}
-          className="-ml-1 font-display text-[22px] text-foreground active:opacity-60"
+          className="flex size-10 items-center justify-center rounded-full bg-white/10 font-display text-[20px] text-white active:opacity-60"
         >
-          ‹
+          ←
         </button>
-        <span aria-hidden className="font-display text-[20px] text-foreground/70">
+        <span
+          aria-hidden
+          className="flex size-10 items-center justify-center rounded-full bg-white/10 font-display text-[18px] font-semibold text-white"
+        >
           ?
         </span>
       </div>
 
-      <h1 className="mt-6 font-display text-[30px] font-bold leading-[1.1] tracking-[-0.02em] text-foreground">
-        Enter your phone number
+      <h1 className="mt-6 font-display text-[32px] font-bold leading-[1.1] tracking-[-0.02em] text-white">
+        Enter your info to log in or create an account
       </h1>
 
-      <div className="mt-6 flex h-14 w-full items-center rounded-xl border border-foreground/25 px-4">
-        <span className="font-display text-[17px] text-foreground/60">+1</span>
+      {useEmail ? (
         <input
-          type="tel"
-          inputMode="tel"
+          type="email"
+          inputMode="email"
           autoFocus
-          value={formatPhone(phone)}
-          onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
-          placeholder="Phone Number"
-          aria-label="Phone number"
-          autoComplete="tel"
-          className="ml-3 h-full w-full bg-transparent font-display text-[17px] text-foreground placeholder:text-foreground/45 outline-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email Address"
+          aria-label="Email address"
+          autoComplete="email"
+          className="mt-7 h-14 w-full rounded-xl border border-white bg-transparent px-4 font-display text-[17px] text-white placeholder:text-white/45 outline-none"
         />
-      </div>
+      ) : (
+        <div className="mt-7 flex h-14 w-full items-center rounded-xl border border-white px-4">
+          <span className="font-display text-[17px] text-white/70">+1</span>
+          <input
+            type="tel"
+            inputMode="tel"
+            autoFocus
+            value={formatPhone(phone)}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+            placeholder="Phone Number"
+            aria-label="Phone number"
+            autoComplete="tel"
+            className="ml-3 h-full w-full bg-transparent font-display text-[17px] text-white placeholder:text-white/45 outline-none"
+          />
+        </div>
+      )}
 
-      <p className="mx-auto mt-5 font-display text-[15px] font-semibold text-foreground underline">
+      <p className="mx-auto mt-6 font-display text-[16px] font-semibold text-white underline">
         Need help logging in?
       </p>
 
       <div className="flex-1" />
 
-      <p className="mb-4 text-center font-display text-[13px] leading-snug text-foreground/60">
-        By entering and tapping Next, you agree to the{" "}
-        <span className="font-semibold text-foreground underline">Terms</span>,{" "}
-        <span className="font-semibold text-foreground underline">E-Sign Consent</span> &{" "}
-        <span className="font-semibold text-foreground underline">Privacy Notice</span>
-      </p>
-
-      <button
-        type="button"
-        disabled={phone.length < 10}
-        onClick={() => {
-          setCode("");
-          goWithSpinner("code");
-        }}
-        className={primary}
-      >
-        Next
-      </button>
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            haptic();
+            setUseEmail((v) => !v);
+          }}
+          className="h-14 flex-1 rounded-full bg-white/12 font-display text-[16px] font-semibold text-white active:opacity-70"
+        >
+          {useEmail ? "Use Phone" : "Use Email"}
+        </button>
+        <button
+          type="button"
+          disabled={!canContinue}
+          onClick={() => {
+            setCode("");
+            goWithSpinner("code");
+          }}
+          className="h-14 flex-1 rounded-full bg-white font-display text-[16px] font-semibold text-black disabled:bg-white/20 disabled:text-white/45 active:opacity-80"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
