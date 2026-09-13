@@ -19,6 +19,8 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
   const [step, setStep] = useState<Step>("chooser");
   const [afterLoading, setAfterLoading] = useState<Step>("welcome");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [useEmail, setUseEmail] = useState(false);
   const [code, setCode] = useState("");
   const [pin, setPin] = useState("");
   const [resendIn, setResendIn] = useState(59);
@@ -56,7 +58,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
 
   // Paint the status-bar area to match the current screen's background.
   useEffect(() => {
-    const dark = step === "welcome" || step === "loading" || step === "code";
+    const dark = step !== "pin" && step !== "success";
     document.body.style.backgroundColor = dark ? "#000000" : "var(--surface)";
     return () => {
       document.body.style.backgroundColor = "";
