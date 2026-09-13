@@ -19,6 +19,8 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
   const [step, setStep] = useState<Step>("chooser");
   const [afterLoading, setAfterLoading] = useState<Step>("welcome");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [useEmail, setUseEmail] = useState(false);
   const [code, setCode] = useState("");
   const [pin, setPin] = useState("");
   const [resendIn, setResendIn] = useState(59);
@@ -56,7 +58,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
 
   // Paint the status-bar area to match the current screen's background.
   useEffect(() => {
-    const dark = step === "welcome" || step === "loading" || step === "code";
+    const dark = step !== "pin" && step !== "success";
     document.body.style.backgroundColor = dark ? "#000000" : "var(--surface)";
     return () => {
       document.body.style.backgroundColor = "";
@@ -84,22 +86,26 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
       { tag: "$bkhodae", name: "Emily", initial: "E", verified: true },
     ];
     return (
-      <div className="h-full overflow-y-auto bg-surface px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+      <div className="h-full overflow-y-auto bg-black px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
         <div className="flex justify-end">
-          <button type="button" aria-label="More options" className="p-2 text-foreground active:opacity-60">
+          <button
+            type="button"
+            aria-label="More options"
+            className="flex size-10 items-center justify-center rounded-full bg-white/10 text-white active:opacity-60"
+          >
             <span className="font-display text-[20px] font-bold leading-none">···</span>
           </button>
         </div>
 
-        <div className="mt-4 flex size-[52px] items-center justify-center rounded-[14px] bg-cash">
-          <img src={dollarSign} alt="" className="h-7 w-auto object-contain" />
+        <div className="mt-8 flex size-[58px] items-center justify-center rounded-[16px] bg-cash">
+          <img src={dollarSign} alt="" className="h-8 w-auto object-contain" />
         </div>
 
-        <h1 className="mt-5 font-display text-[30px] font-bold tracking-[-0.02em] text-foreground">
+        <h1 className="mt-6 font-display text-[34px] font-bold tracking-[-0.02em] text-white">
           Choose an account
         </h1>
 
-        <div className="mt-5">
+        <div className="mt-6">
           {accounts.map((a) => (
             <button
               key={a.tag}
@@ -107,32 +113,32 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
               onClick={() => goWithSpinner("welcome")}
               className="flex w-full items-center gap-4 py-4 text-left active:opacity-60"
             >
-              <span className="flex size-[44px] shrink-0 items-center justify-center rounded-full bg-[#f038b0] font-display text-[18px] font-bold text-white">
+              <span className="flex size-[46px] shrink-0 items-center justify-center rounded-full bg-[#f038b0] font-display text-[20px] font-bold text-black">
                 {a.initial}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-display text-[16px] font-semibold text-foreground">
+                <span className="block truncate font-display text-[17px] font-semibold text-white">
                   {a.tag}
                   {a.verified ? <span className="ml-1 text-cash">●</span> : null}
                 </span>
-                <span className="block truncate text-[14px] text-muted-foreground">{a.name}</span>
+                <span className="block truncate text-[15px] text-white/70">{a.name}</span>
               </span>
-              <span className="text-[18px] text-muted-foreground">›</span>
+              <span className="text-[18px] text-white/70">›</span>
             </button>
           ))}
 
           <button
             type="button"
             onClick={() => goWithSpinner("welcome")}
-            className="flex w-full items-center gap-4 py-4 text-left active:opacity-60"
+            className="mt-2 flex w-full items-center gap-4 py-4 text-left active:opacity-60"
           >
-            <span className="flex size-[44px] shrink-0 items-center justify-center rounded-full bg-foreground/8 font-display text-[22px] font-semibold text-foreground">
+            <span className="flex size-[46px] shrink-0 items-center justify-center rounded-full bg-white/10 font-display text-[24px] font-semibold text-white">
               +
             </span>
-            <span className="min-w-0 flex-1 font-display text-[16px] font-semibold text-foreground">
+            <span className="min-w-0 flex-1 font-display text-[17px] font-semibold text-white">
               Sign in to another account
             </span>
-            <span className="text-[18px] text-muted-foreground">›</span>
+            <span className="text-[18px] text-white/70">›</span>
           </button>
         </div>
       </div>
@@ -212,7 +218,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
         </div>
 
         <h1 className="mt-6 font-display text-[30px] font-bold leading-[1.1] tracking-[-0.02em] text-white">
-          Please enter the code sent to {formatPhone(phone)}
+          Please enter the code sent to {useEmail ? email : formatPhone(phone)}
         </h1>
 
         <input
@@ -346,66 +352,89 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
     );
   }
 
-  // Phone number sign in.
+  // Phone / email sign in.
+  const canContinue = useEmail ? /^\S+@\S+\.\S+$/.test(email) : phone.length >= 10;
   return (
-    <div className="flex h-full flex-col overflow-y-auto bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+    <div className="flex h-full flex-col overflow-y-auto bg-black px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
       <div className="flex items-center justify-between">
         <button
           type="button"
           aria-label="Back"
           onClick={back}
-          className="-ml-1 font-display text-[22px] text-foreground active:opacity-60"
+          className="flex size-10 items-center justify-center rounded-full bg-white/10 font-display text-[20px] text-white active:opacity-60"
         >
-          ‹
+          ←
         </button>
-        <span aria-hidden className="font-display text-[20px] text-foreground/70">
+        <span
+          aria-hidden
+          className="flex size-10 items-center justify-center rounded-full bg-white/10 font-display text-[18px] font-semibold text-white"
+        >
           ?
         </span>
       </div>
 
-      <h1 className="mt-6 font-display text-[30px] font-bold leading-[1.1] tracking-[-0.02em] text-foreground">
-        Enter your phone number
+      <h1 className="mt-6 font-display text-[32px] font-bold leading-[1.1] tracking-[-0.02em] text-white">
+        Enter your info to log in or create an account
       </h1>
 
-      <div className="mt-6 flex h-14 w-full items-center rounded-xl border border-foreground/25 px-4">
-        <span className="font-display text-[17px] text-foreground/60">+1</span>
+      {useEmail ? (
         <input
-          type="tel"
-          inputMode="tel"
+          type="email"
+          inputMode="email"
           autoFocus
-          value={formatPhone(phone)}
-          onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
-          placeholder="Phone Number"
-          aria-label="Phone number"
-          autoComplete="tel"
-          className="ml-3 h-full w-full bg-transparent font-display text-[17px] text-foreground placeholder:text-foreground/45 outline-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email Address"
+          aria-label="Email address"
+          autoComplete="email"
+          className="mt-7 h-14 w-full rounded-xl border border-white bg-transparent px-4 font-display text-[17px] text-white placeholder:text-white/45 outline-none"
         />
-      </div>
+      ) : (
+        <div className="mt-7 flex h-14 w-full items-center rounded-xl border border-white px-4">
+          <span className="font-display text-[17px] text-white/70">+1</span>
+          <input
+            type="tel"
+            inputMode="tel"
+            autoFocus
+            value={formatPhone(phone)}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+            placeholder="Phone Number"
+            aria-label="Phone number"
+            autoComplete="tel"
+            className="ml-3 h-full w-full bg-transparent font-display text-[17px] text-white placeholder:text-white/45 outline-none"
+          />
+        </div>
+      )}
 
-      <p className="mx-auto mt-5 font-display text-[15px] font-semibold text-foreground underline">
+      <p className="mx-auto mt-6 font-display text-[16px] font-semibold text-white underline">
         Need help logging in?
       </p>
 
       <div className="flex-1" />
 
-      <p className="mb-4 text-center font-display text-[13px] leading-snug text-foreground/60">
-        By entering and tapping Next, you agree to the{" "}
-        <span className="font-semibold text-foreground underline">Terms</span>,{" "}
-        <span className="font-semibold text-foreground underline">E-Sign Consent</span> &{" "}
-        <span className="font-semibold text-foreground underline">Privacy Notice</span>
-      </p>
-
-      <button
-        type="button"
-        disabled={phone.length < 10}
-        onClick={() => {
-          setCode("");
-          goWithSpinner("code");
-        }}
-        className={primary}
-      >
-        Next
-      </button>
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            haptic();
+            setUseEmail((v) => !v);
+          }}
+          className="h-14 flex-1 rounded-full bg-white/12 font-display text-[16px] font-semibold text-white active:opacity-70"
+        >
+          {useEmail ? "Use Phone" : "Use Email"}
+        </button>
+        <button
+          type="button"
+          disabled={!canContinue}
+          onClick={() => {
+            setCode("");
+            goWithSpinner("code");
+          }}
+          className="h-14 flex-1 rounded-full bg-white font-display text-[16px] font-semibold text-black disabled:bg-white/20 disabled:text-white/45 active:opacity-80"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
