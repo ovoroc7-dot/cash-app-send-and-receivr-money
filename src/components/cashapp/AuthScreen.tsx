@@ -218,7 +218,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
         </div>
 
         <h1 className="mt-6 font-display text-[30px] font-bold leading-[1.1] tracking-[-0.02em] text-white">
-          Please enter the code sent to {formatPhone(phone)}
+          Please enter the code sent to {useEmail ? email : formatPhone(phone)}
         </h1>
 
         <input
