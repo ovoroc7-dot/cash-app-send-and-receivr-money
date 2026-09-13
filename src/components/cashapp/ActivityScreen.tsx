@@ -1,7 +1,18 @@
 import { useMemo, useState } from "react";
-import { Ban, Clock, MessageSquare, ChevronRight, Search, X, Plus } from "lucide-react";
+import {
+  Ban,
+  Clock,
+  MessageSquare,
+  ChevronRight,
+  Search,
+  X,
+  Plus,
+  Check,
+  Download,
+  DollarSign,
+} from "lucide-react";
 import avatar from "@/assets/avatar.jpg";
-import { fmtAmount, useCash, type Payment } from "./store";
+import { fmtAmount, useCash, type Payment, type Txn } from "./store";
 
 const history = [
   {
@@ -18,24 +29,29 @@ const history = [
 ];
 
 export function ActivityScreen() {
-  const { pending } = useCash();
-  const [open, setOpen] = useState<Payment | null>(null);
+  const { transactions } = useCash();
+  const [openSent, setOpenSent] = useState<Payment | null>(null);
+  const [openAdd, setOpenAdd] = useState<Txn | null>(null);
   const [query, setQuery] = useState("");
 
   // Recent transaction profiles sit at the top, most recent first.
   const people = useMemo(() => {
     const seen = new Set<string>();
-    return pending
+    return transactions
+      .filter((p) => p.kind === "sent")
       .filter((p) => (seen.has(p.name) ? false : (seen.add(p.name), true)))
       .slice(0, 6);
-  }, [pending]);
+  }, [transactions]);
 
   const q = query.trim().toLowerCase();
   const shown = q
-    ? pending.filter(
-        (p) => p.name.toLowerCase().includes(q) || p.note.toLowerCase().includes(q),
+    ? transactions.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.note.toLowerCase().includes(q) ||
+          (p.source ?? "").toLowerCase().includes(q),
       )
-    : pending;
+    : transactions;
 
   return (
     <div
@@ -94,30 +110,62 @@ export function ActivityScreen() {
           <h2 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-cash-ink">
             Today
           </h2>
-          {shown.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => setOpen(p)}
-              className="mt-4 flex w-full items-center gap-4 text-left"
-            >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#f5303e] font-display text-[17px] font-bold text-white">
-                {p.name[0]}
-              </span>
-              <span className="flex-1">
-                <span className="block font-display text-[16px] font-semibold text-cash-ink">
-                  {p.name}
+          {shown.map((p) =>
+            p.kind === "added" ? (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setOpenAdd(p)}
+                className="mt-4 flex w-full items-center gap-4 text-left"
+              >
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-cash">
+                  <span className="font-display text-[19px] font-bold leading-none text-white">
+                    $
+                  </span>
                 </span>
-                <span className="block font-display text-[14px] text-cash-ink/50">
-                  {fmtAmount(p.amount)} for {p.note}
+                <span className="flex-1">
+                  <span className="block font-display text-[16px] font-semibold text-cash-ink">
+                    Add money
+                  </span>
+                  <span className="block font-display text-[14px] text-cash-ink/50">
+                    {p.source ?? "Visa debit 3049"}
+                  </span>
+                  <span className="block font-display text-[14px] text-cash-ink/50">{p.time}</span>
                 </span>
-                <span className="block font-display text-[14px] text-cash-ink/50">{p.time}</span>
-              </span>
-              <span className="font-display text-[15px] text-cash-ink/60">
-                {fmtAmount(p.amount)}
-              </span>
-            </button>
-          ))}
+                <span className="font-display text-[16px] font-semibold text-cash-ink">
+                  + {fmtAmount(p.amount)}
+                </span>
+              </button>
+            ) : (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setOpenSent(p)}
+                className="mt-4 flex w-full items-center gap-4 text-left"
+              >
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#f5303e] font-display text-[17px] font-bold text-white">
+                  {p.name[0]}
+                </span>
+                <span className="flex-1">
+                  <span className="block font-display text-[16px] font-semibold text-cash-ink">
+                    {p.name}
+                  </span>
+                  <span className="block font-display text-[14px] text-cash-ink/50">
+                    {fmtAmount(p.amount)} for {p.note}
+                    {p.status === "canceled" ? " • Canceled" : ""}
+                  </span>
+                  <span className="block font-display text-[14px] text-cash-ink/50">{p.time}</span>
+                </span>
+                <span
+                  className={`font-display text-[15px] text-cash-ink/60 ${
+                    p.status === "canceled" ? "line-through" : ""
+                  }`}
+                >
+                  {fmtAmount(p.amount)}
+                </span>
+              </button>
+            ),
+          )}
         </section>
       )}
 
@@ -152,7 +200,8 @@ export function ActivityScreen() {
           </section>
         ))}
 
-      {open && <PaymentDetail payment={open} onClose={() => setOpen(null)} />}
+      {openSent && <PaymentDetail payment={openSent} onClose={() => setOpenSent(null)} />}
+      {openAdd && <AddMoneyReceipt txn={openAdd} onClose={() => setOpenAdd(null)} />}
     </div>
   );
 }
@@ -167,6 +216,100 @@ function QuickTile({ label, children }: { label: string; children: React.ReactNo
         {label}
       </span>
     </button>
+  );
+}
+
+/** Full "Add money" receipt, dark like the Cash App transaction details screen. */
+function AddMoneyReceipt({ txn, onClose }: { txn: Txn; onClose: () => void }) {
+  const source = txn.source ?? "Visa debit 3049";
+  const rows = [
+    {
+      Icon: Check,
+      title: "Complete",
+      sub: `Transfer from ${source}`,
+    },
+    { Icon: DollarSign, title: "Transferred from", sub: source },
+    { Icon: Download, title: "Transferred to", sub: "Cash balance" },
+    { Icon: Clock, title: "Deposited", sub: `Today at ${txn.time}` },
+    { Icon: MessageSquare, title: "Identifier", sub: `#${txn.id.toUpperCase()}` },
+  ];
+
+  return (
+    <div
+      style={{ touchAction: "pan-y" }}
+      className="absolute inset-0 z-40 overflow-y-auto overscroll-contain bg-black"
+    >
+      <div className="px-6 pb-16 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+        <button
+          type="button"
+          aria-label="Close"
+          onClick={onClose}
+          className="flex size-10 items-center justify-center rounded-full bg-white/10 active:opacity-70"
+        >
+          <X className="size-6 text-white" strokeWidth={2.5} />
+        </button>
+
+        <span className="mt-7 flex size-[60px] items-center justify-center rounded-full bg-cash">
+          <span className="font-display text-[32px] font-bold leading-none text-black">$</span>
+        </span>
+
+        <h2 className="mt-5 font-display text-[30px] font-bold tracking-[-0.03em] text-white">
+          Add money
+        </h2>
+        <p className="mt-2 font-display text-[16px] text-white/50">Today at {txn.time}</p>
+
+        <p className="mt-5 font-display text-[46px] font-bold leading-none tracking-[-0.04em] text-white">
+          + {fmtAmount(txn.amount)}
+        </p>
+
+        <hr className="mt-8 border-white/15" />
+        <h3 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-white">
+          Transaction details
+        </h3>
+
+        <div className="mt-6 space-y-7">
+          {rows.map(({ Icon, title, sub }) => (
+            <div key={title} className="flex gap-4">
+              <Icon className="mt-0.5 size-5 shrink-0 text-white" strokeWidth={2.2} />
+              <span>
+                <span className="block font-display text-[16px] font-semibold text-white">
+                  {title}
+                </span>
+                <span className="block font-display text-[15px] text-white/55">{sub}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <hr className="mt-8 border-white/15" />
+        <h3 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-white">
+          What you can do
+        </h3>
+        <div className="mt-6 space-y-7">
+          {[
+            { Icon: Clock, label: "View statement" },
+            { Icon: MessageSquare, label: "Contact Support" },
+          ].map(({ Icon, label }) => (
+            <button key={label} type="button" className="flex w-full items-center gap-4 text-left">
+              <Icon className="size-5 shrink-0 text-white" strokeWidth={2.2} />
+              <span className="flex-1 font-display text-[16px] font-semibold text-white">
+                {label}
+              </span>
+              <ChevronRight className="size-4 text-white/50" strokeWidth={2.5} />
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-10 space-y-1 font-mono text-[12px] text-white/40">
+          <p className="font-semibold text-white/70">Block, Inc.</p>
+          <p>1955 Broadway, Suite 600</p>
+          <p>Oakland, CA 94612</p>
+          <p>(800) 969-1940</p>
+          <p className="pt-3">NMLS #: 942933</p>
+          <p className="pt-3 underline">cash.app</p>
+        </div>
+      </div>
+    </div>
   );
 }
 
