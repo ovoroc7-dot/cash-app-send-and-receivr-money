@@ -8,7 +8,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
 export const fmtAmount = (amount: string) => `$${Number(amount).toFixed(2)}`;
 
@@ -50,12 +49,33 @@ export type Payment = {
   time: string;
 };
 
+/** Every money movement shown in Activity. Saved on the device so history survives sign out. */
+export type Txn = {
+  id: string;
+  kind: "sent" | "added";
+  name: string;
+  amount: string;
+  note: string;
+  time: string;
+  createdAt: number;
+  status: "pending" | "complete" | "canceled";
+  /** Funding source for added money, e.g. "Visa debit 3049". */
+  source?: string;
+};
+
+const TXN_KEY = "cash.txns";
+const BAL_KEY = "cash.balance";
+
+const nowTime = () =>
+  new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+
 type Store = {
+  transactions: Txn[];
   pending: Payment[];
   addPayment: (p: Omit<Payment, "id" | "time">) => string;
   cancelPayment: (id: string) => void;
   balance: number;
-  addFunds: (amount: number) => void;
+  addFunds: (amount: number, source?: string) => void;
   autoReload: boolean;
   setAutoReload: (on: boolean) => void;
   announce: (message: string) => void;
@@ -64,87 +84,100 @@ type Store = {
 const Ctx = createContext<Store | null>(null);
 
 export function CashProvider({ children }: { children: ReactNode }) {
-  const [pending, setPending] = useState<Payment[]>([]);
+  const [transactions, setTransactions] = useState<Txn[]>([]);
   const [balance, setBalance] = useState(0);
   const [autoReload, setAutoReload] = useState(false);
   const [live, setLive] = useState("");
-  const userId = useRef<string | null>(null);
+  const loaded = useRef(false);
 
   const announce = useCallback((message: string) => {
     setLive("");
     requestAnimationFrame(() => setLive(message));
   }, []);
 
-  // Load the saved cash balance for the signed-in account, creating the
-  // wallet row on first sign-in so it persists on every device.
+  // Restore the saved balance and history. Kept on the device so it stays
+  // after the app is closed, or after signing out and back in.
   useEffect(() => {
-    let alive = true;
-    const load = async () => {
-      const { data } = await supabase.auth.getUser();
-      const id = data.user?.id ?? null;
-      userId.current = id;
-      if (!id || !alive) return;
-      const { data: wallet } = await supabase
-        .from("wallets")
-        .select("balance")
-        .eq("user_id", id)
-        .maybeSingle();
-      if (!alive) return;
-      if (wallet) {
-        setBalance(Number(wallet.balance));
-      } else {
-        await supabase.from("wallets").insert({ user_id: id, balance: 0 });
-        setBalance(0);
-      }
-    };
-    void load();
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN" || event === "SIGNED_OUT") void load();
-    });
-    return () => {
-      alive = false;
-      sub.subscription.unsubscribe();
-    };
+    try {
+      const raw = localStorage.getItem(TXN_KEY);
+      if (raw) setTransactions(JSON.parse(raw) as Txn[]);
+      const b = localStorage.getItem(BAL_KEY);
+      if (b) setBalance(Number(b) || 0);
+    } catch {
+      /* ignore unreadable storage */
+    }
+    loaded.current = true;
   }, []);
 
-  const persist = useCallback(async (next: number) => {
-    const id = userId.current;
-    if (!id) return;
-    await supabase
-      .from("wallets")
-      .upsert({ user_id: id, balance: next, updated_at: new Date().toISOString() });
-  }, []);
+  useEffect(() => {
+    if (!loaded.current) return;
+    try {
+      localStorage.setItem(TXN_KEY, JSON.stringify(transactions));
+      localStorage.setItem(BAL_KEY, String(balance));
+    } catch {
+      /* ignore full storage */
+    }
+  }, [transactions, balance]);
+
+  const pending = useMemo<Payment[]>(
+    () =>
+      transactions
+        .filter((t) => t.kind === "sent" && t.status !== "canceled")
+        .map(({ id, name, amount, note, time }) => ({ id, name, amount, note, time })),
+    [transactions],
+  );
 
   const value = useMemo<Store>(
     () => ({
+      transactions,
       pending,
       balance,
       autoReload,
       setAutoReload,
       announce,
-      addFunds: (amount) =>
+      addFunds: (amount, source = "Visa debit 3049") => {
         setBalance((b) => {
           const next = b + amount;
           haptic("success");
           announce(`Added ${speakMoney(amount)}. Cash balance ${speakMoney(next)}.`);
-          void persist(next);
           return next;
-        }),
+        });
+        setTransactions((list) => [
+          {
+            id: Math.random().toString(36).slice(2),
+            kind: "added",
+            name: "Add money",
+            amount: String(amount),
+            note: "",
+            source,
+            status: "complete",
+            time: nowTime(),
+            createdAt: Date.now(),
+          },
+          ...list,
+        ]);
+      },
       addPayment: (p) => {
         const id = Math.random().toString(36).slice(2);
-        setPending((list) => [
+        setTransactions((list) => [
           {
             ...p,
             id,
-            time: new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }),
+            kind: "sent",
+            status: "pending",
+            time: nowTime(),
+            createdAt: Date.now(),
           },
           ...list,
         ]);
         return id;
       },
-      cancelPayment: (id) => setPending((list) => list.filter((p) => p.id !== id)),
+      cancelPayment: (id) =>
+        setTransactions((list) =>
+          list.map((t) => (t.id === id ? { ...t, status: "canceled" } : t)),
+        ),
     }),
-    [pending, balance, autoReload, announce, persist],
+    [transactions, pending, balance, autoReload, announce],
   );
 
   return (
