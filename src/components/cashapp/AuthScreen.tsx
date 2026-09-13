@@ -86,22 +86,26 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
       { tag: "$bkhodae", name: "Emily", initial: "E", verified: true },
     ];
     return (
-      <div className="h-full overflow-y-auto bg-surface px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+      <div className="h-full overflow-y-auto bg-black px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
         <div className="flex justify-end">
-          <button type="button" aria-label="More options" className="p-2 text-foreground active:opacity-60">
+          <button
+            type="button"
+            aria-label="More options"
+            className="flex size-10 items-center justify-center rounded-full bg-white/10 text-white active:opacity-60"
+          >
             <span className="font-display text-[20px] font-bold leading-none">···</span>
           </button>
         </div>
 
-        <div className="mt-4 flex size-[52px] items-center justify-center rounded-[14px] bg-cash">
-          <img src={dollarSign} alt="" className="h-7 w-auto object-contain" />
+        <div className="mt-8 flex size-[58px] items-center justify-center rounded-[16px] bg-cash">
+          <img src={dollarSign} alt="" className="h-8 w-auto object-contain" />
         </div>
 
-        <h1 className="mt-5 font-display text-[30px] font-bold tracking-[-0.02em] text-foreground">
+        <h1 className="mt-6 font-display text-[34px] font-bold tracking-[-0.02em] text-white">
           Choose an account
         </h1>
 
-        <div className="mt-5">
+        <div className="mt-6">
           {accounts.map((a) => (
             <button
               key={a.tag}
@@ -109,32 +113,32 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
               onClick={() => goWithSpinner("welcome")}
               className="flex w-full items-center gap-4 py-4 text-left active:opacity-60"
             >
-              <span className="flex size-[44px] shrink-0 items-center justify-center rounded-full bg-[#f038b0] font-display text-[18px] font-bold text-white">
+              <span className="flex size-[46px] shrink-0 items-center justify-center rounded-full bg-[#f038b0] font-display text-[20px] font-bold text-black">
                 {a.initial}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-display text-[16px] font-semibold text-foreground">
+                <span className="block truncate font-display text-[17px] font-semibold text-white">
                   {a.tag}
                   {a.verified ? <span className="ml-1 text-cash">●</span> : null}
                 </span>
-                <span className="block truncate text-[14px] text-muted-foreground">{a.name}</span>
+                <span className="block truncate text-[15px] text-white/70">{a.name}</span>
               </span>
-              <span className="text-[18px] text-muted-foreground">›</span>
+              <span className="text-[18px] text-white/70">›</span>
             </button>
           ))}
 
           <button
             type="button"
             onClick={() => goWithSpinner("welcome")}
-            className="flex w-full items-center gap-4 py-4 text-left active:opacity-60"
+            className="mt-2 flex w-full items-center gap-4 py-4 text-left active:opacity-60"
           >
-            <span className="flex size-[44px] shrink-0 items-center justify-center rounded-full bg-foreground/8 font-display text-[22px] font-semibold text-foreground">
+            <span className="flex size-[46px] shrink-0 items-center justify-center rounded-full bg-white/10 font-display text-[24px] font-semibold text-white">
               +
             </span>
-            <span className="min-w-0 flex-1 font-display text-[16px] font-semibold text-foreground">
+            <span className="min-w-0 flex-1 font-display text-[17px] font-semibold text-white">
               Sign in to another account
             </span>
-            <span className="text-[18px] text-muted-foreground">›</span>
+            <span className="text-[18px] text-white/70">›</span>
           </button>
         </div>
       </div>
