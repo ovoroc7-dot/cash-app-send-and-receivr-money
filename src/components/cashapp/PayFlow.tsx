@@ -64,6 +64,7 @@ export function PayFlow({
   const [method, setMethod] = useState("discover");
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [showReceiptAction, setShowReceiptAction] = useState(true);
+  const [search, setSearch] = useState("");
   const lastReceiptScrollTop = useRef(0);
 
   useEffect(() => {
@@ -321,38 +322,91 @@ export function PayFlow({
               <label className="flex h-11 flex-1 items-center gap-2 rounded-full bg-cash-ink/[0.05] px-4">
                 <Search className="size-4 text-cash-ink/50" strokeWidth={2.6} />
                 <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  aria-label="Search for a recipient"
                   placeholder="Name, $cashtag, email, phone, US..."
                   className="w-full bg-transparent font-display text-[15px] text-cash-ink outline-none placeholder:text-cash-ink/45"
                 />
               </label>
               <ScanLine className="size-6 text-cash-ink" strokeWidth={2.2} />
             </div>
-            <p className="mt-6 font-display text-[19px] font-bold text-cash-ink">Contacts</p>
-            <div className="mt-4 flex-1 space-y-5 overflow-y-auto">
-              {contacts.map((c) => (
-                <button
-                  key={c.name}
-                  type="button"
-                  onClick={() => {
-                    setPerson(c);
-                    setStep("note");
-                  }}
-                  className="flex w-full items-center gap-4 text-left"
-                >
-                  <span
-                    className={`flex size-10 shrink-0 items-center justify-center rounded-full font-display text-[17px] font-bold text-white ${c.color}`}
-                  >
-                    {c.name[0]}
-                  </span>
-                  <span>
-                    <span className="block font-display text-[16px] font-semibold text-cash-ink">
-                      {c.name}
-                    </span>
-                    <span className="block font-display text-[14px] text-cash-ink/50">{c.sub}</span>
-                  </span>
-                </button>
-              ))}
-            </div>
+            {(() => {
+              const q = search.trim().toLowerCase();
+              const matches = q
+                ? contacts.filter(
+                    (c) =>
+                      c.name.toLowerCase().includes(q) || c.sub.toLowerCase().includes(q),
+                  )
+                : contacts;
+              const typedName = search.trim();
+              const showCustom =
+                typedName.length > 1 &&
+                !matches.some((c) => c.name.toLowerCase() === typedName.toLowerCase());
+              const pick = (c: (typeof contacts)[number]) => {
+                setPerson(c);
+                setStep("note");
+              };
+              return (
+                <>
+                  <p className="mt-6 font-display text-[19px] font-bold text-cash-ink">
+                    {q ? "Results" : "Contacts"}
+                  </p>
+                  <div className="mt-4 flex-1 space-y-5 overflow-y-auto">
+                    {showCustom && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          pick({
+                            name: typedName,
+                            sub: "Send to this recipient",
+                            color: "bg-[#2b6fe8]",
+                          })
+                        }
+                        className="flex w-full items-center gap-4 text-left"
+                      >
+                        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#2b6fe8] font-display text-[17px] font-bold text-white">
+                          {typedName[0]?.toUpperCase()}
+                        </span>
+                        <span>
+                          <span className="block font-display text-[16px] font-semibold text-cash-ink">
+                            {typedName}
+                          </span>
+                          <span className="block font-display text-[14px] text-cash-ink/50">
+                            Send to this recipient
+                          </span>
+                        </span>
+                      </button>
+                    )}
+                    {matches.map((c) => (
+                      <button
+                        key={c.name}
+                        type="button"
+                        onClick={() => pick(c)}
+                        className="flex w-full items-center gap-4 text-left"
+                      >
+                        <span
+                          className={`flex size-10 shrink-0 items-center justify-center rounded-full font-display text-[17px] font-bold text-white ${c.color}`}
+                        >
+                          {c.name[0]}
+                        </span>
+                        <span>
+                          <span className="block font-display text-[16px] font-semibold text-cash-ink">
+                            {c.name}
+                          </span>
+                          <span className="block font-display text-[14px] text-cash-ink/50">
+                            {c.sub}
+                          </span>
+                        </span>
+                      </button>
+                    ))}
+                    {!matches.length && !showCustom && (
+                      <p className="font-display text-[15px] text-cash-ink/50">No matches yet.</p>
+                    )}
+                  </div>
+                </>
+              );
+            })()}
           </>
         ) : (
           <>
