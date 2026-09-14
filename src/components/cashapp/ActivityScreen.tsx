@@ -237,52 +237,52 @@ function AddMoneyReceipt({ txn, onClose }: { txn: Txn; onClose: () => void }) {
   return (
     <div
       style={{ touchAction: "pan-y" }}
-      className="absolute inset-0 z-40 overflow-y-auto overscroll-contain bg-black"
+      className="absolute inset-0 z-40 overflow-y-auto overscroll-contain bg-surface"
     >
       <div className="px-6 pb-16 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
         <button
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="flex size-10 items-center justify-center rounded-full bg-white/10 active:opacity-70"
+          className="flex size-10 items-center justify-center rounded-full bg-cash-ink/10 active:opacity-70"
         >
-          <X className="size-6 text-white" strokeWidth={2.5} />
+          <X className="size-6 text-cash-ink" strokeWidth={2.5} />
         </button>
 
         <span className="mt-7 flex size-[60px] items-center justify-center rounded-full bg-cash">
           <span className="font-display text-[32px] font-bold leading-none text-black">$</span>
         </span>
 
-        <h2 className="mt-5 font-display text-[30px] font-bold tracking-[-0.03em] text-white">
+        <h2 className="mt-5 font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
           Add money
         </h2>
-        <p className="mt-2 font-display text-[16px] text-white/50">Today at {txn.time}</p>
+        <p className="mt-2 font-display text-[16px] text-cash-ink/50">Today at {txn.time}</p>
 
-        <p className="mt-5 font-display text-[46px] font-bold leading-none tracking-[-0.04em] text-white">
+        <p className="mt-5 font-display text-[46px] font-bold leading-none tracking-[-0.04em] text-cash-ink">
           + {fmtAmount(txn.amount)}
         </p>
 
-        <hr className="mt-8 border-white/15" />
-        <h3 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-white">
+        <hr className="mt-8 border-cash-ink/15" />
+        <h3 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-cash-ink">
           Transaction details
         </h3>
 
         <div className="mt-6 space-y-7">
           {rows.map(({ Icon, title, sub }) => (
             <div key={title} className="flex gap-4">
-              <Icon className="mt-0.5 size-5 shrink-0 text-white" strokeWidth={2.2} />
+              <Icon className="mt-0.5 size-5 shrink-0 text-cash-ink" strokeWidth={2.2} />
               <span>
-                <span className="block font-display text-[16px] font-semibold text-white">
+                <span className="block font-display text-[16px] font-semibold text-cash-ink">
                   {title}
                 </span>
-                <span className="block font-display text-[15px] text-white/55">{sub}</span>
+                <span className="block font-display text-[15px] text-cash-ink/55">{sub}</span>
               </span>
             </div>
           ))}
         </div>
 
-        <hr className="mt-8 border-white/15" />
-        <h3 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-white">
+        <hr className="mt-8 border-cash-ink/15" />
+        <h3 className="mt-7 font-display text-[22px] font-bold tracking-[-0.02em] text-cash-ink">
           What you can do
         </h3>
         <div className="mt-6 space-y-7">
@@ -291,17 +291,17 @@ function AddMoneyReceipt({ txn, onClose }: { txn: Txn; onClose: () => void }) {
             { Icon: MessageSquare, label: "Contact Support" },
           ].map(({ Icon, label }) => (
             <button key={label} type="button" className="flex w-full items-center gap-4 text-left">
-              <Icon className="size-5 shrink-0 text-white" strokeWidth={2.2} />
-              <span className="flex-1 font-display text-[16px] font-semibold text-white">
+              <Icon className="size-5 shrink-0 text-cash-ink" strokeWidth={2.2} />
+              <span className="flex-1 font-display text-[16px] font-semibold text-cash-ink">
                 {label}
               </span>
-              <ChevronRight className="size-4 text-white/50" strokeWidth={2.5} />
+              <ChevronRight className="size-4 text-cash-ink/50" strokeWidth={2.5} />
             </button>
           ))}
         </div>
 
-        <div className="mt-10 space-y-1 font-mono text-[12px] text-white/40">
-          <p className="font-semibold text-white/70">Block, Inc.</p>
+        <div className="mt-10 space-y-1 font-mono text-[12px] text-cash-ink/40">
+          <p className="font-semibold text-cash-ink/70">Block, Inc.</p>
           <p>1955 Broadway, Suite 600</p>
           <p>Oakland, CA 94612</p>
           <p>(800) 969-1940</p>
