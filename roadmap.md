@@ -6,3 +6,6 @@
 - [x] Onboarding tail (video 3): ZIP code, Create a Cash App PIN, Meet the Cash App Card, Sync contacts
 
 - [x] Sign-in flow: phone -> code 565656 -> Cash PIN 5656 -> welcome -> main app, session kept until sign out
+- [x] Money Added activity row + full scrollable dark Add money receipt
+- [x] Saved history (sent + added) and cash balance that survive closing the app and signing out
+- [x] Recipient dropdown in the Cash Tag / email / phone field when sending money
