@@ -64,6 +64,7 @@ export function PayFlow({
   const [method, setMethod] = useState("discover");
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [showReceiptAction, setShowReceiptAction] = useState(true);
+  const [search, setSearch] = useState("");
   const lastReceiptScrollTop = useRef(0);
 
   useEffect(() => {
