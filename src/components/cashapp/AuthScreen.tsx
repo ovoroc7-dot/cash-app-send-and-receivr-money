@@ -58,8 +58,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
 
   // Paint the status-bar area to match the current screen's background.
   useEffect(() => {
-    const dark = step !== "pin" && step !== "success";
-    document.body.style.backgroundColor = dark ? "#000000" : "var(--surface)";
+    document.body.style.backgroundColor = "var(--surface)";
     return () => {
       document.body.style.backgroundColor = "";
     };
@@ -86,12 +85,12 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
       { tag: "$bkhodae", name: "Emily", initial: "E", verified: true },
     ];
     return (
-      <div className="h-full overflow-y-auto bg-black px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+      <div className="h-full overflow-y-auto bg-surface px-5 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
         <div className="flex justify-end">
           <button
             type="button"
             aria-label="More options"
-            className="flex size-10 items-center justify-center rounded-full bg-white/10 text-white active:opacity-60"
+            className="flex size-10 items-center justify-center rounded-full bg-cash-ink/10 text-cash-ink active:opacity-60"
           >
             <span className="font-display text-[20px] font-bold leading-none">···</span>
           </button>
@@ -101,7 +100,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
           <img src={dollarSign} alt="" className="h-8 w-auto object-contain" />
         </div>
 
-        <h1 className="mt-6 font-display text-[34px] font-bold tracking-[-0.02em] text-white">
+        <h1 className="mt-6 font-display text-[34px] font-bold tracking-[-0.02em] text-cash-ink">
           Choose an account
         </h1>
 
@@ -117,13 +116,13 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
                 {a.initial}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-display text-[17px] font-semibold text-white">
+                <span className="block truncate font-display text-[17px] font-semibold text-cash-ink">
                   {a.tag}
                   {a.verified ? <span className="ml-1 text-cash">●</span> : null}
                 </span>
-                <span className="block truncate text-[15px] text-white/70">{a.name}</span>
+                <span className="block truncate text-[15px] text-cash-ink/70">{a.name}</span>
               </span>
-              <span className="text-[18px] text-white/70">›</span>
+              <span className="text-[18px] text-cash-ink/70">›</span>
             </button>
           ))}
 
@@ -132,13 +131,13 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
             onClick={() => goWithSpinner("welcome")}
             className="mt-2 flex w-full items-center gap-4 py-4 text-left active:opacity-60"
           >
-            <span className="flex size-[46px] shrink-0 items-center justify-center rounded-full bg-white/10 font-display text-[24px] font-semibold text-white">
+            <span className="flex size-[46px] shrink-0 items-center justify-center rounded-full bg-cash-ink/10 font-display text-[24px] font-semibold text-cash-ink">
               +
             </span>
-            <span className="min-w-0 flex-1 font-display text-[17px] font-semibold text-white">
+            <span className="min-w-0 flex-1 font-display text-[17px] font-semibold text-cash-ink">
               Sign in to another account
             </span>
-            <span className="text-[18px] text-white/70">›</span>
+            <span className="text-[18px] text-cash-ink/70">›</span>
           </button>
         </div>
       </div>
@@ -147,8 +146,8 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
 
   if (step === "loading") {
     return (
-      <div className="flex h-full items-center justify-center bg-black" role="status" aria-label="Loading">
-        <span className="size-8 animate-spin rounded-full border-2 border-white/25 border-t-white" />
+      <div className="flex h-full items-center justify-center bg-surface" role="status" aria-label="Loading">
+        <span className="size-8 animate-spin rounded-full border-2 border-cash-ink/25 border-t-cash-ink" />
       </div>
     );
   }
@@ -170,12 +169,12 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
 
   if (step === "welcome") {
     return (
-      <div className="relative flex h-full flex-col justify-end bg-black px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+      <div className="relative flex h-full flex-col justify-end bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
         <div className="pointer-events-none absolute inset-x-0 bottom-[38%] top-[14%]">
           <div className="absolute left-[8%] top-[38%] size-[84px] rotate-[-8deg] rounded-[18px] bg-cash/80 blur-[0.3px]" />
           <div className="absolute right-[6%] top-[6%] h-[150px] w-[86px] rotate-[6deg] rounded-[18px] bg-cash" />
-          <div className="absolute left-1/2 top-0 flex size-[62px] -translate-x-1/2 items-center justify-center rounded-full bg-white/10">
-            <span className="font-display text-[26px] font-bold text-white/70">$</span>
+          <div className="absolute left-1/2 top-0 flex size-[62px] -translate-x-1/2 items-center justify-center rounded-full bg-cash-ink/10">
+            <span className="font-display text-[26px] font-bold text-cash-ink/70">$</span>
           </div>
           <div className="absolute bottom-[10%] right-[16%] h-[64px] w-[104px] rotate-[-4deg] rounded-[10px] bg-gradient-to-br from-[#ffb37a] via-[#f38aa6] to-[#8f9bf2]" />
         </div>
@@ -184,14 +183,14 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
           <img src={dollarSign} alt="" className="h-6 w-auto object-contain" />
         </div>
 
-        <h1 className="font-display text-[34px] font-bold leading-[1.08] tracking-[-0.02em] text-white">
+        <h1 className="font-display text-[34px] font-bold leading-[1.08] tracking-[-0.02em] text-cash-ink">
           Manage your money without all the fees
         </h1>
 
         <button
           type="button"
           onClick={() => goWithSpinner("entry")}
-          className="mt-8 h-14 w-full rounded-full bg-white/12 font-display text-[17px] font-semibold text-white active:opacity-70"
+          className="mt-8 h-14 w-full rounded-full bg-cash-ink/12 font-display text-[17px] font-semibold text-cash-ink active:opacity-70"
         >
           Get started
         </button>
@@ -202,22 +201,22 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
   if (step === "code") {
     const valid = code.replace(/\D/g, "").length === 6;
     return (
-      <div className="flex h-full flex-col overflow-y-auto bg-black px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+      <div className="flex h-full flex-col overflow-y-auto bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
         <div className="flex items-center justify-between">
           <button
             type="button"
             aria-label="Back"
             onClick={back}
-            className="flex size-9 items-center justify-center rounded-full bg-white/10 font-display text-[16px] text-white active:opacity-60"
+            className="flex size-9 items-center justify-center rounded-full bg-cash-ink/10 font-display text-[16px] text-cash-ink active:opacity-60"
           >
             ✕
           </button>
-          <span aria-hidden className="flex size-9 items-center justify-center rounded-full bg-white/10 font-display text-[16px] text-white">
+          <span aria-hidden className="flex size-9 items-center justify-center rounded-full bg-cash-ink/10 font-display text-[16px] text-cash-ink">
             ?
           </span>
         </div>
 
-        <h1 className="mt-6 font-display text-[30px] font-bold leading-[1.1] tracking-[-0.02em] text-white">
+        <h1 className="mt-6 font-display text-[30px] font-bold leading-[1.1] tracking-[-0.02em] text-cash-ink">
           Please enter the code sent to {useEmail ? email : formatPhone(phone)}
         </h1>
 
@@ -232,21 +231,21 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
           }}
           placeholder="Confirmation Code"
           aria-label="Confirmation code"
-          className="mt-6 h-14 w-full rounded-xl border border-white/70 bg-transparent px-4 font-display text-[17px] text-white placeholder:text-white/45 outline-none focus:border-white"
+          className="mt-6 h-14 w-full rounded-xl border border-cash-ink/70 bg-transparent px-4 font-display text-[17px] text-cash-ink placeholder:text-cash-ink/45 outline-none focus:border-cash-ink"
         />
 
-        <p className="mt-3 font-display text-[14px] text-white/60">
+        <p className="mt-3 font-display text-[14px] text-cash-ink/60">
           {resendIn > 0
             ? `You can request another code in ${resendIn} seconds`
             : "You can request another code now"}
         </p>
 
-        <p className="mt-6 text-center font-display text-[15px] font-semibold text-white underline">
+        <p className="mt-6 text-center font-display text-[15px] font-semibold text-cash-ink underline">
           Need help logging in?
         </p>
 
         {msg ? (
-          <p role="status" className="mt-4 text-center font-display text-[14px] text-white/80">
+          <p role="status" className="mt-4 text-center font-display text-[14px] text-cash-ink/80">
             {msg}
           </p>
         ) : null}
@@ -260,7 +259,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
             haptic();
             setResendIn(59);
           }}
-          className="h-14 w-full rounded-full bg-white/10 font-display text-[16px] font-semibold text-white disabled:text-white/40"
+          className="h-14 w-full rounded-full bg-cash-ink/10 font-display text-[16px] font-semibold text-cash-ink disabled:text-cash-ink/40"
         >
           Resend Code
         </button>
@@ -275,7 +274,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
             setPin("");
             goWithSpinner("pin");
           }}
-          className="mt-3 h-14 w-full rounded-full bg-white font-display text-[16px] font-semibold text-black disabled:bg-white/15 disabled:text-white/40 active:opacity-80"
+          className="mt-3 h-14 w-full rounded-full bg-cash-ink font-display text-[16px] font-semibold text-surface disabled:bg-cash-ink/15 disabled:text-cash-ink/40 active:opacity-80"
         >
           Next
         </button>
@@ -355,25 +354,25 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
   // Phone / email sign in.
   const canContinue = useEmail ? /^\S+@\S+\.\S+$/.test(email) : phone.length >= 10;
   return (
-    <div className="flex h-full flex-col overflow-y-auto bg-black px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+    <div className="flex h-full flex-col overflow-y-auto bg-surface px-6 pb-10 pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
       <div className="flex items-center justify-between">
         <button
           type="button"
           aria-label="Back"
           onClick={back}
-          className="flex size-10 items-center justify-center rounded-full bg-white/10 font-display text-[20px] text-white active:opacity-60"
+          className="flex size-10 items-center justify-center rounded-full bg-cash-ink/10 font-display text-[20px] text-cash-ink active:opacity-60"
         >
           ←
         </button>
         <span
           aria-hidden
-          className="flex size-10 items-center justify-center rounded-full bg-white/10 font-display text-[18px] font-semibold text-white"
+          className="flex size-10 items-center justify-center rounded-full bg-cash-ink/10 font-display text-[18px] font-semibold text-cash-ink"
         >
           ?
         </span>
       </div>
 
-      <h1 className="mt-6 font-display text-[32px] font-bold leading-[1.1] tracking-[-0.02em] text-white">
+      <h1 className="mt-6 font-display text-[32px] font-bold leading-[1.1] tracking-[-0.02em] text-cash-ink">
         Enter your info to log in or create an account
       </h1>
 
@@ -387,11 +386,11 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
           placeholder="Email Address"
           aria-label="Email address"
           autoComplete="email"
-          className="mt-7 h-14 w-full rounded-xl border border-white bg-transparent px-4 font-display text-[17px] text-white placeholder:text-white/45 outline-none"
+          className="mt-7 h-14 w-full rounded-xl border border-cash-ink bg-transparent px-4 font-display text-[17px] text-cash-ink placeholder:text-cash-ink/45 outline-none"
         />
       ) : (
-        <div className="mt-7 flex h-14 w-full items-center rounded-xl border border-white px-4">
-          <span className="font-display text-[17px] text-white/70">+1</span>
+        <div className="mt-7 flex h-14 w-full items-center rounded-xl border border-cash-ink px-4">
+          <span className="font-display text-[17px] text-cash-ink/70">+1</span>
           <input
             type="tel"
             inputMode="tel"
@@ -401,12 +400,12 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
             placeholder="Phone Number"
             aria-label="Phone number"
             autoComplete="tel"
-            className="ml-3 h-full w-full bg-transparent font-display text-[17px] text-white placeholder:text-white/45 outline-none"
+            className="ml-3 h-full w-full bg-transparent font-display text-[17px] text-cash-ink placeholder:text-cash-ink/45 outline-none"
           />
         </div>
       )}
 
-      <p className="mx-auto mt-6 font-display text-[16px] font-semibold text-white underline">
+      <p className="mx-auto mt-6 font-display text-[16px] font-semibold text-cash-ink underline">
         Need help logging in?
       </p>
 
@@ -419,7 +418,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
             haptic();
             setUseEmail((v) => !v);
           }}
-          className="h-14 flex-1 rounded-full bg-white/12 font-display text-[16px] font-semibold text-white active:opacity-70"
+          className="h-14 flex-1 rounded-full bg-cash-ink/12 font-display text-[16px] font-semibold text-cash-ink active:opacity-70"
         >
           {useEmail ? "Use Phone" : "Use Email"}
         </button>
@@ -430,7 +429,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
             setCode("");
             goWithSpinner("code");
           }}
-          className="h-14 flex-1 rounded-full bg-white font-display text-[16px] font-semibold text-black disabled:bg-white/20 disabled:text-white/45 active:opacity-80"
+          className="h-14 flex-1 rounded-full bg-cash-ink font-display text-[16px] font-semibold text-surface disabled:bg-cash-ink/20 disabled:text-cash-ink/45 active:opacity-80"
         >
           Next
         </button>
