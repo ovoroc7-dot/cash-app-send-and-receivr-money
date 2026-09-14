@@ -58,8 +58,7 @@ export function AuthScreen({ onDone }: { onDone: () => void }) {
 
   // Paint the status-bar area to match the current screen's background.
   useEffect(() => {
-    const dark = step !== "pin" && step !== "success";
-    document.body.style.backgroundColor = dark ? "#000000" : "var(--surface)";
+    document.body.style.backgroundColor = "var(--surface)";
     return () => {
       document.body.style.backgroundColor = "";
     };
