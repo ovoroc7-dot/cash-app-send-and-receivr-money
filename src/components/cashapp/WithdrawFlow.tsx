@@ -120,7 +120,7 @@ export function WithdrawFlow({ onClose }: { onClose: () => void }) {
           onClick={() => setStep("amount")}
           className="flex-1 cursor-default bg-cash-ink/35"
         />
-        <div className="rounded-t-[22px] bg-surface px-5 pb-8 pt-3 animate-slide-up-sheet">
+        <div className="rounded-t-[22px] bg-surface px-5 pb-8 pt-3 animate-fade-in">
           <span className="mx-auto block h-1 w-9 rounded-full bg-cash-ink/15" />
           <h2 className="mt-4 font-display text-[26px] font-bold leading-tight tracking-[-0.02em] text-cash-ink">
             How do you want to withdraw {shownTyped}?
