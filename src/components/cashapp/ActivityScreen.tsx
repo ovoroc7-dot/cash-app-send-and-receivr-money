@@ -111,7 +111,7 @@ export function ActivityScreen() {
             Today
           </h2>
           {shown.map((p) =>
-            p.kind === "added" ? (
+            p.kind === "added" || p.kind === "withdrawn" ? (
               <button
                 key={p.id}
                 type="button"
@@ -125,15 +125,15 @@ export function ActivityScreen() {
                 </span>
                 <span className="flex-1">
                   <span className="block font-display text-[16px] font-semibold text-cash-ink">
-                    Add money
+                    {p.kind === "withdrawn" ? "Withdrawal" : "Add money"}
                   </span>
                   <span className="block font-display text-[14px] text-cash-ink/50">
-                    {p.source ?? "Visa debit 3049"}
+                    {p.source ?? (p.kind === "withdrawn" ? "The Bancorp Bank" : "Visa debit 3049")}
                   </span>
                   <span className="block font-display text-[14px] text-cash-ink/50">{p.time}</span>
                 </span>
                 <span className="font-display text-[16px] font-semibold text-cash-ink">
-                  + {fmtAmount(p.amount)}
+                  {p.kind === "withdrawn" ? fmtAmount(p.amount) : `+ ${fmtAmount(p.amount)}`}
                 </span>
               </button>
             ) : (
