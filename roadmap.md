@@ -9,3 +9,5 @@
 - [x] Money Added activity row + full scrollable dark Add money receipt
 - [x] Saved history (sent + added) and cash balance that survive closing the app and signing out
 - [x] Recipient dropdown in the Cash Tag / email / phone field when sending money
+
+- [x] Withdraw flow (amount -> speed sheet -> receipt with Done) + persistent Withdrawal row and receipt in Activity

@@ -16,6 +16,7 @@ import iconSavings from "@/assets/icon-savings.png";
 import iconBitcoin from "@/assets/icon-bitcoin.png";
 import avatar from "@/assets/avatar.jpg";
 import { AddMoneyFlow } from "./AddMoneyFlow";
+import { WithdrawFlow } from "./WithdrawFlow";
 import { BitcoinScreen } from "./BitcoinScreen";
 import { fitSize, useCash } from "./store";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,6 +25,7 @@ export function MoneyScreen() {
   const [hidden, setHidden] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [btcOpen, setBtcOpen] = useState(false);
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
   const { balance } = useCash();
 
   return (
@@ -121,7 +123,8 @@ export function MoneyScreen() {
             </button>
             <button
               type="button"
-              className="h-16 rounded-full bg-surface-raised font-display text-[19px] font-bold text-cash-ink"
+              onClick={() => setWithdrawOpen(true)}
+              className="h-16 rounded-full bg-surface-raised font-display text-[19px] font-bold text-cash-ink active:opacity-70"
             >
               Withdraw
             </button>
@@ -280,6 +283,7 @@ export function MoneyScreen() {
     </div>
     {addOpen ? <AddMoneyFlow onClose={() => setAddOpen(false)} /> : null}
     {btcOpen ? <BitcoinScreen onClose={() => setBtcOpen(false)} /> : null}
+    {withdrawOpen ? <WithdrawFlow onClose={() => setWithdrawOpen(false)} /> : null}
     </>
   );
 }

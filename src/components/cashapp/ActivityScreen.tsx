@@ -111,7 +111,7 @@ export function ActivityScreen() {
             Today
           </h2>
           {shown.map((p) =>
-            p.kind === "added" ? (
+            p.kind === "added" || p.kind === "withdrawn" ? (
               <button
                 key={p.id}
                 type="button"
@@ -125,15 +125,15 @@ export function ActivityScreen() {
                 </span>
                 <span className="flex-1">
                   <span className="block font-display text-[16px] font-semibold text-cash-ink">
-                    Add money
+                    {p.kind === "withdrawn" ? "Withdrawal" : "Add money"}
                   </span>
                   <span className="block font-display text-[14px] text-cash-ink/50">
-                    {p.source ?? "Visa debit 3049"}
+                    {p.source ?? (p.kind === "withdrawn" ? "The Bancorp Bank" : "Visa debit 3049")}
                   </span>
                   <span className="block font-display text-[14px] text-cash-ink/50">{p.time}</span>
                 </span>
                 <span className="font-display text-[16px] font-semibold text-cash-ink">
-                  + {fmtAmount(p.amount)}
+                  {p.kind === "withdrawn" ? fmtAmount(p.amount) : `+ ${fmtAmount(p.amount)}`}
                 </span>
               </button>
             ) : (
@@ -221,16 +221,18 @@ function QuickTile({ label, children }: { label: string; children: React.ReactNo
 
 /** Full "Add money" receipt, dark like the Cash App transaction details screen. */
 function AddMoneyReceipt({ txn, onClose }: { txn: Txn; onClose: () => void }) {
-  const source = txn.source ?? "Visa debit 3049";
+  const out = txn.kind === "withdrawn";
+  const source = txn.source ?? (out ? "The Bancorp Bank" : "Visa debit 3049");
+  const title = out ? "Withdrawal" : "Add money";
   const rows = [
     {
       Icon: Check,
       title: "Complete",
-      sub: `Transfer from ${source}`,
+      sub: out ? `Transfer to ${source}` : `Transfer from ${source}`,
     },
-    { Icon: DollarSign, title: "Transferred from", sub: source },
-    { Icon: Download, title: "Transferred to", sub: "Cash balance" },
-    { Icon: Clock, title: "Deposited", sub: `Today at ${txn.time}` },
+    { Icon: DollarSign, title: "Transferred from", sub: out ? "Cash balance" : source },
+    { Icon: Download, title: "Transferred to", sub: out ? source : "Cash balance" },
+    { Icon: Clock, title: out ? "Withdrawn" : "Deposited", sub: `Today at ${txn.time}` },
     { Icon: MessageSquare, title: "Identifier", sub: `#${txn.id.toUpperCase()}` },
   ];
 
@@ -254,12 +256,13 @@ function AddMoneyReceipt({ txn, onClose }: { txn: Txn; onClose: () => void }) {
         </span>
 
         <h2 className="mt-5 font-display text-[30px] font-bold tracking-[-0.03em] text-cash-ink">
-          Add money
+          {title}
         </h2>
         <p className="mt-2 font-display text-[16px] text-cash-ink/50">Today at {txn.time}</p>
 
         <p className="mt-5 font-display text-[46px] font-bold leading-none tracking-[-0.04em] text-cash-ink">
-          + {fmtAmount(txn.amount)}
+          {out ? "" : "+ "}
+          {fmtAmount(txn.amount)}
         </p>
 
         <hr className="mt-8 border-cash-ink/15" />

@@ -52,7 +52,7 @@ export type Payment = {
 /** Every money movement shown in Activity. Saved on the device so history survives sign out. */
 export type Txn = {
   id: string;
-  kind: "sent" | "added";
+  kind: "sent" | "added" | "withdrawn";
   name: string;
   amount: string;
   note: string;
@@ -76,6 +76,7 @@ type Store = {
   cancelPayment: (id: string) => void;
   balance: number;
   addFunds: (amount: number, source?: string) => void;
+  withdrawFunds: (amount: number, opts?: { destination?: string; note?: string }) => void;
   autoReload: boolean;
   setAutoReload: (on: boolean) => void;
   announce: (message: string) => void;
@@ -150,6 +151,29 @@ export function CashProvider({ children }: { children: ReactNode }) {
             amount: String(amount),
             note: "",
             source,
+            status: "complete",
+            time: nowTime(),
+            createdAt: Date.now(),
+          },
+          ...list,
+        ]);
+      },
+      withdrawFunds: (amount, opts) => {
+        const destination = opts?.destination ?? "The Bancorp Bank";
+        setBalance((b) => {
+          const next = Math.max(0, b - amount);
+          haptic("success");
+          announce(`Withdrew ${speakMoney(amount)}. Cash balance ${speakMoney(next)}.`);
+          return next;
+        });
+        setTransactions((list) => [
+          {
+            id: Math.random().toString(36).slice(2),
+            kind: "withdrawn",
+            name: "Withdrawal",
+            amount: String(amount),
+            note: opts?.note ?? "",
+            source: destination,
             status: "complete",
             time: nowTime(),
             createdAt: Date.now(),
